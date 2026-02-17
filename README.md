@@ -82,15 +82,47 @@ How to Run
 
 If you are modifying the source, the project requires the following file structure:
 
-/BO3Tracker
-│   bo3tracker.py          # Main Application Logic & UI
-│   challenge_system.py    # Backend logic for challenges/unlocks
-│   config.json            # User settings (auto-generated)
-│   damage_history.json    # Persisted damage stats (auto-generated)
-│   style.css              # Core styling
-│   setup.css              # Styling for the setup screen
+```text
+BO3-Tracker/
 │
-├── /perk icons/           # Images for Perk-a-Colas
-├── /camoimages/           # Images for weapon camos
-├── /callingcards/         # Images/Videos for player cards
-└── /themes/               # CSS themes (Void, Origins, etc.)
+├── assets/                  # 🎨 Game Assets & Data
+│   ├── callingcards/        # Images/Videos for player cards
+│   ├── camoimages/          # Images for weapon camos
+│   ├── perk icons/          # Perk-a-Cola icons
+│   ├── themes/              # CSS theme files
+│   ├── custom_camos.json    # Database for modded map camos
+│   ├── setup.css            # Styling for the setup window
+│   └── style.css            # Main application styling
+│
+├── src/                     # 🐍 Python Source Code
+│   ├── bo3tracker.py        # Main application entry point
+│   └── challenge_system.py  # Backend logic for challenges
+│
+├── build_tracker.py         # 🔨 Script to compile the EXE
+├── .gitignore               # 🚫 Files to exclude
+├── LICENSE                  # ⚖️ License file
+├── README.md                # 📖 Documentation
+└── requirements.txt         # 📦 Dependencies
+```
+
+❓ Troubleshooting
+
+    Stats not updating?
+
+        Ensure the path to CurrentGame.json is correct in the Settings tab.
+
+        Some mods only update this file at the end of a round or when the game is paused.
+
+    Images/Icons missing?
+
+        Ensure you have not moved the perk icons or camoimages folders away from the executable. The program looks for them in its immediate directory.
+
+    "Classic" Badge:
+
+        The Classic mode badge only appears if the gamemode string in the JSON contains "classic".
+
+📜 License
+
+This project is free to use for the Black Ops III Zombies community.
+Visual assets (Perk Icons, Game Images) are the property of Activision/Treyarch. 
+Also thanks to Sphynx for making an amazing black ops 3 mod. 
