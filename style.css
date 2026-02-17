@@ -1,0 +1,275 @@
+/* style.css - Modern Tactical Theme */
+:root {
+    --bg-dark: #0b0c10;
+    --bg-panel: rgba(31, 40, 51, 0.7);
+    --bg-panel-hover: rgba(31, 40, 51, 0.9);
+    --accent: #66fcf1; /* Cyan for high value */
+    --primary: #c5c6c7; /* Text */
+    --highlight: #45a29e; /* Teal */
+    --gold: #ffd700;
+    --danger: #ff4d4d;
+    --font-main: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "Consolas", "Monaco", monospace;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 50% 50%, #1a1d26 0%, #0b0c10 100%);
+    color: var(--primary);
+    font-family: var(--font-main);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 260px;
+    background: rgba(11, 12, 16, 0.95);
+    border-right: 1px solid #2d3436;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.header {
+    padding: 25px 20px;
+    background: linear-gradient(90deg, rgba(69, 162, 158, 0.1), transparent);
+    border-left: 4px solid var(--highlight);
+    color: var(--highlight);
+    font-size: 1.1em;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.nav-btn {
+    padding: 18px 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    color: #888;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+}
+
+.nav-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.nav-btn.active { background: rgba(69, 162, 158, 0.1); color: var(--accent); border-right: 3px solid var(--accent); }
+
+.list { flex: 1; overflow-y: auto; padding-top: 10px; }
+.sb-item {
+    padding: 12px 25px;
+    cursor: pointer;
+    color: #777;
+    transition: 0.2s;
+    font-size: 0.85em;
+    border-left: 3px solid transparent;
+}
+.sb-item:hover { color: #fff; background: rgba(255,255,255,0.02); }
+.sb-item.active { background: rgba(255,255,255,0.05); color: var(--accent); border-left: 3px solid var(--accent); }
+
+.config-btn {
+    padding: 15px;
+    text-align: center;
+    background: #151515;
+    color: #555;
+    font-size: 0.75em;
+    cursor: pointer;
+    margin-top: auto;
+    border-top: 1px solid #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.config-btn:hover { background: #222; color: #fff; }
+
+/* --- MAIN VIEW --- */
+.main-view { flex: 1; position: relative; overflow: hidden; }
+.tab-content {
+    position: absolute; inset: 0;
+    overflow-y: auto; display: none; padding: 30px; box-sizing: border-box;
+    /* Smooth scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+}
+.tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- LIVE STATS CARDS --- */
+.status-bar {
+    background: var(--bg-panel);
+    border-left: 4px solid var(--accent);
+    color: #fff;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    display: inline-block;
+    margin-bottom: 20px;
+    border-radius: 0 4px 4px 0;
+}
+
+.card {
+    background: var(--bg-panel);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
+    transition: transform 0.2s;
+}
+.card:hover { border-color: rgba(255,255,255,0.2); }
+
+.card-title {
+    color: #888;
+    font-size: 0.75em;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 8px;
+}
+
+.stat-big { font-family: var(--font-mono); font-size: 2.5em; font-weight: 700; color: #fff; line-height: 1; }
+.stat-sub { font-size: 1.1em; color: var(--highlight); margin-top: 5px; }
+.stat-rank { font-family: var(--font-mono); font-size: 2em; color: var(--gold); font-weight: bold; }
+
+.detail-row {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 8px 0; font-size: 0.9em; color: #aaa;
+}
+.detail-row span:last-child { font-family: var(--font-mono); font-weight: bold; color: #eee; }
+
+/* Grid Layout for Stats */
+.stat-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.nerf-box { 
+    border: 1px solid var(--danger); 
+    background: rgba(255, 77, 77, 0.1); 
+    color: var(--danger); 
+    padding: 15px; 
+    border-radius: 8px;
+    text-align: center; 
+    margin-bottom: 20px; 
+    font-weight: bold;
+}
+
+/* Tables */
+table { width: 100%; border-collapse: separate; border-spacing: 0 4px; font-size: 0.9em; }
+th { text-align: left; color: #666; font-size: 0.75em; text-transform: uppercase; padding: 8px; }
+td { background: rgba(0,0,0,0.2); padding: 10px 8px; color: #ddd; font-family: var(--font-mono); }
+td:first-child { border-radius: 4px 0 0 4px; color: var(--highlight); font-family: var(--font-main); font-weight: 600; }
+td:last-child { border-radius: 0 4px 4px 0; }
+
+/* Perks */
+.perk-container { display: flex; flex-wrap: wrap; gap: 12px; }
+.perk-item { width: 54px; height: 54px; background: rgba(0,0,0,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); }
+.perk-img { width: 40px; height: 40px; object-fit: contain; }
+
+/* --- CAMO MATRIX --- */
+.header-camo { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;
+}
+h1 { margin: 0; font-size: 1.8em; font-weight: 300; letter-spacing: 2px; }
+.user-badge { 
+    background: rgba(69, 162, 158, 0.2); color: var(--accent); 
+    padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 0.8em; letter-spacing: 1px;
+}
+
+.controls { 
+    display: flex; gap: 15px; margin-bottom: 25px; 
+    background: var(--bg-panel); padding: 15px; border-radius: 8px; 
+}
+input, select {
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; padding: 10px; border-radius: 4px; outline: none;
+}
+input:focus, select:focus { border-color: var(--highlight); }
+button.nav-btn-small {
+    background: #333; color: #fff; border: none; padding: 0 20px; 
+    border-radius: 4px; cursor: pointer; font-weight: bold;
+}
+
+/* Camo Cards */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.camo-card {
+    background: rgba(20, 20, 25, 0.8);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+    transition: 0.2s;
+}
+.camo-card:hover { transform: translateY(-2px); border-color: #555; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+/* --- UPDATED: PADDING LEFT TO AVOID STAR OVERLAP --- */
+.card-head { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: start; 
+    margin-bottom: 10px; 
+    padding-left: 30px; /* Added padding to make room for star on left */
+}
+
+.w-name { font-size: 1.1em; font-weight: 700; color: #fff; }
+.w-type { font-size: 0.75em; color: #777; text-transform: uppercase; margin-top: 2px; }
+.w-packed { color: var(--highlight); font-size: 0.8em; font-weight: 600; min-height: 1.2em; }
+.game-tag { font-size: 0.65em; background: #222; padding: 3px 6px; border-radius: 3px; color: #999; }
+
+/* Progress Bar */
+.progress-bar { width: 100%; background: #111; height: 6px; border-radius: 3px; overflow: hidden; margin: 10px 0; }
+.fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.5s ease; }
+.fill.max { background: var(--accent); }
+
+/* Camo Display */
+.camo-display { display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; margin-top: 10px; }
+.camo-img-box { width: 50px; height: 50px; border-radius: 4px; overflow: hidden; background: #000; border: 1px solid #333; }
+.camo-display-img { width: 100%; height: 100%; background-size: cover; background-position: center; }
+.camo-text { color: var(--gold); font-size: 0.9em; font-weight: 700; text-transform: uppercase; }
+
+/* Camo Tray (The small icons) */
+.camo-tray { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+.camo-option {
+    width: 24px; height: 24px;
+    border: 1px solid #333; border-radius: 3px;
+    cursor: pointer; background: #000; position: relative;
+    transition: 0.2s;
+}
+.camo-option:hover { transform: scale(1.2); z-index: 2; border-color: #fff; }
+.camo-option.active { border-color: var(--gold); box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+.camo-img-ref { width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.6; }
+.camo-option.active .camo-img-ref, .camo-option:hover .camo-img-ref { opacity: 1; }
+
+/* --- UPDATED: STAR POSITIONED LEFT --- */
+.star-btn { 
+    position: absolute; 
+    top: 10px; 
+    left: 10px; /* Changed from right to left */
+    cursor: pointer; 
+    color: #333; 
+    font-size: 1.2em; 
+    z-index: 10;
+}
+.star-btn.active { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+.star-btn:hover { color: #fff; }
+
+.priority-section { border: 1px dashed var(--gold); padding: 20px; margin-bottom: 30px; border-radius: 8px; position: relative; }
+.priority-section::before { content: "★ PRIORITY TRACKING"; position: absolute; top: -10px; left: 20px; background: var(--bg-dark); padding: 0 10px; color: var(--gold); font-size: 0.8em; font-weight: bold; }
+
+#classic_badge { 
+    position: absolute; 
+    top: 5px; 
+    right: 10px; 
+    width: 50px; 
+    height: 50px; 
+    opacity: 0.8; 
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); 
+}

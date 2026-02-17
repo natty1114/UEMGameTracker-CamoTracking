@@ -1,0 +1,120 @@
+/* --- ORIGINS 115: ULTIMATE EDITION (REMASTERED) --- */
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+/* --- TACTICAL 115 CURSORS --- */
+body {
+    background: #0b0f14 !important;
+    color: #aebcc4 !important;
+    font-family: 'Special Elite', cursive !important;
+    /* Precision Tactical Crosshair */
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300a8ff' stroke-width='1.5'><circle cx='12' cy='12' r='9' stroke-opacity='0.3'/><path d='M12 2v4m0 12v4M2 12h4m12 0h4M12 12h.01'/></svg>") 12 12, crosshair !important;
+}
+
+/* --- THE "BLUE CORE" ATMOSPHERE --- */
+body::before {
+    content: "";
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 120%, #003366 0%, #0b0f14 70%);
+    z-index: -2;
+}
+
+/* Scanline/Grid Overlay for Industrial Feel */
+body::after {
+    content: "";
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    background-size: 100% 4px, 3px 100%;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+/* --- UI ELEMENTS --- */
+.sidebar { 
+    background: #0d1117 !important; 
+    border-right: 2px solid #1a222d !important;
+    box-shadow: 5px 0 15px rgba(0, 168, 255, 0.05);
+}
+
+.header { 
+    border-left: 5px solid #00a8ff !important; 
+    color: #fff !important; 
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #00a8ff, 0 0 20px rgba(0, 168, 255, 0.5);
+    background: linear-gradient(90deg, rgba(0,168,255,0.1), transparent);
+    padding-left: 15px !important;
+}
+
+/* Weathered Metal Card Look */
+.card, .chal-card {
+    background: #161b22 !important;
+    border: 1px solid #30363d !important;
+    border-top: 2px solid #58a6ff !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.3) !important;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: #00a8ff !important;
+}
+
+/* Bioluminescent Stats */
+.stat-big { 
+    color: #00a8ff !important; 
+    text-shadow: 0 0 15px #00a8ff; 
+    font-weight: bold;
+    animation: flicker 4s infinite;
+}
+
+/* 115 Battery Fill */
+.fill { 
+    background: linear-gradient(90deg, #004d7a, #00a8ff, #004d7a) !important;
+    background-size: 200% 100% !important;
+    animation: goldShine 2s linear infinite; /* Reusing your shine logic for flow */
+    box-shadow: 0 0 10px rgba(0, 168, 255, 0.5);
+}
+
+/* Industrial Buttons */
+button, .config-btn {
+    background: #1c2128 !important;
+    border: 1px solid #444c56 !important;
+    color: #58a6ff !important;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+button:hover, .config-btn:hover {
+    background: #00a8ff !important;
+    color: #fff !important;
+    box-shadow: 0 0 20px #00a8ff;
+    animation: electricShort 0.2s infinite;
+}
+
+/* --- INTERACTIVE SPARK CURSOR --- */
+.nav-btn:hover, button:hover, .sb-item:hover, .config-btn:hover, 
+.camo-option:hover, .star-btn:hover, .header:hover, input:hover, select:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='%2300a8ff' stroke-width='2'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>"), pointer !important;
+}
+
+/* --- ANIMATIONS --- */
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55% { opacity: 0.8; text-shadow: none; }
+}
+
+@keyframes electricShort {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(1px, -1px); }
+    50% { transform: translate(-1px, 1px); }
+    75% { transform: translate(1px, 1px); }
+    100% { transform: translate(0,0); }
+}
+
+@keyframes goldShine { 
+    from { background-position: 200% 0; } 
+    to { background-position: -200% 0; } 
+}

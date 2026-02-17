@@ -1,0 +1,79 @@
+/* --- RETROWAVE: ULTIMATE EDITION --- */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+body {
+    background-color: #12001f !important;
+    color: #00f2ff !important;
+    font-family: 'VT323', monospace !important;
+    font-size: 1.2em; /* Pixel fonts render small */
+}
+
+/* --- CRT SCANLINES --- */
+body::before {
+    content: " ";
+    display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 6px 100%;
+    z-index: 100; pointer-events: none;
+}
+
+/* --- GRID FLOOR --- */
+body::after {
+    content: "";
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 30%;
+    background: linear-gradient(to bottom, transparent, #ff00ff 2px, transparent 2px);
+    background-size: 100% 20px;
+    transform: perspective(500px) rotateX(60deg) scale(2) translateY(50px);
+    z-index: -1;
+    opacity: 0.2;
+    animation: gridMove 2s linear infinite;
+}
+@keyframes gridMove { from { background-position: 0 0; } to { background-position: 0 20px; } }
+
+/* --- UI ELEMENTS --- */
+.sidebar { 
+    background: #090014 !important; 
+    border-right: 2px solid #ff00ff !important; 
+    box-shadow: 0 0 15px #ff00ff;
+}
+
+.header { 
+    color: #ff00ff !important; 
+    text-shadow: 2px 2px #00f2ff;
+    border-left: none !important;
+}
+
+/* Neon Cards */
+.card, .chal-card {
+    background: rgba(0, 0, 0, 0.8) !important;
+    border: 1px solid #00f2ff !important;
+    box-shadow: 0 0 8px #00f2ff, inset 0 0 20px rgba(255, 0, 255, 0.1) !important;
+    border-radius: 8px !important;
+}
+
+.stat-big { 
+    font-family: 'VT323', monospace !important; 
+    color: #fff !important; 
+    text-shadow: 2px 0 #ff00ff, -2px 0 #00f2ff;
+}
+
+.fill { 
+    background: linear-gradient(90deg, #ff00ff, #00f2ff) !important; 
+}
+
+/* Buttons */
+button {
+    background: #000 !important;
+    border: 2px solid #ff00ff !important;
+    color: #ff00ff !important;
+    text-transform: uppercase;
+    font-family: 'VT323', monospace !important;
+    font-size: 1.2em;
+}
+button:hover { background: #ff00ff !important; color: #000 !important; }
+
+/* --- RETRO: ACTIVE HAND CURSOR --- */
+.nav-btn:hover, button:hover, .sb-item:hover, .config-btn:hover, 
+.camo-option:hover, .star-btn:hover, .header:hover, input:hover, select:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%23000000' stroke='%23ff00ff' stroke-width='1.5'><path d='M14.5 12.5L14.5 3.5C14.5 2.1 13.4 1 12 1C10.6 1 9.5 2.1 9.5 3.5L9.5 10.5L8.2 10.2C8.1 10.2 7.7 10.2 7.4 10.5L6 11.9L11.6 17.5C12 17.9 12.6 18.2 13.2 18.2H18C18.8 18.2 19.5 17.5 19.5 16.7V14C19.5 13.2 18.8 12.5 18 12.5H14.5Z'/></svg>"), pointer !important;
+}
