@@ -2,6 +2,7 @@
 
 Call of Duty: Black Ops III - Tracker & Camo Matrix
 
+NOTE: YOU NEED TO ACCEPT THE API IN THE UEM MOD FOR THE CURRENTGAME.JSON LIVE TRACKING TO WORK. I CANNOT DO ANYTHING ABOUT THIS SORRY.
 A comprehensive external dashboard and overlay tool for Call of Duty: Black Ops III Zombies. This tool tracks live game statistics, calculates accurate weapon damage (bypassing the visual damage cap), manages custom camo progression for modded maps, and features a built-in challenge and reward system.
 🤖 A Note on AI Development
 
@@ -77,6 +78,8 @@ How to Run
         Live Data File: Point the tracker to your local CurrentGame.json. This is usually found in your BO3 install directory under \players\CurrentGame.json.
 
         History Folder: Create a folder (e.g., BO3_History) and select it. This is where the tracker will save your past games.
+
+        
 
 📂 Project Structure
 
