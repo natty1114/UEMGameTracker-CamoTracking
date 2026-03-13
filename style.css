@@ -92,7 +92,6 @@ body {
 .tab-content {
     position: absolute; inset: 0;
     overflow-y: auto; display: none; padding: 30px; box-sizing: border-box;
-    /* Smooth scrollbar */
     scrollbar-width: thin;
     scrollbar-color: #333 transparent;
 }
@@ -113,6 +112,17 @@ body {
     margin-bottom: 20px;
     border-radius: 0 4px 4px 0;
 }
+
+/* PLAYER TABS */
+.player-tabs-container {
+    display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; overflow-x: auto;
+}
+.player-tab {
+    background: rgba(0,0,0,0.4); color: #888; border: 1px solid #333; padding: 8px 20px;
+    border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85em; transition: 0.2s; white-space: nowrap;
+}
+.player-tab:hover { background: rgba(102, 252, 241, 0.1); color: #fff; border-color: #555; }
+.player-tab.active { background: var(--highlight); color: #000; border-color: var(--highlight); }
 
 .card {
     background: var(--bg-panel);
@@ -210,13 +220,12 @@ button.nav-btn-small {
 }
 .camo-card:hover { transform: translateY(-2px); border-color: #555; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
-/* --- UPDATED: PADDING LEFT TO AVOID STAR OVERLAP --- */
 .card-head { 
     display: flex; 
     justify-content: space-between; 
     align-items: start; 
     margin-bottom: 10px; 
-    padding-left: 30px; /* Added padding to make room for star on left */
+    padding-left: 30px; 
 }
 
 .w-name { font-size: 1.1em; font-weight: 700; color: #fff; }
@@ -248,11 +257,10 @@ button.nav-btn-small {
 .camo-img-ref { width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0.6; }
 .camo-option.active .camo-img-ref, .camo-option:hover .camo-img-ref { opacity: 1; }
 
-/* --- UPDATED: STAR POSITIONED LEFT --- */
 .star-btn { 
     position: absolute; 
     top: 10px; 
-    left: 10px; /* Changed from right to left */
+    left: 10px; 
     cursor: pointer; 
     color: #333; 
     font-size: 1.2em; 
