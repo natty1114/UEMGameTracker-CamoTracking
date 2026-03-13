@@ -92,6 +92,7 @@ BO3-Tracker/
 │   ├── callingcards/        # Images/Videos for player cards
 │   ├── camoimages/          # Images for weapon camos
 │   ├── perk icons/          # Perk-a-Cola icons
+│   ├── rankicons/            # Contains icons for the leveling hud
 │   ├── themes/              # CSS theme files
 │   ├── custom_camos.json    # Database for modded map camos
 │   ├── setup.css            # Styling for the setup window
