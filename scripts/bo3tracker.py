@@ -15,6 +15,7 @@ from challenge_system import ChallengeManager
 CONFIG_FILE = "config.json"
 DAMAGE_HISTORY_FILE = "damage_history.json"
 ICONS_DIR_NAME = "perk icons" 
+RANK_ICONS_DIR_NAME = "rank icons"
 CAMO_DB_FILE = "custom_camos.json"
 CAMO_IMG_DIR = "camoimages"
 CALLING_CARD_DIR = "callingcards"
@@ -99,6 +100,28 @@ def get_base64_icon(perk_key):
                     return "data:" + mime + ";base64," + b64
             except: pass
     return None
+
+def get_rank_icon_base64(filename):
+    base_dir = get_base_path()
+    target = os.path.join(base_dir, RANK_ICONS_DIR_NAME, filename)
+    if os.path.exists(target):
+        try:
+            with open(target, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode('utf-8')
+                return f"data:image/png;base64,{b64}"
+        except: pass
+    return None
+
+def get_prestige_icon_src(prestige):
+    safe_prestige = min(max(int(prestige), 0), 20)
+    if safe_prestige == 0: return None
+    img_name = f"ui_icon_ranks_prestige_{safe_prestige}_large.png"
+    return get_rank_icon_base64(img_name)
+
+def get_level_icon_src(level):
+    safe_level = min(max(int(level), 1), 90)
+    img_name = f"ui_icon_rank_mp_level{safe_level}_large.png"
+    return get_rank_icon_base64(img_name)
     
 def get_classic_mode_icon():
     path = os.path.join(get_base_path(), "trackericons", "classic_zombie.webp")
@@ -125,7 +148,6 @@ def get_camo_image_src(index):
 def get_calling_card_src(card_name):
     if not card_name or card_name == "default": return None
     base_dir = get_base_path()
-    # UPDATED: Check for Video formats first
     for ext in [".mp4", ".webm", ".jpg", ".png", ".webp"]:
         img_name = f"{card_name}{ext}"
         target = os.path.join(base_dir, CALLING_CARD_DIR, img_name)
@@ -133,7 +155,6 @@ def get_calling_card_src(card_name):
             try:
                 with open(target, "rb") as f:
                     b64 = base64.b64encode(f.read()).decode('utf-8')
-                    # Determine Mime Type
                     mime = ""
                     if ext == ".mp4": mime = "video/mp4"
                     elif ext == ".webm": mime = "video/webm"
@@ -144,7 +165,7 @@ def get_calling_card_src(card_name):
             except: pass
     return None
 
-# --- DAMAGE MEMORY SYSTEM ---
+# --- MULTI-PLAYER DAMAGE MEMORY SYSTEM ---
 class DamageMemory:
     def __init__(self):
         self.file_path = os.path.join(get_base_path(), DAMAGE_HISTORY_FILE)
@@ -157,18 +178,21 @@ class DamageMemory:
     def _save_to_disk(self):
         save_json(self.file_path, self.cache)
 
-    def get_real_damage(self, game_id, weapon_name, current_raw_val):
+    def get_real_damage(self, game_id, player_id, weapon_name, current_raw_val):
         with self.lock:
             if game_id not in self.cache:
                 self.cache[game_id] = {}
 
-            if weapon_name not in self.cache[game_id]:
-                self.cache[game_id][weapon_name] = {
+            if player_id not in self.cache[game_id]:
+                self.cache[game_id][player_id] = {}
+
+            if weapon_name not in self.cache[game_id][player_id]:
+                self.cache[game_id][player_id][weapon_name] = {
                     "last_seen": 0,
                     "overflow_offset": 0
                 }
 
-            w_data = self.cache[game_id][weapon_name]
+            w_data = self.cache[game_id][player_id][weapon_name]
             last_val = w_data["last_seen"]
             offset = w_data["overflow_offset"]
             
@@ -179,14 +203,14 @@ class DamageMemory:
                     self._save_to_disk() 
 
             w_data["last_seen"] = current_raw_val
-            self.cache[game_id][weapon_name] = w_data
+            self.cache[game_id][player_id][weapon_name] = w_data
             return current_raw_val + offset
 
 # Initialize Systems
 damage_tracker = DamageMemory()
 challenge_manager = ChallengeManager(get_base_path()) 
 
-# --- DATA PROCESSOR (GAME STATS) ---
+# --- DATA PROCESSOR (MULTI-PLAYER STATS) ---
 def process_stats(data, is_live=False):
     if not data: return None
     
@@ -194,45 +218,9 @@ def process_stats(data, is_live=False):
     players = data.get('players') or data.get('data', {}).get('players', {})
     game_id = str(game.get('game_id', 'unknown_match'))
     
-    if not players: p = {} 
-    else: p = list(players.values())[0]
-
     time_sec = int(game.get('time_total', 0))
     mins, secs = divmod(time_sec, 60)
-    kills = int(p.get('kills', 0))
-    headshots = int(p.get('headshots', 0))
-    accuracy = round((headshots / kills) * 100, 1) if kills > 0 else 0
-    xp_val = int(p.get('xp', p.get('total_xp', 0)))
     
-    try:
-        raw_mult = game.get('xp_multiplier') or p.get('xp_multiplier') or "100"
-        xp_mult = "x{:.3f}".format(float(raw_mult) / 100.0)
-    except:
-        xp_mult = "x1.000"
-
-    ult = int(p.get('prestige_ultimate', 0))
-    abso = int(p.get('prestige_absolute', 0))
-    leg = int(p.get('prestige_legend', 0))
-    prest = int(p.get('prestige', 0))
-    lvl = int(p.get('level', 1))
-
-    # Determine Main Title
-    if ult > 0: rank_main = "ULTIMATE PRESTIGE"
-    elif abso > 0: rank_main = "ABSOLUTE PRESTIGE"
-    elif leg > 0: rank_main = "PRESTIGE LEGEND"
-    elif prest > 0: rank_main = f"PRESTIGE {prest}"
-    else: rank_main = "RECRUIT"
-
-    rank_parts = []
-    if ult > 0: rank_parts.append(f"Ult Tier {ult}")
-    if abso > 0: rank_parts.append(f"Abs Tier {abso}")
-    if leg > 0: rank_parts.append(f"Leg Tier {leg}")
-    if prest > 0: rank_parts.append(f"Prestige {prest}")
-    rank_parts.append(f"Level {lvl}")
-    
-    rank_sub = " // ".join(rank_parts)
-    
-    player_title = '"{}"'.format(p.get("player_title", "")) if p.get("player_title") else ""
     status_text = "LIVE FEED" if is_live else f"ARCHIVED: {game.get('game_id')}"
     status_color = "#66fcf1" if is_live else "#444" 
 
@@ -241,65 +229,119 @@ def process_stats(data, is_live=False):
         reason = str(game.get('nerfed_reason', '')).replace('|', ' ')
         nerf_html = f"<div class='nerf-box'>⚠ ACTIVE MODIFIERS: {reason}</div>"
 
-    perks_html = ""
-    raw_perks = p.get('perks', [])
-    valid_perk_count = 0 
-    if isinstance(raw_perks, dict): raw_perks = list(raw_perks.values())
-    for perk in raw_perks:
-        if any(x in perk.lower() for x in IGNORE_KEYWORDS): continue
-        pretty = PERK_NAMES.get(perk, perk.replace('specialty_', '').replace('_', ' ').title())
-        if "null" in pretty.lower(): continue
-        
-        valid_perk_count += 1
-        icon_b64 = get_base64_icon(perk)
-        if icon_b64: perks_html += f'<div class="perk-item"><img src="{icon_b64}" class="perk-img" title="{pretty}"></div>'
-        else: perks_html += f'<div class="perk-item"><div class="perk-fallback" style="font-size:0.5em; text-align:center;">{pretty[:3]}</div></div>'
-    if not perks_html: perks_html = "<span style='color:#555; font-style:italic;'>No Active Perks</span>"
-
-    weapons_html = ""
-    weapons = p.get('top5', p.get('weapon_data', {}))
-    processed_weapons = []
-    
-    for k, w in weapons.items():
-        if w.get('display') == 'none': continue
-        
-        is_pap = (int(w.get('repack_level', 0)) > 0) or (w.get('display_name_upgraded') and w.get('display_name_upgraded') != "none")
-        status_html = '<span style="color:#66fcf1; font-weight:bold;">PAP</span>' if is_pap else '<span style="color:#888">STD</span>'
-        dname = str(w.get('display', 'Unknown'))
-        kills_w = str(w.get('kills', 0))
-        
-        try: raw_damage = int(float(w.get('damage', 0)))
-        except: raw_damage = 0
-            
-        corrected_damage = damage_tracker.get_real_damage(game_id, dname, raw_damage)
-        
-        processed_weapons.append({
-            "name": dname,
-            "kills": kills_w,
-            "damage_val": corrected_damage, 
-            "damage_str": "{:,}".format(corrected_damage),
-            "status": status_html
-        })
-
-    processed_weapons.sort(key=lambda x: x['damage_val'], reverse=True)
-
-    for pw in processed_weapons:
-        weapons_html += f"<tr><td>{pw['name']}</td><td>{pw['kills']}</td><td>{pw['damage_str']}</td><td>{pw['status']}</td></tr>"
-
-    equip = p.get('equipment', {})
-    lethal = equip.get('lethal', {}).get('name', 'None').replace('_', ' ').title()
-    tactical = equip.get('tactical', {}).get('name', 'None').replace('_', ' ').title()
-
-    return {
+    game_info = {
         "status": status_text, "color": status_color, "nerf": nerf_html,
         "map": str(game.get('map_played', 'Unknown')).replace('_',' ').title(), 
         "round": game.get('rounds_total', 0),
         "time": "{:02d}:{:02d}".format(mins, secs), "mode": game.get('gamemode', 'Standard'),
-        "r_main": rank_main, "title": player_title, "r_sub": rank_sub, "gums": p.get('gobblegums_used', 0),
-        "xp": "{:,}".format(xp_val), "mult": xp_mult,
-        "k": kills, "pts": "{:,}".format(int(p.get('points', 0))), "acc": accuracy,
-        "melee": p.get('melee_kills', 0), "equip": p.get('equipment_kills', 0), "downs": p.get('downs', 0),
-        "perks": perks_html, "perk_count": valid_perk_count, "leth": lethal, "tact": tactical, "weaps": weapons_html
+        "version": str(game.get('version', 'Unknown')), 
+        "avg_time": str(game.get('average_round_time', '0')), 
+    }
+
+    players_list = []
+    
+    for pid, p in players.items():
+        kills = int(p.get('kills', 0))
+        headshots = int(p.get('headshots', 0))
+        accuracy = round((headshots / kills) * 100, 1) if kills > 0 else 0
+        xp_val = int(p.get('xp', p.get('total_xp', 0)))
+        
+        try:
+            raw_mult = game.get('xp_multiplier') or p.get('xp_multiplier') or "100"
+            xp_mult = "x{:.3f}".format(float(raw_mult) / 100.0)
+        except:
+            xp_mult = "x1.000"
+
+        ult = int(p.get('prestige_ultimate', 0))
+        abso = int(p.get('prestige_absolute', 0))
+        leg = int(p.get('prestige_legend', 0))
+        prest = int(p.get('prestige', 0))
+        lvl = int(p.get('level', 1))
+        
+        prestige_icon = get_prestige_icon_src(prest)
+        level_icon = get_level_icon_src(lvl)
+
+        if ult > 0: rank_main = "ULTIMATE PRESTIGE"
+        elif abso > 0: rank_main = "ABSOLUTE PRESTIGE"
+        elif leg > 0: rank_main = "PRESTIGE LEGEND"
+        elif prest > 0: rank_main = f"PRESTIGE {prest}"
+        else: rank_main = "RECRUIT"
+
+        rank_parts = []
+        if ult > 0: rank_parts.append(f"Ult Tier {ult}")
+        if abso > 0: rank_parts.append(f"Abs Tier {abso}")
+        if leg > 0: rank_parts.append(f"Leg Tier {leg}")
+        if prest > 0: rank_parts.append(f"Prestige {prest}")
+        rank_parts.append(f"Level {lvl}")
+        
+        rank_sub = " // ".join(rank_parts)
+        player_title = '"{}"'.format(p.get("player_title", "")) if p.get("player_title") else ""
+
+        perks_html = ""
+        raw_perks = p.get('perks', [])
+        valid_perk_count = 0 
+        if isinstance(raw_perks, dict): raw_perks = list(raw_perks.values())
+        for perk in raw_perks:
+            if any(x in perk.lower() for x in IGNORE_KEYWORDS): continue
+            pretty = PERK_NAMES.get(perk, perk.replace('specialty_', '').replace('_', ' ').title())
+            if "null" in pretty.lower(): continue
+            
+            valid_perk_count += 1
+            icon_b64 = get_base64_icon(perk)
+            if icon_b64: perks_html += f'<div class="perk-item"><img src="{icon_b64}" class="perk-img" title="{pretty}"></div>'
+            else: perks_html += f'<div class="perk-item"><div class="perk-fallback" style="font-size:0.5em; text-align:center;">{pretty[:3]}</div></div>'
+        if not perks_html: perks_html = "<span style='color:#555; font-style:italic;'>No Active Perks</span>"
+
+        weapons_html = ""
+        weapons = p.get('top5', p.get('weapon_data', {}))
+        processed_weapons = []
+        
+        for k, w in weapons.items():
+            if w.get('display') == 'none': continue
+            
+            is_pap = (int(w.get('repack_level', 0)) > 0) or (w.get('display_name_upgraded') and w.get('display_name_upgraded') != "none")
+            status_html = '<span style="color:#66fcf1; font-weight:bold;">PAP</span>' if is_pap else '<span style="color:#888">STD</span>'
+            dname = str(w.get('display', 'Unknown'))
+            kills_w = str(w.get('kills', 0))
+            headshots_w = str(w.get('headshots', 0)) 
+            
+            try: raw_damage = int(float(w.get('damage', 0)))
+            except: raw_damage = 0
+                
+            # --- FIX: Use 'k' instead of 'dname' here ---
+            corrected_damage = damage_tracker.get_real_damage(game_id, pid, k, raw_damage)
+            
+            processed_weapons.append({
+                "name": dname,
+                "kills": kills_w,
+                "headshots": headshots_w,
+                "damage_val": corrected_damage, 
+                "damage_str": "{:,}".format(corrected_damage),
+                "status": status_html
+            })
+
+        processed_weapons.sort(key=lambda x: x['damage_val'], reverse=True)
+
+        for pw in processed_weapons:
+            weapons_html += f"<tr><td>{pw['name']}</td><td>{pw['kills']}</td><td>{pw['headshots']}</td><td>{pw['damage_str']}</td><td>{pw['status']}</td></tr>"
+
+        equip = p.get('equipment', {})
+        lethal = equip.get('lethal', {}).get('name', 'None').replace('_', ' ').title()
+        tactical = equip.get('tactical', {}).get('name', 'None').replace('_', ' ').title()
+
+        players_list.append({
+            "pid": pid,
+            "r_main": rank_main, "title": player_title, "r_sub": rank_sub, 
+            "prest_icon": prestige_icon, "lvl_icon": level_icon,
+            "gums": p.get('gobblegums_used', 0), "xp": "{:,}".format(xp_val), "mult": xp_mult,
+            "k": kills, "pts": "{:,}".format(int(p.get('points', 0))), "acc": accuracy,
+            "melee": p.get('melee_kills', 0), "equip": p.get('equipment_kills', 0), "downs": p.get('downs', 0),
+            "perks": perks_html, "perk_count": valid_perk_count, "leth": lethal, "tact": tactical, "weaps": weapons_html
+        })
+
+    return {
+        "game": game_info,
+        "players": players_list
     }
 
 # --- PROCESSOR (CAMO STATS) ---
@@ -410,7 +452,7 @@ def get_unified_overlay_html():
         <div id="unified-box">
             <div id="perk-area"></div>
             <div id="damage-area">
-                <div class="title">Top Weapon Damage</div>
+                <div class="title">Top Weapon Damage (Player 1)</div>
                 <div id="damage-list"></div>
             </div>
         </div>
@@ -443,14 +485,18 @@ def overlay_loop():
                     data = load_json(path)
                     stats = process_stats(data, is_live=True)
                     
-                    if stats:
+                    if stats and stats['players']:
+                        # Lock Overlay to Player 1 to save screen real estate
+                        p_stats = stats['players'][0]
+                        pid = p_stats['pid']
+                        
                         game = data.get('game') or data.get('data', {}).get('game', {})
                         game_id = str(game.get('game_id', 'unknown'))
                         players = data.get('players') or data.get('data', {}).get('players', {})
                         top_3_weapons = []
                         
-                        if players:
-                            p = list(players.values())[0]
+                        if players and pid in players:
+                            p = players[pid]
                             weapons = p.get('top5', p.get('weapon_data', {}))
                             processed = []
                             for k, w in weapons.items():
@@ -458,7 +504,10 @@ def overlay_loop():
                                 dname = str(w.get('display', 'Unknown'))
                                 try: raw_dmg = int(float(w.get('damage', 0)))
                                 except: raw_dmg = 0
-                                real_dmg = damage_tracker.get_real_damage(game_id, dname, raw_dmg)
+                                
+                                # --- FIX: Use 'k' instead of 'dname' here ---
+                                real_dmg = damage_tracker.get_real_damage(game_id, pid, k, raw_dmg)
+                                
                                 processed.append({
                                     "name": dname,
                                     "kills": str(w.get('kills', 0)),
@@ -469,10 +518,10 @@ def overlay_loop():
                             top_3_weapons = processed[:3]
 
                         json_dmg = json.dumps(top_3_weapons)
-                        unified_window.evaluate_js(f'updateOverlay(`{stats["perks"]}`, {json_dmg})')
+                        unified_window.evaluate_js(f'updateOverlay(`{p_stats["perks"]}`, {json_dmg})')
                         
                         import math
-                        perk_count = stats.get('perk_count', 0)
+                        perk_count = p_stats.get('perk_count', 0)
                         rows = math.ceil(perk_count / 5) if perk_count > 0 else 1
                         calc_height = 130 + (rows * 45)
                         unified_window.resize(280, int(calc_height))
@@ -630,50 +679,70 @@ def get_main_app_html():
                         </div>
                         <div style="text-align:right;">
                              <div class="detail-row"><span>TIME</span><span id="d_time">00:00</span></div>
+                             <div class="detail-row"><span>AVG ROUND</span><span id="d_avg_time">0s</span></div> 
                              <div class="detail-row"><span>MODE</span><span id="d_mode">-</span></div>
+                             <div class="detail-row"><span>VERSION</span><span id="d_version" style="color:#888; font-size: 0.8em;">-</span></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="stat-grid-2">
-                    <div class="card">
-                        <div class="card-title">SERVICE RECORD</div>
-                        <div id="d_rmain" class="stat-rank">-</div>
-                        <div id="d_title" style="color:#aaa; font-style:italic; font-size:0.9em; margin-bottom:5px;">-</div>
-                        <div id="d_rsub" style="color:#888; font-size:0.8em;">-</div>
-                        <div style="margin-top:15px;">
-                            <div class="detail-row"><span>XP EARNED</span><span id="d_xp">0</span></div>
-                            <div class="detail-row"><span>MULTIPLIER</span><span id="d_mult" style="color:var(--highlight)">x1.0</span></div>
-                             <div class="detail-row"><span>GOBBLEGUMS</span><span id="d_gums" style="color:#d400ff">0</span></div>
+                <div id="player-tabs-container" class="player-tabs-container"></div>
+
+                <div id="player-specific-content" style="display: none;">
+                    <div class="stat-grid-2">
+                        <div class="card">
+                            <div class="card-title">SERVICE RECORD</div>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="display: flex; gap: 10px; margin-right: 15px;">
+                                    <div id="d_prest_box" style="text-align: center; display:none;">
+                                        <img id="d_prest_icon" src="" style="width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.8));">
+                                        <div style="font-size: 0.6em; color: #888; margin-top: -5px;">PRESTIGE</div>
+                                    </div>
+                                    <div id="d_lvl_box" style="text-align: center; display:none;">
+                                        <img id="d_lvl_icon" src="" style="width: 50px; height: 50px; object-fit: contain; filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.8));">
+                                        <div style="font-size: 0.6em; color: #888; margin-top: -5px;">LEVEL</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id="d_rmain" class="stat-rank">-</div>
+                                    <div id="d_title" style="color:#aaa; font-style:italic; font-size:0.9em; margin-bottom:5px;">-</div>
+                                    <div id="d_rsub" style="color:#888; font-size:0.8em;">-</div>
+                                </div>
+                            </div>
+                            <div style="margin-top:15px;">
+                                <div class="detail-row"><span>XP EARNED</span><span id="d_xp">0</span></div>
+                                <div class="detail-row"><span>MULTIPLIER</span><span id="d_mult" style="color:var(--highlight)">x1.0</span></div>
+                                 <div class="detail-row"><span>GOBBLEGUMS</span><span id="d_gums" style="color:#d400ff">0</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">COMBAT EFFICIENCY</div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
+                                <div><div style="color:#888; font-size:0.7em;">ELIMINATIONS</div><div id="d_kills" class="stat-big">0</div></div>
+                                <div><div style="color:#888; font-size:0.7em;">SCORE</div><div id="d_score" class="stat-big" style="color:#fff">0</div></div>
+                            </div>
+                            <div class="detail-row"><span>ACCURACY</span><span><span id="d_acc">0</span>%</span></div>
+                            <div class="detail-row"><span>MELEE / EQUIP</span><span><span id="d_melee">0</span> / <span id="d_equip">0</span></span></div>
+                            <div class="detail-row"><span>DOWNS</span><span id="d_downs" style="color:var(--danger)">0</span></div>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-title">COMBAT EFFICIENCY</div>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
-                            <div><div style="color:#888; font-size:0.7em;">ELIMINATIONS</div><div id="d_kills" class="stat-big">0</div></div>
-                            <div><div style="color:#888; font-size:0.7em;">SCORE</div><div id="d_score" class="stat-big" style="color:#fff">0</div></div>
+
+                    <div class="card full-width">
+                        <div class="card-title">ACTIVE PERKS</div>
+                        <div id="d_perks" class="perk-container"></div>
+                    </div>
+
+                    <div class="card full-width">
+                        <div class="card-title">ARMORY & LOADOUT</div>
+                        <div style="display:flex; gap:30px; margin-bottom:20px; font-size:0.9em; padding:10px; background:rgba(0,0,0,0.2); border-radius:6px;">
+                            <span>LETHAL: <b id="d_leth" style="color:#fff">-</b></span>
+                            <span>TACTICAL: <b id="d_tact" style="color:#fff">-</b></span>
                         </div>
-                        <div class="detail-row"><span>ACCURACY</span><span><span id="d_acc">0</span>%</span></div>
-                        <div class="detail-row"><span>MELEE / EQUIP</span><span><span id="d_melee">0</span> / <span id="d_equip">0</span></span></div>
-                        <div class="detail-row"><span>DOWNS</span><span id="d_downs" style="color:var(--danger)">0</span></div>
+                        <table>
+                            <thead><tr><th>WEAPON</th><th>KILLS</th><th>HS</th><th>DAMAGE</th><th>STATUS</th></tr></thead>
+                            <tbody id="d_weaps"></tbody>
+                        </table>
                     </div>
-                </div>
-
-                <div class="card full-width">
-                    <div class="card-title">ACTIVE PERKS</div>
-                    <div id="d_perks" class="perk-container"></div>
-                </div>
-
-                <div class="card full-width">
-                    <div class="card-title">ARMORY & LOADOUT</div>
-                    <div style="display:flex; gap:30px; margin-bottom:20px; font-size:0.9em; padding:10px; background:rgba(0,0,0,0.2); border-radius:6px;">
-                        <span>LETHAL: <b id="d_leth" style="color:#fff">-</b></span>
-                        <span>TACTICAL: <b id="d_tact" style="color:#fff">-</b></span>
-                    </div>
-                    <table>
-                        <thead><tr><th>WEAPON</th><th>KILLS</th><th>DAMAGE</th><th>STATUS</th></tr></thead>
-                        <tbody id="d_weaps"></tbody>
-                    </table>
                 </div>
             </div>
            
@@ -711,7 +780,7 @@ def get_main_app_html():
                         <img id="card-display" class="card-display-header" src="" style="display:none;">
                         <video id="card-display-video" class="card-display-header" autoplay loop muted playsinline style="display:none;"></video>
                     </div>
-                    <div style="font-size:0.8em; color:#777;">LIFETIME STATISTICS</div>
+                    <div style="font-size:0.8em; color:#777;">LIFETIME STATISTICS (PLAYER 1)</div>
                 </div>
 
                 <div class="stat-grid-2">
@@ -857,9 +926,8 @@ def get_main_app_html():
                          <ul style="color:#aaa; font-size:0.9em; line-height:1.6;">
                             <li><b>Priority Tracking:</b> Click the Star (★) on any weapon in the Camo Matrix to pin it to the top of the list. Max 3 weapons.</li>
                             <li><b>Match History:</b> The tracker automatically archives your games. Click any match in the sidebar to review past performance.</li>
-                            <li><b>Higher Visble Gun Damage:</b> The tracker automatically trys to work out how much damage you are doing once the game cap is reached using the data of damage each round. This is a test function
-                            and might be removed as it is a lot of damage I cannot gaurantee that it will be correct as there are lost of factors to take into account.</li>
-                            <li><b>Camo Tracker:</b> Built in camo tracker for come custom maps.</li>
+                            <li><b>Higher Visble Gun Damage:</b> The tracker automatically trys to work out how much damage you are doing once the game cap is reached using the data of damage each round.</li>
+                            <li><b>Camo Tracker:</b> Built in camo tracker for some custom maps.</li>
                          </ul>
                     </div>
                 </div>
@@ -878,6 +946,9 @@ def get_main_app_html():
             let currentMapIndex = 0;
             let currentStarredWeapons = [];
             let currentChalFilter = 'operations';
+
+            let currentPlayerIndex = 0;
+            let cachedPlayers = [];
 
             function toggleOverlays(checkbox) {
                 window.pywebview.api.toggle_overlay_system(checkbox.checked);
@@ -943,7 +1014,6 @@ def get_main_app_html():
                 }
             }
 
-            // HELPER: Handles Displaying Image OR Video
             function showMedia(src, imgId, vidId) {
                 const img = document.getElementById(imgId);
                 const vid = document.getElementById(vidId);
@@ -1009,6 +1079,19 @@ def get_main_app_html():
                         'Gold': 'c_gold', 'Retro': 'c_retro', 'Matrix': 'c_mat'
                     };
                     
+                    list.forEach(c => {
+                        if (c.id.startsWith('c_auto_th_')) {
+                            const parts = c.id.split('_');
+                            if (parts.length >= 5) {
+                                const tName = parts[3];
+                                const displayName = tName.charAt(0).toUpperCase() + tName.slice(1);
+                                if (!themeGroups[displayName]) {
+                                    themeGroups[displayName] = `c_auto_th_${tName}`;
+                                }
+                            }
+                        }
+                    });
+                    
                     let html = "";
                     for (const [name, prefix] of Object.entries(themeGroups)) {
                         const themeChallenges = list.filter(c => c.id.startsWith(prefix));
@@ -1023,7 +1106,8 @@ def get_main_app_html():
 
                 const filtered = list.filter(c => {
                     if (c.id.startsWith('c_void') || c.id.startsWith('c_org') || c.id.startsWith('c_red') || 
-                        c.id.startsWith('c_gold') || c.id.startsWith('c_retro') || c.id.startsWith('c_mat')) {
+                        c.id.startsWith('c_gold') || c.id.startsWith('c_retro') || c.id.startsWith('c_mat') ||
+                        c.id.startsWith('c_auto_th_')) {
                         return false; 
                     }
                     if(currentChalFilter === 'lifetime') return c.cat === 'lifetime';
@@ -1168,7 +1252,6 @@ def get_main_app_html():
                     }
                     updateSidebar();
                     
-                    // Update challenges if visible
                     const chalTab = document.getElementById('tab-challenges');
                     if (chalTab && chalTab.classList.contains('active')) {
                         loadChallenges();
@@ -1176,10 +1259,42 @@ def get_main_app_html():
                 }, 3000);
             }
             
-            function updateData(d) {
-                if(!d) return;
+            // --- NEW: MULTI-PLAYER TAB LOGIC ---
+            function switchPlayerTab(index) {
+                currentPlayerIndex = index;
+                document.querySelectorAll('.player-tab').forEach((el, i) => {
+                    el.classList.toggle('active', i === index);
+                });
+                if (cachedPlayers && cachedPlayers.length > index) {
+                    updatePlayerUI(cachedPlayers[index]);
+                }
+            }
 
-                const currentRound = parseInt(d.round);
+            function buildPlayerTabs(players) {
+                const container = document.getElementById('player-tabs-container');
+                if (players.length !== container.children.length) {
+                    container.innerHTML = "";
+                    players.forEach((p, i) => {
+                        const btn = document.createElement('button');
+                        btn.className = `player-tab ${i === currentPlayerIndex ? 'active' : ''}`;
+                        btn.innerText = `PLAYER ${i + 1}`; 
+                        btn.onclick = () => switchPlayerTab(i);
+                        container.appendChild(btn);
+                    });
+                }
+                
+                if (players.length > 0) {
+                    document.getElementById('player-specific-content').style.display = 'block';
+                    if (currentPlayerIndex >= players.length) currentPlayerIndex = 0;
+                } else {
+                    document.getElementById('player-specific-content').style.display = 'none';
+                }
+            }
+
+            function updateData(d) {
+                if(!d || !d.game) return;
+
+                const currentRound = parseInt(d.game.round);
                 if (currentRound > lastRound && lastRound !== 0) {
                     if (currentRound % 5 === 0) {
                         triggerMilestoneAnim(currentRound);
@@ -1187,35 +1302,67 @@ def get_main_app_html():
                 }
                 lastRound = currentRound;
 
-                document.getElementById('d_status_bar').innerText = d.status;
-                document.getElementById('d_status_bar').style.borderLeftColor = d.color;
-                document.getElementById('d_map').innerText = d.map;
-                document.getElementById('d_round').innerText = d.round;
-                document.getElementById('d_time').innerText = d.time;
-                document.getElementById('d_mode').innerText = d.mode;
+                document.getElementById('d_status_bar').innerText = d.game.status;
+                document.getElementById('d_status_bar').style.borderLeftColor = d.game.color;
+                document.getElementById('d_map').innerText = d.game.map;
+                document.getElementById('d_round').innerText = d.game.round;
+                document.getElementById('d_time').innerText = d.game.time;
+                document.getElementById('d_avg_time').innerText = d.game.avg_time + "s";
+                document.getElementById('d_mode').innerText = d.game.mode;
+                document.getElementById('d_version').innerText = d.game.version;
+                
                 const badge = document.getElementById('classic_badge');
-                if (d.mode && d.mode.toLowerCase().includes('classic')) {
+                if (d.game.mode && d.game.mode.toLowerCase().includes('classic')) {
                     badge.style.display = 'block';
                 } else {
                     badge.style.display = 'none';
                 }
-                document.getElementById('d_rmain').innerText = d.r_main;
-                document.getElementById('d_title').innerText = d.title;
-                document.getElementById('d_rsub').innerText = d.r_sub;
-                document.getElementById('d_gums').innerText = d.gums;
-                document.getElementById('d_xp').innerText = d.xp;
-                document.getElementById('d_mult').innerText = d.mult;
-                document.getElementById('d_kills').innerText = d.k;
-                document.getElementById('d_score').innerText = d.pts;
-                document.getElementById('d_acc').innerText = d.acc;
-                document.getElementById('d_melee').innerText = d.melee;
-                document.getElementById('d_equip').innerText = d.equip;
-                document.getElementById('d_downs').innerText = d.downs;
-                document.getElementById('d_leth').innerText = d.leth;
-                document.getElementById('d_tact').innerText = d.tact;
-                document.getElementById('d_nerf').innerHTML = d.nerf;
-                document.getElementById('d_perks').innerHTML = d.perks;
-                document.getElementById('d_weaps').innerHTML = d.weaps;
+                document.getElementById('d_nerf').innerHTML = d.game.nerf;
+
+                cachedPlayers = d.players || [];
+                buildPlayerTabs(cachedPlayers);
+                
+                if (cachedPlayers.length > 0) {
+                    updatePlayerUI(cachedPlayers[currentPlayerIndex]);
+                }
+            }
+
+            function updatePlayerUI(p) {
+                if (!p) return;
+                const prestBox = document.getElementById('d_prest_box');
+                const prestImg = document.getElementById('d_prest_icon');
+                if (p.prest_icon) {
+                    prestImg.src = p.prest_icon;
+                    prestBox.style.display = 'block';
+                } else {
+                    prestBox.style.display = 'none';
+                }
+
+                const lvlBox = document.getElementById('d_lvl_box');
+                const lvlImg = document.getElementById('d_lvl_icon');
+                if (p.lvl_icon) {
+                    lvlImg.src = p.lvl_icon;
+                    lvlBox.style.display = 'block';
+                } else {
+                    lvlBox.style.display = 'none';
+                }
+
+                document.getElementById('d_rmain').innerText = p.r_main;
+                document.getElementById('d_title').innerText = p.title;
+                document.getElementById('d_rsub').innerText = p.r_sub;
+                document.getElementById('d_gums').innerText = p.gums;
+                document.getElementById('d_xp').innerText = p.xp;
+                document.getElementById('d_mult').innerText = p.mult;
+                document.getElementById('d_kills').innerText = p.k;
+                document.getElementById('d_score').innerText = p.pts;
+                document.getElementById('d_acc').innerText = p.acc;
+                document.getElementById('d_melee').innerText = p.melee;
+                document.getElementById('d_equip').innerText = p.equip;
+                document.getElementById('d_downs').innerText = p.downs;
+                document.getElementById('d_leth').innerText = p.leth;
+                document.getElementById('d_tact').innerText = p.tact;
+                document.getElementById('d_perks').innerHTML = p.perks;
+                document.getElementById('d_weaps').innerHTML = p.weaps;
             }
 
             function triggerMilestoneAnim(round) {
@@ -1646,6 +1793,7 @@ class TrackerAPI:
                 players = data.get('players') or data.get('data', {}).get('players', {})
                 if not players: continue
                 
+                # Career Stats are locked to Player '0' (The Host/Local Player)
                 p = list(players.values())[0]
 
                 totals["matches"] += 1
@@ -1698,7 +1846,6 @@ class TrackerAPI:
             "favorite_weapon": {"name": fav_weapon, "kills": fav_weapon_kills}
         }
     
-    # --- NEW: CHALLENGE API METHODS ---
     def get_challenges(self):
         return challenge_manager.get_frontend_data()
 
@@ -1756,13 +1903,19 @@ class TrackerAPI:
         return True
     
     def reset_challenges_api(self):
-        challenge_manager.reset_all_challenges()
+        live_path = app_config.get('live_path')
+        live_data = None
+        if live_path and os.path.exists(live_path):
+            try:
+                live_data = load_json(live_path)
+            except: pass
+            
+        challenge_manager.reset_all_challenges(live_data)
         return True
 
     def get_card_image(self, card_name):
         return get_calling_card_src(card_name)
 
-    # --- CALLING CARD METHODS ---
     def get_unlocked_calling_cards(self):
         challenges = challenge_manager.get_frontend_data()
         unlocked_cards = ["default"]
@@ -1782,12 +1935,12 @@ class TrackerAPI:
     def get_active_card(self):
         return app_config.get('active_card', 'default')
 
-# --- LIVE BACKGROUND LOGIC ---
+# --- LIVE BACKGROUND LOGIC (MULTI-PLAYER) ---
 def monitor_game():
     last_saved_data_str = ""  
     last_game_id = None
-    known_active_perks = set()
-    session_perk_count = 0
+    known_active_perks = {} 
+    session_perk_count = {} 
 
     while True:
         live_path = app_config.get('live_path')
@@ -1806,37 +1959,33 @@ def monitor_game():
                     raw_id = str(game.get('game_id', '0'))
                     
                     if raw_id and raw_id != "0":
-                        # Detect New Game
                         if raw_id != last_game_id:
                             last_game_id = raw_id
-                            known_active_perks = set()
-                            session_perk_count = 0
+                            known_active_perks = {}
+                            session_perk_count = {}
                         
-                        # Live Perk Tracking
                         players = current_data.get('players') or current_data.get('data', {}).get('players', {})
                         if players:
-                            p = list(players.values())[0]
-                            raw_perks = p.get('perks', [])
-                            if isinstance(raw_perks, dict): raw_perks = list(raw_perks.values())
-                            
-                            # Filter valid perks
-                            current_perks_set = set([x for x in raw_perks if x and "null" not in x and "pistoldeath" not in x])
-                            
-                            # Find newly bought perks
-                            new_perks = current_perks_set - known_active_perks
-                            if new_perks:
-                                session_perk_count += len(new_perks)
-                                known_active_perks = current_perks_set
-                            
-                            # If perks lost (downed), known_active_perks must update to reflect current state
-                            # so re-buying counts again.
-                            if len(current_perks_set) < len(known_active_perks):
-                                known_active_perks = current_perks_set
+                            for pid, p in players.items():
+                                if pid not in known_active_perks:
+                                    known_active_perks[pid] = set()
+                                    session_perk_count[pid] = 0
 
-                        # Inject Calculated Value
-                        current_data['calculated_perks_drank'] = session_perk_count
+                                raw_perks = p.get('perks', [])
+                                if isinstance(raw_perks, dict): raw_perks = list(raw_perks.values())
+                                
+                                current_perks_set = set([x for x in raw_perks if x and "null" not in x and "pistoldeath" not in x])
+                                
+                                new_perks = current_perks_set - known_active_perks[pid]
+                                if new_perks:
+                                    session_perk_count[pid] += len(new_perks)
+                                    known_active_perks[pid] = current_perks_set
+                                
+                                if len(current_perks_set) < len(known_active_perks[pid]):
+                                    known_active_perks[pid] = current_perks_set
 
-                        # Save Logic
+                                p['calculated_perks_drank'] = session_perk_count[pid]
+
                         current_data_str = json.dumps(current_data, sort_keys=True)
                         if current_data_str != last_saved_data_str:
                             safe_id = sanitize_filename(raw_id)
@@ -1844,12 +1993,10 @@ def monitor_game():
                                 target_file = os.path.join(hist_path, f"Game_{safe_id}.json")
                                 if save_json(target_file, current_data):
                                     last_saved_data_str = current_data_str
-                                    # Call the robust update method
                                     challenge_manager.process_update(hist_path)
         except Exception:
             pass
         
-        # Faster loop for live tracking (2s)
         time.sleep(2)
 
 def get_entry_point_html():
