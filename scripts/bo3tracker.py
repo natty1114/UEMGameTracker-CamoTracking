@@ -6,6 +6,7 @@ import base64
 import threading
 import webview # pip install pywebview
 import sys
+import zipfile # --- NEW IMPORT FOR BACKUPS ---
 from pathlib import Path
 
 # --- NEW IMPORT ---
@@ -112,6 +113,13 @@ def get_rank_icon_base64(filename):
         except: pass
     return None
 
+def get_tier_icon_src(tier_type, tier_value):
+    safe_val = int(tier_value)
+    if safe_val <= 0: 
+        return None
+    img_name = f"ui_icon_rank_tier_{tier_type}_{safe_val}_large.png"
+    return get_rank_icon_base64(img_name)
+
 def get_prestige_icon_src(prestige):
     safe_prestige = min(max(int(prestige), 0), 20)
     if safe_prestige == 0: return None
@@ -119,8 +127,14 @@ def get_prestige_icon_src(prestige):
     return get_rank_icon_base64(img_name)
 
 def get_level_icon_src(level):
-    safe_level = min(max(int(level), 1), 90)
-    img_name = f"ui_icon_rank_mp_level{safe_level}_large.png"
+    lvl = int(level)
+    if lvl < 100:
+        safe_level = min(max(lvl, 1), 90)
+        img_name = f"ui_icon_rank_mp_level{safe_level}_large.png"
+    else:
+        rank_tier = (lvl // 100) * 100 
+        img_name = f"ui_icon_rank_mp_level{rank_tier}_large.png"
+        
     return get_rank_icon_base64(img_name)
     
 def get_classic_mode_icon():
@@ -258,6 +272,11 @@ def process_stats(data, is_live=False):
         prest = int(p.get('prestige', 0))
         lvl = int(p.get('level', 1))
         
+        # New Tier Icons
+        ult_icon = get_tier_icon_src("ultimate", ult)
+        abso_icon = get_tier_icon_src("absolute", abso)
+        leg_icon = get_tier_icon_src("legend", leg)
+        
         prestige_icon = get_prestige_icon_src(prest)
         level_icon = get_level_icon_src(lvl)
 
@@ -308,7 +327,6 @@ def process_stats(data, is_live=False):
             try: raw_damage = int(float(w.get('damage', 0)))
             except: raw_damage = 0
                 
-            # --- FIX: Use 'k' instead of 'dname' here ---
             corrected_damage = damage_tracker.get_real_damage(game_id, pid, k, raw_damage)
             
             processed_weapons.append({
@@ -332,6 +350,7 @@ def process_stats(data, is_live=False):
         players_list.append({
             "pid": pid,
             "r_main": rank_main, "title": player_title, "r_sub": rank_sub, 
+            "ult_icon": ult_icon, "abso_icon": abso_icon, "leg_icon": leg_icon, 
             "prest_icon": prestige_icon, "lvl_icon": level_icon,
             "gums": p.get('gobblegums_used', 0), "xp": "{:,}".format(xp_val), "mult": xp_mult,
             "k": kills, "pts": "{:,}".format(int(p.get('points', 0))), "acc": accuracy,
@@ -505,7 +524,6 @@ def overlay_loop():
                                 try: raw_dmg = int(float(w.get('damage', 0)))
                                 except: raw_dmg = 0
                                 
-                                # --- FIX: Use 'k' instead of 'dname' here ---
                                 real_dmg = damage_tracker.get_real_damage(game_id, pid, k, raw_dmg)
                                 
                                 processed.append({
@@ -863,6 +881,12 @@ def get_main_app_html():
                         <button class="nav-btn-small" style="height:40px;" onclick="applySelectedCard()">EQUIP</button>
                     </div>
                 </div>
+                
+                <div class="card">
+                    <div class="card-title">UEM STATS BACKUP</div>
+                    <div style="margin-bottom: 10px; color: #aaa; font-size: 0.9em;">Create a zip archive containing your local UEM player stats (stats_zm_0.cgp to stats_zm_4.cgp).</div>
+                    <button class="nav-btn-small" style="background: var(--highlight); color:#000; width:100%; height:40px;" onclick="backupStats()">CREATE BACKUP</button>
+                </div>
 
                 <div class="card">
                     <div class="card-title">DATA MANAGEMENT</div>
@@ -1059,6 +1083,21 @@ def get_main_app_html():
                 document.getElementById('theme-injector').innerHTML = cssContent;
                 await window.pywebview.api.set_active_theme(themeName);
                 alert("Theme Applied: " + themeName);
+            }
+
+            // --- NEW: BACKUP LOGIC ---
+            async function backupStats() {
+                try {
+                    const res = await window.pywebview.api.backup_player_stats();
+                    if (res.success) {
+                        alert(res.msg);
+                    } else {
+                        alert("Backup Failed: " + res.msg);
+                    }
+                } catch(e) {
+                    alert("An error occurred during backup.");
+                    console.error(e);
+                }
             }
 
             // --- CHALLENGE LOGIC ---
@@ -1331,9 +1370,52 @@ def get_main_app_html():
                 if (!p) return;
                 const prestBox = document.getElementById('d_prest_box');
                 const prestImg = document.getElementById('d_prest_icon');
-                if (p.prest_icon) {
-                    prestImg.src = p.prest_icon;
+                // Show the box if the player has ANY of these icons
+                if (p.prest_icon || p.leg_icon || p.abso_icon || p.ult_icon) {
                     prestBox.style.display = 'block';
+                    
+                    // 1. Remove old tier icons so they don't infinitely duplicate on refresh
+                    const oldIcons = prestBox.querySelectorAll('.custom-tier-icon');
+                    oldIcons.forEach(icon => icon.remove());
+
+                    // 2. Handle the standard prestige icon
+                    if (p.prest_icon) {
+                        prestImg.src = p.prest_icon;
+                        prestImg.style.display = 'inline-block';
+                    } else {
+                        prestImg.style.display = 'none';
+                    }
+
+                    // 3. Helper function to inject new icons to the left
+                    const addIcon = (src) => {
+                        if (!src) return;
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.className = 'custom-tier-icon';
+                        
+                        // FIX: Tell the new icon to match the exact height of the prestige icon
+                        let targetHeight = prestImg.clientHeight;
+                        
+                        // If it can't read the height right away, use a fallback height 
+                        // (Change this '28px' up or down if it's still slightly off!)
+                        if (targetHeight === 0) {
+                            img.style.height = '28px'; 
+                        } else {
+                            img.style.height = targetHeight + 'px';
+                        }
+
+                        img.style.width = 'auto'; // Keeps the image from stretching weirdly
+                        img.style.objectFit = 'contain';
+                        img.style.marginRight = '6px'; // Space between the icons
+                        
+                        prestBox.insertBefore(img, prestImg);
+                    };
+
+                    // 4. Add the tier icons (they will appear to the left of prestImg)
+                    addIcon(p.leg_icon);
+                    addIcon(p.abso_icon);
+                    addIcon(p.ult_icon);
+
                 } else {
                     prestBox.style.display = 'none';
                 }
@@ -1379,17 +1461,26 @@ def get_main_app_html():
                 try {
                     const newHistory = await window.pywebview.api.get_history_list();
                     const listEl = document.getElementById('history-list');
-                    if (newHistory.length !== listEl.children.length) {
+                    
+                    if (listEl.children.length !== newHistory.length || 
+                       (newHistory.length > 0 && listEl.dataset.firstId !== newHistory[0].id)) {
+                        
                         listEl.innerHTML = "";
+                        if (newHistory.length > 0) listEl.dataset.firstId = newHistory[0].id;
+
                         newHistory.forEach(item => {
                             const div = document.createElement('div');
                             div.className = 'sb-item';
-                            div.innerText = item.label;
+                            div.innerHTML = `
+                                <div class="sb-map">${item.map}</div>
+                                <div class="sb-date">${item.date}</div>
+                                <div class="sb-id" title="${item.id}">${item.id}</div>
+                            `;
                             div.onclick = () => loadHistory(item.id, div);
                             listEl.appendChild(div);
                         });
                     }
-                } catch(e) {}
+                } catch(e) { console.error("Error updating sidebar:", e); }
             }
             
             async function loadHistory(id, el) {
@@ -1661,6 +1752,53 @@ class TrackerAPI:
     def __init__(self):
         self.last_user_path = None 
 
+    def backup_player_stats(self):
+        live_path = app_config.get('live_path')
+        if not live_path or not os.path.exists(live_path):
+            return {"success": False, "msg": "Live Game Path not configured or file not found."}
+        
+        # Start at the directory containing CurrentGame.json
+        players_dir = os.path.dirname(live_path)
+        
+        # Scan backwards up the path tree until we find the actual 'players' folder
+        path_obj = Path(live_path)
+        for parent in list(path_obj.parents):
+            if parent.name.lower() == 'players':
+                players_dir = str(parent)
+                break
+        
+        files_to_backup = []
+        for i in range(5):
+            fname = f"stats_zm_{i}.cgp"
+            fpath = os.path.join(players_dir, fname)
+            if os.path.exists(fpath):
+                files_to_backup.append(fpath)
+                
+        if not files_to_backup:
+            return {"success": False, "msg": f"No stats_zm_*.cgp files found in the folder ({players_dir})."}
+            
+        save_result = window.create_file_dialog(
+            webview.FileDialog.SAVE, 
+            save_filename='uem_stats_backup.zip',
+            file_types=('ZIP Archives (*.zip)',)
+        )
+        
+        if not save_result:
+            return {"success": False, "msg": "Backup cancelled by user."}
+            
+        # Handle the return type from pywebview (can be tuple or string based on OS)
+        save_path = save_result[0] if isinstance(save_result, tuple) else save_result
+        if not save_path.endswith('.zip'):
+            save_path += '.zip'
+            
+        try:
+            with zipfile.ZipFile(save_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for f in files_to_backup:
+                    zipf.write(f, os.path.basename(f))
+            return {"success": True, "msg": f"Successfully backed up {len(files_to_backup)} files to {save_path}"}
+        except Exception as e:
+            return {"success": False, "msg": f"Error creating zip file: {str(e)}"}
+
     def browse_live_file(self):
         result = window.create_file_dialog(webview.FileDialog.OPEN, allow_multiple=False, file_types=('JSON Files (*.json)',))
         return result[0] if result else None
@@ -1736,17 +1874,23 @@ class TrackerAPI:
         for f in json_files[:50]: 
             fname = os.path.basename(f)
             gid = fname.replace("Game_", "").replace(".json", "")
-            label = f"Match {gid[:8]}..." 
+            
+            # Get the date the file was last modified (played)
+            mtime = os.path.getmtime(f)
+            dt = time.localtime(mtime)
+            date_str = time.strftime("%b %d, %Y %I:%M %p", dt) # e.g., Oct 25, 2023 02:30 PM
+            
+            map_name = "Unknown Map"
             try:
                 with open(f, 'r', encoding='utf-8') as jf:
                     d = json.load(jf)
                     game = d.get('game') or d.get('data', {}).get('game', {})
                     map_val = game.get('map_played')
                     if map_val:
-                        clean_map = str(map_val).replace('_', ' ').title()
-                        label = f"{clean_map} - {gid[:6]}.."
+                        map_name = str(map_val).replace('_', ' ').title()
             except: pass
-            results.append({"id": gid, "label": label})
+            
+            results.append({"id": gid, "map": map_name, "date": date_str})
         return results
     
     def get_live_stats(self):
