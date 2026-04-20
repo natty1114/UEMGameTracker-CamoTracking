@@ -9,8 +9,9 @@ import sys
 import zipfile # --- NEW IMPORT FOR BACKUPS ---
 from pathlib import Path
 
-# --- NEW IMPORT ---
+# --- CUSTOM IMPORTS ---
 from challenge_system import ChallengeManager
+from match_xp import xp_tracker_instance
 
 # --- CONSTANTS ---
 CONFIG_FILE = "config.json"
@@ -272,6 +273,25 @@ def process_stats(data, is_live=False):
         prest = int(p.get('prestige', 0))
         lvl = int(p.get('level', 1))
         
+       # --- NEW MATCH XP & XPM LOGIC ---
+        if 'match_xp_earned' in p:
+            match_xp_earned = int(p['match_xp_earned']) 
+        elif is_live:
+            # Only calculate/track memory if it is the active live game
+            match_xp_earned = xp_tracker_instance.calculate_match_xp(game_id, pid, prest, lvl, xp_val)
+        else:
+            # It's an old archive. Do not trigger the calculator.
+            match_xp_earned = 0 
+            
+        match_xp_str = "{:,}".format(match_xp_earned)
+
+        # Calculate XP per Minute (XPM)
+        xp_per_min = 0
+        if time_sec > 0:
+            xp_per_min = int(match_xp_earned / (time_sec / 60.0))
+        xpm_str = "{:,}".format(xp_per_min)
+        # --------------------------------
+        
         # New Tier Icons
         ult_icon = get_tier_icon_src("ultimate", ult)
         abso_icon = get_tier_icon_src("absolute", abso)
@@ -352,7 +372,13 @@ def process_stats(data, is_live=False):
             "r_main": rank_main, "title": player_title, "r_sub": rank_sub, 
             "ult_icon": ult_icon, "abso_icon": abso_icon, "leg_icon": leg_icon, 
             "prest_icon": prestige_icon, "lvl_icon": level_icon,
-            "gums": p.get('gobblegums_used', 0), "xp": "{:,}".format(xp_val), "mult": xp_mult,
+            "gums": p.get('gobblegums_used', 0), 
+            
+            # --- MODIFIED XP LINE ---
+            "xp": f"{xp_val:,} (+{match_xp_str} Match XP | {xpm_str} XP/min)",
+            "mult": xp_mult,
+            # ------------------------
+            
             "k": kills, "pts": "{:,}".format(int(p.get('points', 0))), "acc": accuracy,
             "melee": p.get('melee_kills', 0), "equip": p.get('equipment_kills', 0), "downs": p.get('downs', 0),
             "perks": perks_html, "perk_count": valid_perk_count, "leth": lethal, "tact": tactical, "weaps": weapons_html
@@ -821,7 +847,7 @@ def get_main_app_html():
                     </div>
                 </div>
                 
-                 <div class="stat-grid-2">
+                <div class="stat-grid-2">
                      <div class="card">
                         <div class="card-title">LOGISTICS</div>
                         <div class="detail-row"><span>DOORS OPENED</span><span id="life_doors">0</span></div>
@@ -833,9 +859,15 @@ def get_main_app_html():
                             </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="tab-challenges" class="tab-content">
+                <div class="card full-width" style="margin-top: 15px;">
+                    <div class="card-title">TOP MAPS BY HIGHEST MATCH XP</div>
+                    <div id="top_xp_maps_list" style="max-height: 200px; overflow-y: auto; overflow-x: hidden; font-size: 0.85em; color: #aaa; display: block;">
+                        <div style='color:#777; font-style:italic; padding: 5px;'>Loading XP records...</div>
+                    </div>
+                </div>
+
+            </div> <div id="tab-challenges" class="tab-content">
                 <div class="header-camo">
                     <div>
                         <h1>Active Operations</h1>
@@ -1236,7 +1268,10 @@ def get_main_app_html():
                 }
             }
             
-            async function loadCareerData() {
+           async function loadCareerData() {
+                // Fetch and display Top XP Maps
+                loadTopXPMaps(); 
+
                 const activeCard = await window.pywebview.api.get_active_card();
                 if(activeCard && activeCard !== 'default') {
                     const src = await window.pywebview.api.get_card_image(activeCard);
@@ -1269,6 +1304,31 @@ def get_main_app_html():
                     }
                 } catch(e) { console.error("Career Load Error", e); }
             }
+            
+            async function loadTopXPMaps() {
+    try {
+        const topMaps = await window.pywebview.api.get_top_10_xp_maps("0");
+        const container = document.getElementById('top_xp_maps_list');
+        
+        if (!topMaps || topMaps.length === 0) {
+            container.innerHTML = "<div style='padding:10px 5px;'>No match XP data recorded yet.</div>";
+            return;
+        }
+
+        let html = '<div style="display: flex; flex-direction: column;">';
+        topMaps.forEach(entry => {
+            html += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding:10px 5px; flex-shrink:0; min-height:25px;">
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:15px; color:#ddd;">${entry.map}</span>
+                <span style="color:var(--highlight); font-weight:bold; white-space:nowrap;">${entry.xp.toLocaleString()} XP</span>
+            </div>`;
+        });
+        html += '</div>';
+        
+        container.innerHTML = html;
+    } catch(e) { 
+        console.error("Top XP Load Error", e); 
+    }
+}
             
             async function init() {
                 updateSidebar();
@@ -1550,6 +1610,17 @@ def get_main_app_html():
             }
 
             function updateLocalUI(w_id, c_idx) {
+                // --- NEW FIX: Update the internal memory so searching doesn't reset it ---
+                for (let mapKey in GLOBAL_MAPS) {
+                    let weapon = GLOBAL_MAPS[mapKey].weapons.find(w => w.id == w_id);
+                    if (weapon) {
+                        weapon.camo_val = c_idx;
+                        weapon.camo_name = GLOBAL_NAMES[c_idx] || "Unknown Camo";
+                        break;
+                    }
+                }
+                // -------------------------------------------------------------------------
+
                 const items = document.querySelectorAll(`.camo-option[data-wid='${w_id}']`);
                 items.forEach(i => i.classList.remove('active'));
                 const selected = document.querySelectorAll(`.camo-option[data-wid='${w_id}'][data-idx='${c_idx}']`);
@@ -2079,6 +2150,51 @@ class TrackerAPI:
     def get_active_card(self):
         return app_config.get('active_card', 'default')
 
+    def get_top_10_xp_maps(self, player_id="0"):
+        import glob
+        import os
+        
+        xp_cache_path = os.path.join(get_base_path(), "match_xp_cache.json")
+        xp_data = load_json(xp_cache_path) or {}
+        
+        hist_path = app_config.get('history_path')
+        if not hist_path or not os.path.exists(hist_path):
+            return []
+
+        map_highest_xp = {}
+
+        for filepath in glob.glob(os.path.join(hist_path, "Game_*.json")):
+            match_data = load_json(filepath)
+            if not match_data:
+                continue
+                
+            game = match_data.get('game') or match_data.get('data', {}).get('game', {})
+            players = match_data.get('players') or match_data.get('data', {}).get('players', {})
+            
+            game_id = str(game.get('game_id', ''))
+            map_name = str(game.get('map_played', 'Unknown')).replace('_', ' ').title()
+
+            match_xp = 0
+            
+            # 1. Try to get XP from the live cache first
+            if game_id in xp_data and str(player_id) in xp_data[game_id]:
+                match_xp = xp_data[game_id][str(player_id)].get('total_match_xp', 0)
+            
+            # 2. Fallback: If not in cache, check the archived history file directly!
+            elif str(player_id) in players:
+                p_data = players[str(player_id)]
+                # Safely get the match_xp_earned if it exists in the archive
+                match_xp = int(p_data.get('match_xp_earned', 0))
+
+            # 3. Only track maps where XP is greater than 0
+            if match_xp > 0:
+                if map_name not in map_highest_xp or match_xp > map_highest_xp[map_name]:
+                    map_highest_xp[map_name] = match_xp
+
+        # Sort and return the top 10
+        sorted_maps = sorted(map_highest_xp.items(), key=lambda x: x[1], reverse=True)
+        return [{"map": m[0], "xp": m[1]} for m in sorted_maps[:10]]
+
 # --- LIVE BACKGROUND LOGIC (MULTI-PLAYER) ---
 def monitor_game():
     last_saved_data_str = ""  
@@ -2135,6 +2251,19 @@ def monitor_game():
                             safe_id = sanitize_filename(raw_id)
                             if os.path.exists(hist_path):
                                 target_file = os.path.join(hist_path, f"Game_{safe_id}.json")
+                                
+                                # --- NEW: INJECT MATCH XP INTO ARCHIVE ---
+                                game_info = current_data.get('game') or current_data.get('data', {}).get('game', {})
+                                g_id = str(game_info.get('game_id', 'unknown'))
+                                p_dict = current_data.get('players') or current_data.get('data', {}).get('players', {})
+                                
+                                for pid_key, p_data in p_dict.items():
+                                    p_prest = int(p_data.get('prestige', 0))
+                                    p_lvl = int(p_data.get('level', 1))
+                                    p_xp = int(p_data.get('xp', p_data.get('total_xp', 0)))
+                                    p_data['match_xp_earned'] = xp_tracker_instance.calculate_match_xp(g_id, pid_key, p_prest, p_lvl, p_xp)
+                                # -----------------------------------------
+                                
                                 if save_json(target_file, current_data):
                                     last_saved_data_str = current_data_str
                                     challenge_manager.process_update(hist_path)

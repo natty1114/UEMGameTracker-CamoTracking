@@ -26,6 +26,9 @@ class ChallengeManager:
         self.filepath = os.path.join(base_path, CHALLENGES_FILE)
         self.unlocks_path = os.path.join(base_path, UNLOCKS_FILE)
         self.cards_path = os.path.join(base_path, CALLING_CARD_DIR)
+        self.themes_path = os.path.join(base_path, "themes")
+        self.reset_timestamp = 0
+        self.reset_offset = {}
         
         self.theme_requirements = {
             "void":            ["c_void_1", "c_void_2", "c_void_3"],
@@ -66,12 +69,10 @@ class ChallengeManager:
             {"id": "c_gold_1", "cat": "lifetime", "title": "Gold I: Nugget", "desc": "Earn 100,000 Points", "target": 100000, "stat": "points", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_10"},
             {"id": "c_gold_2", "cat": "lifetime", "title": "Gold II: Bullion", "desc": "Earn 500,000 Points", "target": 500000, "stat": "points", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_11"},
             {"id": "c_gold_3", "cat": "lifetime", "title": "Gold III: Tycoon", "desc": "Earn 1,000,000 Points. Unlocks GOLD Theme.", "target": 1000000, "stat": "points", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_12"},
-            
-            # --- THEME: RETRO (LOWERED REQUIREMENTS) ---
+            # --- THEME: RETRO ---
             {"id": "c_retro_1", "cat": "lifetime", "title": "Retro I: 8-Bit", "desc": "Get 1,000 Kills", "target": 1000, "stat": "kills", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_13"},
             {"id": "c_retro_2", "cat": "lifetime", "title": "Retro II: 16-Bit", "desc": "Get 2,500 Kills", "target": 2500, "stat": "kills", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_14"},
             {"id": "c_retro_3", "cat": "lifetime", "title": "Retro III: High Score", "desc": "Get 5,000 Kills. Unlocks RETRO Theme.", "target": 5000, "stat": "kills", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_15"},
-            
             # --- THEME: MATRIX ---
             {"id": "c_mat_1", "cat": "lifetime", "title": "Matrix I: Blue Pill", "desc": "Reach Round 20", "target": 20, "stat": "round", "type": "single_game", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_16"},
             {"id": "c_mat_2", "cat": "lifetime", "title": "Matrix II: Red Pill", "desc": "Reach Round 35", "target": 35, "stat": "round", "type": "single_game", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_17"},
@@ -81,7 +82,6 @@ class ChallengeManager:
             {"id": "c_door_master", "cat": "lifetime", "title": "Keymaster", "desc": "Open 1,000 Doors", "target": 1000, "stat": "doors", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_20"},
             {"id": "c_round_100", "cat": "lifetime", "title": "Century Club", "desc": "Reach Round 100 in one game", "target": 100, "stat": "round", "type": "single_game", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_21"},
             {"id": "c_perk_addict", "cat": "lifetime", "title": "Soda Fountain", "desc": "Finish games with 500 Perks active total", "target": 500, "stat": "perks_drank", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_22"},
-            
             # --- CAREER: CQC ---
             {"id": "c_melee_1", "cat": "lifetime", "title": "Brawler", "desc": "Get 100 Melee Kills", "target": 100, "stat": "melee", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_23"},
             {"id": "c_melee_2", "cat": "lifetime", "title": "Knife Master", "desc": "Get 500 Melee Kills", "target": 500, "stat": "melee", "type": "cumulative", "progress": 0, "completed": False, "reward_type": "calling_card", "reward_val": "playercard_24"},
@@ -91,6 +91,9 @@ class ChallengeManager:
         saved_data = load_json(self.filepath)
         if isinstance(saved_data, list): saved_data = {"challenges": saved_data} 
         if not saved_data: saved_data = {"challenges": defaults}
+        
+        self.reset_timestamp = saved_data.get("reset_timestamp", 0)
+        self.reset_offset = saved_data.get("reset_offset", {})
         
         current_list = saved_data.get("challenges", [])
         cleaned_list = [c for c in current_list if not c['id'].startswith("c_theme_") and not c.get('cat') in ['daily', 'weekly']]
@@ -104,8 +107,11 @@ class ChallengeManager:
             if d['id'] not in existing_ids: cleaned_list.append(d)
 
         final_list = self._scan_and_create_card_challenges(cleaned_list)
+        final_list = self._scan_and_create_theme_challenges(final_list)
         
         saved_data["challenges"] = final_list
+        saved_data["reset_timestamp"] = self.reset_timestamp
+        saved_data["reset_offset"] = self.reset_offset
         saved_data.pop("last_daily", None)
         saved_data.pop("last_weekly", None)
         save_json(self.filepath, saved_data)
@@ -149,6 +155,81 @@ class ChallengeManager:
             }
             current_challenges.append(new_chal)
             
+        return current_challenges
+
+    def _scan_and_create_theme_challenges(self, current_challenges):
+        if not os.path.exists(self.themes_path):
+             os.makedirs(self.themes_path)
+             return current_challenges
+
+        css_files = glob.glob(os.path.join(self.themes_path, "*.css"))
+
+        # Find the highest playercard index currently in use
+        max_card_idx = 0
+        for c in current_challenges:
+            if c.get('reward_type') == 'calling_card' and str(c.get('reward_val', '')).startswith('playercard_'):
+                try:
+                    idx = int(c['reward_val'].split('_')[1])
+                    if idx > max_card_idx:
+                        max_card_idx = idx
+                except:
+                    pass
+            
+        for f in css_files:
+            theme_name = os.path.splitext(os.path.basename(f))[0]
+            if theme_name == "default": 
+                continue
+
+            pretty_name = theme_name.replace("_", " ").title()
+            
+            c_id_1 = f"c_auto_th_{theme_name}_1"
+            c_id_2 = f"c_auto_th_{theme_name}_2"
+            c_id_3 = f"c_auto_th_{theme_name}_3"
+            
+            self.theme_requirements[theme_name] = [c_id_1, c_id_2, c_id_3]
+            
+            # Helper to generate playercard sequence
+            def get_or_assign_card(c_id):
+                nonlocal max_card_idx
+                for existing_c in current_challenges:
+                    if existing_c['id'] == c_id:
+                        if not str(existing_c.get('reward_val', '')).startswith('playercard_'):
+                            max_card_idx += 1
+                            existing_c['reward_type'] = 'calling_card'
+                            existing_c['reward_val'] = f"playercard_{max_card_idx}"
+                        return existing_c['reward_val']
+                
+                max_card_idx += 1
+                return f"playercard_{max_card_idx}"
+
+            card_1 = get_or_assign_card(c_id_1)
+            card_2 = get_or_assign_card(c_id_2)
+            card_3 = get_or_assign_card(c_id_3)
+
+            existing_ids = [c['id'] for c in current_challenges]
+            
+            if c_id_1 not in existing_ids:
+                current_challenges.append({
+                    "id": c_id_1, "cat": "themes", "title": f"{pretty_name} I: Initiate",
+                    "desc": "Get 1,000 Kills", "target": 1000, "stat": "kills",
+                    "type": "cumulative", "progress": 0, "completed": False,
+                    "reward_type": "calling_card", "reward_val": card_1
+                })
+            if c_id_2 not in existing_ids:
+                current_challenges.append({
+                    "id": c_id_2, "cat": "themes", "title": f"{pretty_name} II: Veteran",
+                    "desc": "Get 2,500 Kills", "target": 2500, "stat": "kills",
+                    "type": "cumulative", "progress": 0, "completed": False,
+                    "reward_type": "calling_card", "reward_val": card_2
+                })
+            if c_id_3 not in existing_ids:
+                current_challenges.append({
+                    "id": c_id_3, "cat": "themes", "title": f"{pretty_name} III: Master",
+                    "desc": f"Get 5,000 Kills. Unlocks {pretty_name.upper()} Theme.", "target": 5000, "stat": "kills",
+                    "type": "cumulative", "progress": 0, "completed": False,
+                    "reward_type": "calling_card", "reward_val": card_3
+                })
+                
         return current_challenges
 
     def get_frontend_data(self):
@@ -204,21 +285,39 @@ class ChallengeManager:
             "rounds_added": int(game.get('rounds_total', 0))
         }
 
+        chain_available = {chain: stats.copy() for chain in self.theme_requirements.keys()}
         changed = False
+
         for c in self.challenges:
             if c['completed']: continue
             if not self._is_challenge_active(c['id']): continue
 
-            val = stats.get(c['stat'], 0)
-            if val == 0: continue
+            my_chain = None
+            for chain_name, chain_list in self.theme_requirements.items():
+                if c['id'] in chain_list:
+                    my_chain = chain_name
+                    break
+                    
+            if my_chain:
+                val = chain_available[my_chain].get(c['stat'], 0)
+            else:
+                val = stats.get(c['stat'], 0)
+
+            if val <= 0: continue
 
             if c['type'] == 'cumulative':
-                c['progress'] += val
-                if c['progress'] >= c['target']:
+                if c['progress'] + val >= c['target']:
+                    excess = (c['progress'] + val) - c['target']
                     c['progress'] = c['target']
                     c['completed'] = True
-                changed = True
-            
+                    if my_chain:
+                        chain_available[my_chain][c['stat']] = excess 
+                    changed = True
+                else:
+                    c['progress'] += val
+                    if my_chain:
+                        chain_available[my_chain][c['stat']] = 0 
+                    changed = True
             elif c['type'] == 'single_game':
                 if val >= c['target']:
                     c['progress'] = c['target']
@@ -250,6 +349,9 @@ class ChallengeManager:
         json_files.sort(key=os.path.getmtime) 
         
         for f in json_files:
+            if os.path.getmtime(f) < self.reset_timestamp:
+                continue
+                
             try:
                 data = load_json(f)
                 if not data: continue
@@ -257,7 +359,7 @@ class ChallengeManager:
             except: pass
             
         self.check_theme_unlocks()
-        full = {"challenges": self.challenges}
+        full = {"challenges": self.challenges, "reset_timestamp": self.reset_timestamp, "reset_offset": self.reset_offset}
         save_json(self.filepath, full)
 
     def _apply_game_stats(self, game_data):
@@ -265,6 +367,7 @@ class ChallengeManager:
         players = game_data.get('players') or game_data.get('data', {}).get('players', {})
         if not players: return
         p = list(players.values())[0]
+        game_id = str(game.get('game_id', ''))
 
         raw_perks = p.get('perks', [])
         valid_perks_count = 0
@@ -286,18 +389,48 @@ class ChallengeManager:
             "rounds_added": int(game.get('rounds_total', 0))
         }
 
+        # Apply Mid-Match Offset Subtraction
+        if self.reset_offset and self.reset_offset.get("game_id") == game_id:
+            stats["matches"] = 0
+            stats["kills"] = max(0, stats["kills"] - self.reset_offset.get("kills", 0))
+            stats["headshots"] = max(0, stats["headshots"] - self.reset_offset.get("headshots", 0))
+            stats["doors"] = max(0, stats["doors"] - self.reset_offset.get("doors", 0))
+            stats["round"] = max(0, stats["round"] - self.reset_offset.get("round", 0))
+            stats["points"] = max(0, stats["points"] - self.reset_offset.get("points", 0))
+            stats["melee"] = max(0, stats["melee"] - self.reset_offset.get("melee", 0))
+            stats["perks_drank"] = max(0, stats["perks_drank"] - self.reset_offset.get("perks_drank", 0))
+            stats["rounds_added"] = max(0, stats["rounds_added"] - self.reset_offset.get("rounds_added", 0))
+
+        chain_available = {chain: stats.copy() for chain in self.theme_requirements.keys()}
+
         for c in self.challenges:
             if not self._is_challenge_active(c['id']): continue
             if c['completed']: continue 
 
-            val = stats.get(c['stat'], 0)
-            if val == 0: continue
+            my_chain = None
+            for chain_name, chain_list in self.theme_requirements.items():
+                if c['id'] in chain_list:
+                    my_chain = chain_name
+                    break
+                    
+            if my_chain:
+                val = chain_available[my_chain].get(c['stat'], 0)
+            else:
+                val = stats.get(c['stat'], 0)
+
+            if val <= 0: continue
 
             if c['type'] == 'cumulative':
-                c['progress'] += val
-                if c['progress'] >= c['target']:
+                if c['progress'] + val >= c['target']:
+                    excess = (c['progress'] + val) - c['target']
                     c['progress'] = c['target']
                     c['completed'] = True
+                    if my_chain:
+                        chain_available[my_chain][c['stat']] = excess 
+                else:
+                    c['progress'] += val
+                    if my_chain:
+                        chain_available[my_chain][c['stat']] = 0 
             
             elif c['type'] == 'single_game':
                 if val >= c['target']:
@@ -306,7 +439,7 @@ class ChallengeManager:
                 elif val > c['progress']:
                     c['progress'] = val
 
-    def reset_all_challenges(self):
+    def reset_all_challenges(self, live_data=None):
         for c in self.challenges:
             c['progress'] = 0
             c['completed'] = False
@@ -314,7 +447,36 @@ class ChallengeManager:
         self.unlocked_rewards = ["default"]
         save_json(self.unlocks_path, self.unlocked_rewards)
         
-        full = {"challenges": self.challenges}
+        self.reset_timestamp = time.time()
+        self.reset_offset = {}
+        
+        # Snapshot current live game stats
+        if live_data:
+            game = live_data.get('game') or live_data.get('data', {}).get('game', {})
+            players = live_data.get('players') or live_data.get('data', {}).get('players', {})
+            if players:
+                p = list(players.values())[0]
+                game_id = str(game.get('game_id', ''))
+                if game_id:
+                    raw_perks = p.get('perks', [])
+                    valid_perks_count = 0
+                    if isinstance(raw_perks, dict): raw_perks = list(raw_perks.values())
+                    if raw_perks:
+                         valid_perks_count = len([x for x in raw_perks if x and "null" not in x and "pistoldeath" not in x])
+                    
+                    self.reset_offset = {
+                        "game_id": game_id,
+                        "kills": int(p.get('kills', 0)),
+                        "headshots": int(p.get('headshots', 0)),
+                        "doors": int(p.get('doors_purchased', 0)),
+                        "round": int(game.get('rounds_total', 0)),
+                        "points": int(p.get('player_points_gained', p.get('points', 0))), 
+                        "melee": int(p.get('melee_kills', 0)),
+                        "perks_drank": live_data.get('calculated_perks_drank', valid_perks_count),
+                        "rounds_added": int(game.get('rounds_total', 0))
+                    }
+        
+        full = {"challenges": self.challenges, "reset_timestamp": self.reset_timestamp, "reset_offset": self.reset_offset}
         save_json(self.filepath, full)
         return True
 
