@@ -250,7 +250,8 @@ def process_stats(data, is_live=False):
         "round": game.get('rounds_total', 0),
         "time": "{:02d}:{:02d}".format(mins, secs), "mode": game.get('gamemode', 'Standard'),
         "version": str(game.get('version', 'Unknown')), 
-        "avg_time": str(game.get('average_round_time', '0')), 
+        "avg_time": str(game.get('average_round_time', '0')),
+        "zpm": str(game.get('zpm', '0'))
     }
 
     players_list = []
@@ -704,6 +705,12 @@ def get_main_app_html():
             <div class="nav-btn" id="chal-btn" onclick="switchTab('challenges')">CHALLENGES</div>
             <div style="padding:20px; color:#555; font-size:0.7em; font-weight:bold; letter-spacing:1px; margin-top:10px;">MATCH LOGS</div>
             <div class="list" id="history-list"></div>
+            
+            <div id="history-pagination" style="display:flex; justify-content:space-between; padding: 10px 20px;">
+                <button class="nav-btn-small" style="background:#222; color:#aaa; flex:1; margin-right:5px;" onclick="changeHistoryPage(-1)">PREV</button>
+                <span id="hist-page-info" style="color:#aaa; font-size: 0.8em; align-self: center; text-align:center; min-width:40px;">1 / 1</span>
+                <button class="nav-btn-small" style="background:#222; color:#aaa; flex:1; margin-left:5px;" onclick="changeHistoryPage(1)">NEXT</button>
+            </div>
             <div class="config-btn" onclick="switchTab('help')">HELP & FAQ</div>
             <div class="config-btn" onclick="switchTab('settings')">SETTINGS</div>
         </div>
@@ -724,6 +731,7 @@ def get_main_app_html():
                         <div style="text-align:right;">
                              <div class="detail-row"><span>TIME</span><span id="d_time">00:00</span></div>
                              <div class="detail-row"><span>AVG ROUND</span><span id="d_avg_time">0s</span></div> 
+                             <div class="detail-row"><span>ZPM</span><span id="d_zpm">0</span></div>
                              <div class="detail-row"><span>MODE</span><span id="d_mode">-</span></div>
                              <div class="detail-row"><span>VERSION</span><span id="d_version" style="color:#888; font-size: 0.8em;">-</span></div>
                         </div>
@@ -834,7 +842,7 @@ def get_main_app_html():
                         <div class="detail-row"><span>HEADSHOTS</span><span id="life_headshots">0</span></div>
                         <div class="detail-row"><span>PRECISION</span><span id="life_hs_pct" style="color:#ff9d00">0%</span></div>
                         <div style="margin-top:10px; border-top:1px solid #333; padding-top:5px;">
-                             <div class="detail-row"><span>FAVORITE WEAPON</span><span id="life_fav_gun" style="text-align:right">None</span></div>
+                            <div class="detail-row"><span>FAVORITE WEAPONS</span><span id="life_fav_gun" style="text-align:right">None</span></div>
                         </div>
                     </div>
 
@@ -848,22 +856,39 @@ def get_main_app_html():
                 </div>
                 
                 <div class="stat-grid-2">
-                     <div class="card">
-                        <div class="card-title">LOGISTICS</div>
-                        <div class="detail-row"><span>DOORS OPENED</span><span id="life_doors">0</span></div>
-                        <div class="detail-row"><span>GOBBLEGUMS</span><span id="life_gums" style="color:#d400ff">0</span></div>
-                    </div>
-                     <div class="card">
-                        <div class="card-title">PERSONAL BESTS (ROUNDS)</div>
-                        <div id="life_map_list" style="max-height:150px; overflow-y:auto; font-size:0.8em; color:#aaa;">
-                            </div>
-                    </div>
-                </div>
+    <div class="card">
+        <div class="card-title">LOGISTICS</div>
+        <div class="detail-row"><span>DOORS OPENED</span><span id="life_doors">0</span></div>
+        <div class="detail-row"><span>GOBBLEGUMS</span><span id="life_gums" style="color:#d400ff">0</span></div>
+        <div class="detail-row"><span>MYSTERY BOX</span><span id="life_box">0</span></div>
+        <div class="detail-row"><span>PLAYER POINTS GAINED</span><span id="life_pts" style="color:#ffd700">0</span></div>
+    </div>
+    <div class="card">
+        <div class="card-title">PERSONAL BESTS (ROUNDS)</div>
+        <div id="life_map_list" style="max-height:150px; overflow-y:auto; font-size:0.8em; color:#aaa;">
+        </div>
+    </div>
+</div>
 
-                <div class="card full-width" style="margin-top: 15px;">
-                    <div class="card-title">TOP MAPS BY HIGHEST MATCH XP</div>
-                    <div id="top_xp_maps_list" style="max-height: 200px; overflow-y: auto; overflow-x: hidden; font-size: 0.85em; color: #aaa; display: block;">
-                        <div style='color:#777; font-style:italic; padding: 5px;'>Loading XP records...</div>
+               <div class="stat-grid-2" style="margin-top: 15px;">
+    <div class="card">
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>MOST PLAYED MAPS</span>
+            <select id="map-sort-toggle" onchange="renderMostPlayedMaps()" style="background: #222; color: #aaa; border: 1px solid #444; font-size: 0.7em; padding: 2px; outline: none; cursor: pointer;">
+                <option value="matches">By Matches</option>
+                <option value="time">By Time</option>
+            </select>
+        </div>
+        <div id="life_most_played" style="max-height: 200px; overflow-y: auto; overflow-x: hidden; font-size: 0.85em; color: #aaa; display: block;">
+            <div style='color:#777; font-style:italic; padding: 5px;'>Loading map records...</div>
+        </div>
+    </div>
+                    
+                    <div class="card">
+                        <div class="card-title">TOP MAPS BY HIGHEST MATCH XP</div>
+                        <div id="top_xp_maps_list" style="max-height: 200px; overflow-y: auto; overflow-x: hidden; font-size: 0.85em; color: #aaa; display: block;">
+                            <div style='color:#777; font-style:italic; padding: 5px;'>Loading XP records...</div>
+                        </div>
                     </div>
                 </div>
 
@@ -1004,7 +1029,21 @@ def get_main_app_html():
             let currentChalFilter = 'operations';
 
             let currentPlayerIndex = 0;
-            let cachedPlayers = [];
+               let cachedPlayers = [];
+
+               // --- NEW PAGINATION CODE ---
+               let currentHistoryPage = 1;
+               let totalHistoryPages = 1;
+
+               function changeHistoryPage(dir) {
+                   currentHistoryPage += dir;
+                   if (currentHistoryPage < 1) currentHistoryPage = 1;
+                   if (currentHistoryPage > totalHistoryPages) currentHistoryPage = totalHistoryPages;
+                   
+                   document.getElementById('history-list').innerHTML = "";
+                   updateSidebar();
+               }
+               // ---------------------------
 
             function toggleOverlays(checkbox) {
                 window.pywebview.api.toggle_overlay_system(checkbox.checked);
@@ -1268,6 +1307,8 @@ def get_main_app_html():
                 }
             }
             
+            let careerMapData = null; // Store the map data for toggling
+            
            async function loadCareerData() {
                 // Fetch and display Top XP Maps
                 loadTopXPMaps(); 
@@ -1286,7 +1327,12 @@ def get_main_app_html():
                         document.getElementById('life_kills').innerText = parseInt(data.totals.kills).toLocaleString();
                         document.getElementById('life_headshots').innerText = parseInt(data.totals.headshots).toLocaleString();
                         document.getElementById('life_hs_pct').innerText = data.ratios.hs_percent + "%";
-                        document.getElementById('life_fav_gun').innerText = data.favorite_weapon.name + " (" + data.favorite_weapon.kills + ")";
+                        let favGunsText = "None (0)";
+if (data.favorite_weapons && data.favorite_weapons.length > 0) {
+    // Joins the top 3 weapons with a line break so they stack neatly on the right side
+    favGunsText = data.favorite_weapons.map(w => w.name + " (" + w.kills.toLocaleString() + ")").join("<br>");
+}
+document.getElementById('life_fav_gun').innerHTML = favGunsText;
                         
                         document.getElementById('life_rounds').innerText = parseInt(data.totals.rounds).toLocaleString();
                         document.getElementById('life_time').innerText = data.time_str;
@@ -1295,15 +1341,51 @@ def get_main_app_html():
                         
                         document.getElementById('life_doors').innerText = parseInt(data.totals.doors).toLocaleString();
                         document.getElementById('life_gums').innerText = parseInt(data.totals.gums).toLocaleString();
+                        document.getElementById('life_box').innerText = parseInt(data.totals.box).toLocaleString();
+                        document.getElementById('life_pts').innerText = parseInt(data.totals.pts).toLocaleString();
                         
-                        let mapHtml = "";
-                        for (const [map, rnd] of Object.entries(data.best_map_rounds)) {
+                       let mapHtml = "";
+                        const sortedMaps = Object.entries(data.best_map_rounds).sort((a, b) => b[1] - a[1]);
+                        for (const [map, rnd] of sortedMaps) {
                             mapHtml += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #333; padding:2px 0;"><span>${map}</span><span style="color:#fff">${rnd}</span></div>`;
                         }
                         document.getElementById('life_map_list').innerHTML = mapHtml;
+
+                        // --- NEW CODE FOR MOST PLAYED MAPS ---
+                        careerMapData = data; 
+                        renderMostPlayedMaps(); 
+                        // -------------------------------------
                     }
                 } catch(e) { console.error("Career Load Error", e); }
             }
+            
+            // ---> PASTE THE NEW FUNCTION RIGHT HERE <---
+            function renderMostPlayedMaps() {
+                if (!careerMapData) return;
+                const sortBy = document.getElementById('map-sort-toggle').value;
+                let playedHtml = "";
+                
+                if (sortBy === 'matches' && careerMapData.top_played_maps && careerMapData.top_played_maps.length > 0) {
+                    careerMapData.top_played_maps.forEach(entry => {
+                        playedHtml += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding:6px 5px;">
+                            <span style="color:#ddd;">${entry.name}</span>
+                            <span style="color:var(--highlight); font-weight:bold;">${entry.count} Matches</span>
+                        </div>`;
+                    });
+                } else if (sortBy === 'time' && careerMapData.top_played_maps_time && careerMapData.top_played_maps_time.length > 0) {
+                    careerMapData.top_played_maps_time.forEach(entry => {
+                        playedHtml += `<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding:6px 5px;">
+                            <span style="color:#ddd;">${entry.name}</span>
+                            <span style="color:var(--highlight); font-weight:bold;">${entry.time_str}</span>
+                        </div>`;
+                    });
+                } else {
+                    playedHtml = "<div style='padding:5px;'>No map data recorded yet.</div>";
+                }
+                
+                document.getElementById('life_most_played').innerHTML = playedHtml;
+            }
+            // -------------------------------------------
             
             async function loadTopXPMaps() {
     try {
@@ -1407,6 +1489,7 @@ def get_main_app_html():
                 document.getElementById('d_round').innerText = d.game.round;
                 document.getElementById('d_time').innerText = d.game.time;
                 document.getElementById('d_avg_time').innerText = d.game.avg_time + "s";
+                document.getElementById('d_zpm').innerText = d.game.zpm;
                 document.getElementById('d_mode').innerText = d.game.mode;
                 document.getElementById('d_version').innerText = d.game.version;
                 
@@ -1519,7 +1602,16 @@ def get_main_app_html():
             
             async function updateSidebar() {
                 try {
-                    const newHistory = await window.pywebview.api.get_history_list();
+                    // Fetch the specific page from Python
+                    const response = await window.pywebview.api.get_history_list(currentHistoryPage);
+                    const newHistory = response.items;
+                    totalHistoryPages = response.total_pages;
+                    currentHistoryPage = response.current_page;
+                    
+                    // Update the page text (e.g. "1 / 4")
+                    const pageInfo = document.getElementById('hist-page-info');
+                    if (pageInfo) pageInfo.innerText = `${currentHistoryPage} / ${totalHistoryPages}`;
+
                     const listEl = document.getElementById('history-list');
                     
                     if (listEl.children.length !== newHistory.length || 
@@ -1936,20 +2028,32 @@ class TrackerAPI:
         t.start()
         return True
     
-    def get_history_list(self):
+    def get_history_list(self, page=1):
+        import math
         hist_path = app_config.get('history_path')
-        if not hist_path or not os.path.exists(hist_path): return []
+        if not hist_path or not os.path.exists(hist_path): 
+            return {"items": [], "total_pages": 0, "current_page": 1}
+            
         json_files = glob.glob(os.path.join(hist_path, "Game_*.json"))
         json_files.sort(key=os.path.getmtime, reverse=True)
+        
+        items_per_page = 50
+        total_items = len(json_files)
+        total_pages = max(1, math.ceil(total_items / items_per_page))
+        
+        # Ensure page stays within valid bounds
+        page = max(1, min(int(page), total_pages))
+        start_idx = (page - 1) * items_per_page
+        end_idx = start_idx + items_per_page
+        
         results = []
-        for f in json_files[:50]: 
+        for f in json_files[start_idx:end_idx]: 
             fname = os.path.basename(f)
             gid = fname.replace("Game_", "").replace(".json", "")
             
-            # Get the date the file was last modified (played)
             mtime = os.path.getmtime(f)
             dt = time.localtime(mtime)
-            date_str = time.strftime("%b %d, %Y %I:%M %p", dt) # e.g., Oct 25, 2023 02:30 PM
+            date_str = time.strftime("%b %d, %Y %I:%M %p", dt) 
             
             map_name = "Unknown Map"
             try:
@@ -1962,7 +2066,8 @@ class TrackerAPI:
             except: pass
             
             results.append({"id": gid, "map": map_name, "date": date_str})
-        return results
+            
+        return {"items": results, "total_pages": total_pages, "current_page": page}
     
     def get_live_stats(self):
         path = app_config.get('live_path')
@@ -1992,13 +2097,18 @@ class TrackerAPI:
 
         totals = {
             "kills": 0, "headshots": 0, "downs": 0, "rounds": 0, 
-            "time_sec": 0, "matches": 0, "doors": 0, "gums": 0
+            "time_sec": 0, "matches": 0, "doors": 0, "gums": 0,
+            "box": 0,
+            "pts": 0
         }
         weapon_stats = {} 
-        map_high_rounds = {} 
+        map_high_rounds = {}
+        map_play_counts = {}
+        map_play_times = {}
 
         json_files = glob.glob(os.path.join(hist_path, "Game_*.json"))
         
+        # 1. ADD UP ALL THE HISTORY FIRST
         for f in json_files:
             try:
                 data = load_json(f)
@@ -2019,11 +2129,23 @@ class TrackerAPI:
                 totals["time_sec"] += int(game.get('time_total', 0))
                 totals["doors"] += int(p.get('doors_purchased', 0))
                 totals["gums"] += int(p.get('gobblegums_used', 0))
+                
+                # Simple Addition of the custom tracked stats
+                totals["box"] += int(p.get('true_match_box', 0))
+                totals["pts"] += int(p.get('true_match_points', 0))
 
                 map_name = str(game.get('map_played', 'Unknown')).replace('_', ' ').title()
                 rnd = int(game.get('rounds_total', 0))
                 if map_name not in map_high_rounds or rnd > map_high_rounds[map_name]:
                     map_high_rounds[map_name] = rnd
+                    
+                if map_name not in map_play_counts:
+                    map_play_counts[map_name] = 0
+                map_play_counts[map_name] += 1
+                
+                if map_name not in map_play_times:
+                    map_play_times[map_name] = 0
+                map_play_times[map_name] += int(game.get('time_total', 0))
 
                 w_data = p.get('weapon_data', p.get('top5', {}))
                 for k, w in w_data.items():
@@ -2033,32 +2155,70 @@ class TrackerAPI:
                     weapon_stats[name] += int(w.get('kills', 0))
 
             except Exception: pass
+        
+        # --- 2. OVERRIDE SELECTED LOGISTICS WITH LIVE GAME ---
+        live_path = app_config.get('live_path')
+        if live_path and os.path.exists(live_path):
+            try:
+                live_data = load_json(live_path)
+                if live_data:
+                    live_players = live_data.get('players') or live_data.get('data', {}).get('players', {})
+                    if live_players:
+                        lp = list(live_players.values())[0]
+                        
+                        # Set to EXACTLY what the current match says (overwriting the history total)
+                        totals["doors"] = int(lp.get('doors_purchased', 0))
+                        totals["gums"] = int(lp.get('gobblegums_used', 0))
+                        totals["pts"] = int(lp.get('player_points_gained', 0))
+                        # Notice we leave "box" alone so it keeps the combined history total!
+            except Exception:
+                pass
+        # -----------------------------------------------------
 
         hs_ratio = 0
         if totals["kills"] > 0:
             hs_ratio = round((totals["headshots"] / totals["kills"]) * 100, 1)
 
-        fav_weapon = "N/A"
-        fav_weapon_kills = 0
+        top_weapons = []
         if weapon_stats:
             sorted_w = sorted(weapon_stats.items(), key=lambda item: item[1], reverse=True)
-            if sorted_w:
-                fav_weapon = sorted_w[0][0]
-                fav_weapon_kills = sorted_w[0][1]
+            # Grab up to the top 3 weapons
+            for w_name, w_kills in sorted_w[:3]:
+                top_weapons.append({"name": w_name, "kills": w_kills})
+                
+        if not top_weapons:
+            top_weapons = [{"name": "None", "kills": 0}]
 
-        m, s = divmod(totals["time_sec"], 60)
-        h, m = divmod(m, 60)
-        
+        # 1. Calculate KPD
         kpd = totals["kills"]
         if totals["downs"] > 0:
             kpd = round(totals["kills"] / totals["downs"], 2)
 
+        # 2. Map Sorting Logic (Matches)
+        sorted_played = sorted(map_play_counts.items(), key=lambda item: item[1], reverse=True)
+        # Using 'map_tuple' instead of 'm' so we don't overwrite the minutes variable!
+        top_played = [{"name": map_tuple[0], "count": map_tuple[1]} for map_tuple in sorted_played[:15]]
+        
+        # 3. Map Sorting Logic (Time)
+        sorted_played_time = sorted(map_play_times.items(), key=lambda item: item[1], reverse=True)
+        top_played_time = []
+        for map_tuple in sorted_played_time[:15]:
+            map_min, map_sec = divmod(map_tuple[1], 60)
+            map_h, map_min = divmod(map_min, 60)
+            top_played_time.append({"name": map_tuple[0], "time_str": f"{map_h}h {map_min}m"})
+
+        # 4. Calculate total lifetime hours/minutes (Do this LAST so it's safe)
+        total_m, total_s = divmod(totals["time_sec"], 60)
+        total_h, total_m = divmod(total_m, 60)
+
         return {
             "totals": totals,
             "ratios": { "hs_percent": hs_ratio, "kpd": kpd },
-            "time_str": f"{h}h {m}m",
+            "time_str": f"{total_h}h {total_m}m", 
             "best_map_rounds": map_high_rounds,
-            "favorite_weapon": {"name": fav_weapon, "kills": fav_weapon_kills}
+            "favorite_weapons": top_weapons,
+            "top_played_maps": top_played,
+            "top_played_maps_time": top_played_time
         }
     
     def get_challenges(self):
@@ -2201,6 +2361,13 @@ def monitor_game():
     last_game_id = None
     known_active_perks = {} 
     session_perk_count = {} 
+    
+    # Simple live trackers
+    session_match_pts = {}
+    session_last_raw_pts = {}
+    
+    session_match_box = {}
+    session_last_raw_box = {}
 
     while True:
         live_path = app_config.get('live_path')
@@ -2223,36 +2390,70 @@ def monitor_game():
                             last_game_id = raw_id
                             known_active_perks = {}
                             session_perk_count = {}
+                            
+                            # Reset our live tracker when a completely new game starts
+                            session_match_pts = {}
+                            session_last_raw_pts = {}
+                            session_match_box = {}
+                            session_last_raw_box = {}
                         
                         players = current_data.get('players') or current_data.get('data', {}).get('players', {})
                         if players:
                             for pid, p in players.items():
+                                # --- 1. PERK LOGIC ---
                                 if pid not in known_active_perks:
                                     known_active_perks[pid] = set()
                                     session_perk_count[pid] = 0
 
                                 raw_perks = p.get('perks', [])
                                 if isinstance(raw_perks, dict): raw_perks = list(raw_perks.values())
-                                
                                 current_perks_set = set([x for x in raw_perks if x and "null" not in x and "pistoldeath" not in x])
-                                
                                 new_perks = current_perks_set - known_active_perks[pid]
-                                if new_perks:
-                                    session_perk_count[pid] += len(new_perks)
-                                    known_active_perks[pid] = current_perks_set
-                                
-                                if len(current_perks_set) < len(known_active_perks[pid]):
-                                    known_active_perks[pid] = current_perks_set
-
+                                if new_perks: session_perk_count[pid] += len(new_perks)
+                                if len(current_perks_set) < len(known_active_perks[pid]): known_active_perks[pid] = current_perks_set
                                 p['calculated_perks_drank'] = session_perk_count[pid]
+                                
+                                # --- 2. SIMPLE DROP-DETECTION TRACKER ---
+                                current_raw_pts = int(p.get('player_points_gained', 0))
+                                current_raw_box = int(p.get('mystery_box_used', 0))
+                                
+                                if pid not in session_match_pts:
+                                    # Initialize with the very first reading of the match
+                                    session_match_pts[pid] = current_raw_pts
+                                    session_last_raw_pts[pid] = current_raw_pts
+                                    
+                                    session_match_box[pid] = current_raw_box
+                                    session_last_raw_box[pid] = current_raw_box
+                                
+                                # Points Math
+                                last_raw_pts = session_last_raw_pts[pid]
+                                if current_raw_pts > last_raw_pts:
+                                    session_match_pts[pid] += (current_raw_pts - last_raw_pts)
+                                elif current_raw_pts < last_raw_pts:
+                                    # DROP DETECTED! Just add the new points.
+                                    session_match_pts[pid] += current_raw_pts 
+                                session_last_raw_pts[pid] = current_raw_pts
+                                
+                                # Box Math
+                                last_raw_box = session_last_raw_box[pid]
+                                if current_raw_box > last_raw_box:
+                                    session_match_box[pid] += (current_raw_box - last_raw_box)
+                                elif current_raw_box < last_raw_box:
+                                    # DROP DETECTED!
+                                    session_match_box[pid] += current_raw_box
+                                session_last_raw_box[pid] = current_raw_box
+                                
+                                # Save the clean values
+                                p['true_match_points'] = session_match_pts[pid]
+                                p['true_match_box'] = session_match_box[pid]
 
+                        # --- SAVE LOGIC ---
                         current_data_str = json.dumps(current_data, sort_keys=True)
                         if current_data_str != last_saved_data_str:
                             safe_id = sanitize_filename(raw_id)
                             if os.path.exists(hist_path):
                                 target_file = os.path.join(hist_path, f"Game_{safe_id}.json")
                                 
-                                # --- NEW: INJECT MATCH XP INTO ARCHIVE ---
                                 game_info = current_data.get('game') or current_data.get('data', {}).get('game', {})
                                 g_id = str(game_info.get('game_id', 'unknown'))
                                 p_dict = current_data.get('players') or current_data.get('data', {}).get('players', {})
@@ -2262,7 +2463,6 @@ def monitor_game():
                                     p_lvl = int(p_data.get('level', 1))
                                     p_xp = int(p_data.get('xp', p_data.get('total_xp', 0)))
                                     p_data['match_xp_earned'] = xp_tracker_instance.calculate_match_xp(g_id, pid_key, p_prest, p_lvl, p_xp)
-                                # -----------------------------------------
                                 
                                 if save_json(target_file, current_data):
                                     last_saved_data_str = current_data_str
