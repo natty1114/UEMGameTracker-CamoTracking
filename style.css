@@ -286,3 +286,128 @@ button.nav-btn-small {
     opacity: 0.8; 
     filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); 
 }
+
+/* --- GRAPH POP-OUT MODE --- */
+.graph-popout-mode {
+    position: fixed !important;
+    top: 2% !important;
+    left: 2% !important;
+    width: 96% !important;
+    height: 96vh !important; 
+    background-color: var(--bg-dark) !important; /* <-- Added !important to force it solid! */
+    border: 1px solid rgba(255,255,255,0.08); /* Matches your card borders */
+    z-index: 9999 !important;
+    padding: 20px;
+    border-radius: 12px; /* Matches your card radius */
+    box-shadow: 0 4px 30px rgba(0,0,0,0.8);
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+
+/* Optional: Style the pop-out button to match your theme */
+.graph-popout-btn {
+    background: var(--bg-panel); 
+    color: var(--primary); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    min-width: 128px;
+    min-height: 38px;
+    padding: 8px 16px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    margin-bottom: 15px;
+    font-family: var(--font-main);
+    font-weight: 600;
+    font-size: 0.85em;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.graph-popout-btn:hover {
+    background: rgba(102, 252, 241, 0.1); 
+    color: #fff; 
+    border-color: var(--highlight);
+}
+
+/* --- GRAPH CONTAINER BASE STYLES (Normal View) --- */
+.xpm-container-base {
+    display: none; 
+    overflow-x: hidden; 
+    overflow-y: hidden; 
+    width: 100%; 
+    max-width: 100%; 
+    box-sizing: border-box; 
+    margin-top: 10px; 
+    background: rgba(0,0,0,0.3); 
+    padding: 10px; 
+    border-radius: 4px; 
+    border: 1px solid #333;
+}
+
+.xpm-scroll-wrapper {
+    width: 100% !important;
+    height: 280px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    position: relative;
+    display: block;
+}
+
+.xpm-scroll-wrapper canvas {
+    display: block;
+    height: 260px !important;
+    width: 100% !important;
+    min-width: 100%;
+}
+
+/* --- GRAPH POP-OUT MODE --- */
+.graph-popout-mode {
+    position: fixed !important;
+    top: 2% !important;
+    left: 2% !important;
+    width: 96% !important;
+    height: 96vh !important; 
+    background-color: var(--bg-dark) !important;
+    border: 1px solid rgba(255,255,255,0.08);
+    z-index: 9999 !important;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.8);
+    overflow: auto !important;
+    box-sizing: border-box;
+}
+
+.graph-popout-mode .xpm-scroll-wrapper {
+    height: calc(96vh - 100px) !important;
+    width: auto !important;
+    min-width: 100%;
+    overflow-x: auto !important;
+}
+
+.graph-popout-mode .xpm-scroll-wrapper canvas {
+    height: calc(96vh - 120px) !important;
+    width: auto !important;
+    min-width: 800px;
+}
+
+.graph-popout-btn {
+    background: var(--bg-panel); 
+    color: var(--primary); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    padding: 8px 15px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    margin-bottom: 15px;
+    font-family: var(--font-main);
+    font-weight: 600;
+    font-size: 0.85em;
+    transition: 0.2s;
+}
+
+.graph-popout-btn:hover {
+    background: rgba(102, 252, 241, 0.1); 
+    color: #fff; 
+    border-color: var(--highlight);
+}
