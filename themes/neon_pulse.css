@@ -1,0 +1,126 @@
+/* --- NEON PULSE: CYBERPUNK EDITION --- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    background: linear-gradient(135deg, #0a0a1a, #1a0a2e, #0a1a2a, #0a0a1a) !important;
+    background-size: 400% 400% !important;
+    animation: neonGradient 30s ease infinite;
+    color: #00f5ff !important;
+    font-family: 'Orbitron', sans-serif !important;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='%2300f5ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><circle cx='12' cy='12' r='3' fill='%23ff00ff'/></svg>"), auto !important;
+}
+
+@keyframes neonGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- NEON CARDS --- */
+.card, .chal-card {
+    background: rgba(10, 10, 30, 0.8) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(0, 245, 255, 0.3) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.15), inset 0 0 8px rgba(255, 0, 255, 0.05) !important;
+    animation: neonPulse 6s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(0, 245, 255, 0.15), inset 0 0 8px rgba(255, 0, 255, 0.05); }
+    50% { box-shadow: 0 0 20px rgba(0, 245, 255, 0.25), inset 0 0 12px rgba(255, 0, 255, 0.1); }
+}
+
+/* --- SCANLINE OVERLAY --- */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 245, 255, 0.015) 2px,
+        rgba(0, 245, 255, 0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* --- UI ELEMENTS --- */
+.header {
+    color: #ff00ff !important;
+    text-shadow: 0 0 12px rgba(255, 0, 255, 0.6), 0 0 24px rgba(255, 0, 255, 0.3) !important;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.sidebar {
+    border-right: 1px solid rgba(0, 245, 255, 0.4) !important;
+    background: rgba(5, 5, 20, 0.9) !important;
+}
+
+button, .config-btn {
+    background: rgba(0, 245, 255, 0.1) !important;
+    border: 1px solid #00f5ff !important;
+    color: #00f5ff !important;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 6px rgba(0, 245, 255, 0.4);
+}
+
+button:hover, .config-btn:hover {
+    background: rgba(255, 0, 255, 0.15) !important;
+    border-color: #ff00ff !important;
+    color: #ff00ff !important;
+    box-shadow: 0 0 18px rgba(255, 0, 255, 0.4), inset 0 0 8px rgba(255, 0, 255, 0.1) !important;
+    text-shadow: 0 0 8px rgba(255, 0, 255, 0.6);
+}
+
+.nav-btn:hover, .nav-btn.active {
+    background: rgba(0, 245, 255, 0.15) !important;
+    color: #00f5ff !important;
+    box-shadow: inset 0 0 12px rgba(0, 245, 255, 0.2) !important;
+}
+
+.stat-big {
+    color: #ff00ff !important;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.5) !important;
+}
+
+.fill {
+    background: linear-gradient(90deg, #00f5ff, #ff00ff) !important;
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.4) !important;
+}
+
+/* --- NEON PULSE: ACTIVE HAND CURSOR --- */
+.nav-btn:hover, button:hover, .sb-item:hover, .config-btn:hover,
+.camo-option:hover, .star-btn:hover, .header:hover, input:hover, select:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%230a0a1a' stroke='%23ff00ff' stroke-width='1.5'><path d='M14.5 12.5L14.5 3.5C14.5 2.1 13.4 1 12 1C10.6 1 9.5 2.1 9.5 3.5L9.5 10.5L8.2 10.2C8.1 10.2 7.7 10.2 7.4 10.5L6 11.9L11.6 17.5C12 17.9 12.6 18.2 13.2 18.2H18C18.8 18.2 19.5 17.5 19.5 16.7V14C19.5 13.2 18.8 12.5 18 12.5H14.5Z'/></svg>"), pointer !important;
+}
+
+/* --- NEON PULSE GRAPH SURFACE --- */
+.xpm-container-base {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: rgba(8, 8, 24, 0.85) !important;
+    border: 1px solid rgba(0, 245, 255, 0.35) !important;
+    box-shadow: inset 0 0 16px rgba(0, 245, 255, 0.1), 0 0 14px rgba(255, 0, 255, 0.08) !important;
+}
+
+.xpm-scroll-wrapper {
+    width: 100% !important;
+    min-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    background-image: linear-gradient(rgba(0, 245, 255, 0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 0, 255, 0.04) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.xpm-scroll-wrapper canvas {
+    width: 100% !important;
+    min-width: 100%;
+}

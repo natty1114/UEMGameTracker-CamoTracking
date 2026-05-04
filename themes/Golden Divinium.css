@@ -152,3 +152,36 @@ button:hover, .config-btn:hover {
     from { background-position: 100% 0; } 
     to { background-position: -100% 0; } 
 }
+
+/* --- GOLDEN DIVINIUM GRAPH SURFACE --- */
+.xpm-container-base {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: linear-gradient(135deg, rgba(8,8,8,0.96), rgba(35,28,0,0.72)) !important;
+    border: 1px solid #755c2b !important;
+    border-top: 2px solid #ffd700 !important;
+    box-shadow: inset 0 0 18px rgba(255, 215, 0, 0.08), 0 0 10px rgba(0,0,0,0.7) !important;
+}
+
+.xpm-scroll-wrapper {
+    width: 100% !important;
+    min-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    background-image: linear-gradient(rgba(255, 215, 0, 0.035) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.xpm-scroll-wrapper canvas {
+    width: 100% !important;
+    min-width: 100%;
+}
+
+.graph-popout-btn {
+    border-color: #ffd700 !important;
+    color: #ffd700 !important;
+    background: #000 !important;
+}

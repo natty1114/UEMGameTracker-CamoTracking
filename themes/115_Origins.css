@@ -118,3 +118,80 @@ button:hover, .config-btn:hover {
     from { background-position: 200% 0; } 
     to { background-position: -200% 0; } 
 }
+
+/* --- GRAPH POP-OUT MODE (ORIGINS THEME) --- */
+.graph-popout-mode {
+    position: fixed !important;
+    top: 2% !important;
+    left: 2% !important;
+    width: 96% !important;
+    height: 96vh !important; 
+    background-color: #0b0f14 !important; /* Matches Origins dark base */
+    border: 1px solid #30363d !important; /* Matches weathered metal border */
+    border-top: 2px solid #58a6ff !important; /* Element 115 blue highlight */
+    z-index: 9999 !important;
+    padding: 20px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.9), inset 0 0 30px rgba(0, 168, 255, 0.05) !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+
+/* Match the pop-out button to the industrial Origins buttons */
+.graph-popout-btn {
+    background: #1c2128 !important;
+    color: #58a6ff !important;
+    border: 1px solid #444c56 !important;
+    padding: 8px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-family: 'Special Elite', cursive !important;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+/* Add the electric short animation and spark cursor on hover */
+.graph-popout-btn:hover {
+    background: #00a8ff !important;
+    color: #fff !important;
+    box-shadow: 0 0 20px #00a8ff;
+    animation: electricShort 0.2s infinite;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='%2300a8ff' stroke-width='2'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>"), pointer !important;
+}
+
+/* --- GRAPH CONTAINER BASE (ORIGINS THEME) --- */
+.xpm-container-base {
+    display: none; 
+    overflow-x: hidden; 
+    overflow-y: hidden; 
+    width: 100%; 
+    max-width: 100%; 
+    box-sizing: border-box; 
+    margin-top: 10px; 
+    /* Weathered Metal Background */
+    background: rgba(13, 17, 23, 0.8) !important; 
+    padding: 10px; 
+    border-radius: 4px; 
+    /* Blue Core Border */
+    border: 1px solid #1a222d !important;
+    border-left: 3px solid #00a8ff !important;
+    box-shadow: inset 0 0 15px rgba(0, 168, 255, 0.05) !important;
+}
+
+.xpm-scroll-wrapper {
+    width: 100% !important;
+    height: 300px; 
+    min-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    position: relative;
+    /* Subtle industrial grid lines in the graph background */
+    background-image: linear-gradient(rgba(0, 168, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 168, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.xpm-scroll-wrapper canvas {
+    width: 100% !important;
+    min-width: 100%;
+}
