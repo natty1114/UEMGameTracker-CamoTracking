@@ -1,139 +1,146 @@
 # UEMGameTracker-CamoTracking
 
-Call of Duty: Black Ops III - Tracker & Camo Matrix
+A community-made external tracker for **Call of Duty: Black Ops III Zombies** and the **UEM mod**.
 
-NOTE: YOU NEED TO ACCEPT THE API IN THE UEM MOD FOR THE CURRENTGAME.JSON LIVE TRACKING TO WORK. I CANNOT DO ANYTHING ABOUT THIS SORRY.
-A comprehensive external dashboard and overlay tool for Call of Duty: Black Ops III Zombies. This tool tracks live game statistics, calculates accurate weapon damage (bypassing the visual damage cap), manages custom camo progression for modded maps, and features a built-in challenge and reward system.
-🤖 A Note on AI Development
+It provides a live dashboard, match history, camo tracking, XP graphs, ZPM graphs, overlays, challenges, themes, calling cards, and a Best Matches page.
 
-This project was developed with the assistance of Generative AI.
+> **Important:** You must accept/enable the API in the UEM mod for `CurrentGame.json` live tracking to work.
 
-If you are looking at the source code, you may notice patterns characteristic of AI-assisted generation, such as:
+## Features
 
-    Large blocks of HTML and CSS embedded directly within Python strings.
+- Live game stats from `CurrentGame.json`
+- Match history archive
+- Weapon damage tracking beyond the visual damage cap
+- Perk display with icons
+- Match XP, XPM, Round XP, and ZPM graphs
+- Optional ZPM overlay on the XPM graph
+- Custom camo tracker for modded maps
+- Starred priority weapons
+- Career profile with rank, level, XP progress, and lifetime stats
+- Challenges and unlockable rewards
+- Themes and calling cards
+- Theme-aware live overlay
+- Optional Steam Workshop map images
+- Best Matches page for saving and reopening favorite games
 
-    Monolithic script structures.
+## Requirements
 
-    Specific logic patterns for UI state management.
+- Windows 10/11
+- Call of Duty: Black Ops III
+- UEM mod with API access enabled
 
-While the code is fully functional and rigorously tested, it is structured differently than a traditional, manually architected application. It is provided "as-is" as a fun, community-focused tool.
-✨ Key Features
-📊 Live Game Tracker
+If running from source:
 
-    Real-Time Stats: Monitors Kills, Headshots, XP, Revives, and Downs.
+- Python 3.x
+- `pywebview`
+- `pyinstaller`
 
-    Damage Calculator: Tracks weapon damage beyond the standard integer limit (overflow support), giving you accurate numbers for high-round zombie health.
+## Setup
 
-    Active Perks: Visual display of current perks with icons.
-
-    Match Archival: Automatically saves match history to JSON files for later review.
-
-🔫 Camo Matrix
-
-    Custom Map Support: Track camo progress for weapons on custom zombies maps (requires profile JSON from uemmaps.com).
-
-    Priority System: "Star" your favorite weapons to pin them to the top of the tracking list.
-
-    Visual Progression: Dynamic progress bars and camo asset previews (Gold, Diamond, Dark Matter, etc.).
-
-🏆 Challenges & Rewards
-
-    Operations: Complete in-app challenges (e.g., "Get 1000 Headshots", "Survive 30 Rounds").
-
-    Unlockables: Earn XP and unlock visual Themes (Void, Origins, Red Hex) and Calling Cards for the tracker interface.
-
-🖥️ Overlay Mode
-
-    Includes a "Unified Overlay" mode—a small, always-on-top window that sits over your game to show live perks and top weapon damage without cluttering the screen.
-
-🛠️ Installation & Setup
-Requirements
-
-    OS: Windows 10/11
-
-    Game: Call of Duty: Black Ops III (Steam Version recommended)
-
-    Dependencies (if running from source): Python 3.x, pywebview, pyinstaller
-
-How to Run
-
-    Download/Compile: Ensure you have the executable (BO3Tracker.exe) and the accompanying asset folders.
-
-    Asset Check: The following folders must be in the same directory as the .exe:
-
-        perk icons
-
-        camoimages
-
-        callingcards
-
-        themes
-
-        trackericons (if applicable)
-
-    Launch: Run BO3Tracker.exe.
-
-    First Time Setup:
-
-        Live Data File: Point the tracker to your local CurrentGame.json. This is usually found in your BO3 install directory under \players\CurrentGame.json.
-
-        History Folder: Create a folder (e.g., BO3_History) and select it. This is where the tracker will save your past games.
-
-        
-
-📂 Project Structure
-
-If you are modifying the source, the project requires the following file structure:
+1. Download or build `BO3Tracker.exe`.
+2. Keep the required asset folders/files beside the `.exe`:
 
 ```text
-BO3-Tracker/
-│
-├── assets/                  # 🎨 Game Assets & Data
-│   ├── callingcards/        # Images/Videos for player cards
-│   ├── camoimages/          # Images for weapon camos
-│   ├── perk icons/          # Perk-a-Cola icons
-│   ├── rankicons/            # Contains icons for the leveling hud
-│   ├── themes/              # CSS theme files
-│   ├── custom_camos.json    # Database for modded map camos
-│   ├── setup.css            # Styling for the setup window
-│   └── style.css            # Main application styling
-│
-├── src/                     # 🐍 Python Source Code
-│   ├── bo3tracker.py        # Main application entry point
-│   └── challenge_system.py  # Backend logic for challenges
-│
-├── build_tracker.py         # 🔨 Script to compile the EXE
-├── .gitignore               # 🚫 Files to exclude
-├── LICENSE                  # ⚖️ License file
-├── README.md                # 📖 Documentation
-└── requirements.txt         # 📦 Dependencies
+perk icons
+rank icons
+camoimages
+callingcards
+themes
+style.css
+setup.css
+custom_camos.json
+xp_requirements.csv
 ```
 
-❓ Troubleshooting
+3. Run `BO3Tracker.exe`.
+4. On first launch, select:
+   - Your `CurrentGame.json` file
+   - A history folder where match JSON files will be saved
 
-    Stats not updating?
+## Running From Source
 
-        Ensure the path to CurrentGame.json is correct in the Settings tab.
+Install dependencies, then run:
 
-        Some mods only update this file at the end of a round or when the game is paused.
+```bash
+python bo3tracker.py
+```
 
-    Images/Icons missing?
+To build a release executable:
 
-        Ensure you have not moved the perk icons or camoimages folders away from the executable. The program looks for them in its immediate directory.
+```bash
+python runner.py
+```
 
-    "Classic" Badge:
+## Smoke Tests
 
-        The Classic mode badge only appears if the gamemode string in the JSON contains "classic".
+The project includes a smoke-test suite for basic validation:
 
-📜 License
+```bash
+python run_smoke_tests.py
+```
 
-This project is free to use for the Black Ops III Zombies community.
-Visual assets (Perk Icons, Game Images) are the property of Activision/Treyarch. 
-Also thanks to Sphynx for making an amazing black ops 3 mod. 
+The tests check core Python files, JSON files, required assets, build-script contents, XP rollover behavior, graph support, Best Matches support, and other app contracts.
 
-Images 
+## Project Notes
 
-![Main Live Game]({53805257-7594-4839-93FF-BBEFAE58D693}.png "Optional Title")
+This project was built with help from Generative AI.
 
-![Camo Tracker "With User Loaded"]({C4085647-4A61-4D17-9A19-A70907CB0A69}.png "Optional Title")
+Some source code may look different from a traditionally structured app, including:
 
+- Large HTML/CSS blocks embedded directly inside Python strings
+- A monolithic main application file
+- UI state logic written directly inside the generated app HTML
+
+The project is provided as-is as a fun, community-focused tool.
+
+## Troubleshooting
+
+### Stats are not updating
+
+- Make sure the UEM API is accepted/enabled.
+- Make sure the tracker points to the correct `CurrentGame.json`.
+- Some mods only update the file at certain times, such as round end or pause.
+
+### Icons or images are missing
+
+Make sure these folders/files are beside the executable:
+
+```text
+perk icons
+rank icons
+camoimages
+callingcards
+themes
+style.css
+setup.css
+custom_camos.json
+xp_requirements.csv
+```
+
+### Steam Workshop images are not showing
+
+- Make sure the map has a valid Steam Workshop link in the game data.
+- Make sure **Show Steam Workshop Images** is enabled in Settings.
+
+### XP looks wrong
+
+Use the XP Round Debugger in Settings to inspect:
+
+- Level XP
+- Tick XP
+- Round XP
+- Match XP
+- Rank changes
+- Rollover XP math
+
+### Best Match saved the wrong game
+
+The Add Best Match button saves the currently displayed game ID. If you are viewing an archived match, it should save that archived match. If no displayed game ID is available, it falls back to the current live match.
+
+## Credits
+
+Made for the Black Ops III Zombies community.
+
+Special thanks to Sphynx for the UEM mod.
+
+Call of Duty, Black Ops III, and related visual assets belong to Activision/Treyarch.
