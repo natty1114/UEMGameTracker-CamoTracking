@@ -1,6 +1,19 @@
 /* --- VOID: CALM & IMMERSIVE EDITION --- */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
+:root {
+    --weapon-name-color: #e0b0ff;
+    --weapon-table-text: #f3eaff;
+    --career-accent: #e0b0ff;
+    --career-value: #f3eaff;
+    --career-muted: #9b86c7;
+    --settings-title: #e0b0ff;
+    --settings-help: #b19cd9;
+    --settings-description: #f3eaff;
+    --settings-status: #7b4397;
+    --settings-note: #9b86c7;
+}
+
 body {
     background: linear-gradient(135deg, #050505, #0f0c29, #1a1a2e, #050505) !important;
     background-size: 400% 400% !important;
@@ -8,6 +21,18 @@ body {
     color: #b19cd9 !important;
     font-family: 'Orbitron', sans-serif !important;
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239400d3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z'/></svg>"), auto !important;
+}
+
+.main-view {
+    background-color: #050505 !important;
+    background-image:
+        radial-gradient(circle at 50% 18%, rgba(148, 0, 211, 0.12), rgba(5, 5, 14, 0.72) 48%, rgba(5, 5, 5, 0.9) 100%),
+        linear-gradient(135deg, rgba(5, 5, 5, 0.42), rgba(15, 12, 41, 0.48), rgba(26, 26, 46, 0.36)),
+        url('void_event_horizon_background.jpg') !important;
+    background-position: center, center, center !important;
+    background-size: 100% 100%, 100% 100%, cover !important;
+    background-repeat: no-repeat, no-repeat, no-repeat !important;
+    background-attachment: local, local, local !important;
 }
 
 /* --- CARDS WITH SHADOW DRIFT --- */
@@ -137,4 +162,31 @@ button:hover {
 .xpm-scroll-wrapper canvas {
     width: 100% !important;
     min-width: 100%;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
 }

@@ -1,0 +1,477 @@
+/* --- DEADOPS ARCADE: GLACIAL FROST HUD --- */
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&family=Iceland&display=swap');
+
+:root {
+    --frost-bg: #020812;
+    --frost-panel: rgba(3, 12, 24, 0.72);
+    --frost-panel-deep: rgba(1, 7, 15, 0.92);
+    --frost-line: #7de9ff;
+    --frost-line-soft: rgba(125, 233, 255, 0.34);
+    --frost-white: #eefaff;
+    --frost-blue: #38c8ff;
+    --frost-cyan: #a7f6ff;
+    --frost-muted: #9ebdca;
+    --frost-ice: #d8fbff;
+    --frost-shadow: rgba(56, 200, 255, 0.26);
+
+    --weapon-name-color: var(--frost-cyan);
+    --weapon-table-text: var(--frost-white);
+    --career-accent: var(--frost-line);
+    --career-value: var(--frost-white);
+    --career-muted: var(--frost-muted);
+    --settings-title: var(--frost-cyan);
+    --settings-help: var(--frost-line);
+    --settings-description: var(--frost-white);
+    --settings-status: #b9f7ff;
+    --settings-note: var(--frost-muted);
+}
+
+body {
+    background-image:
+        radial-gradient(circle at 50% 18%, rgba(173, 244, 255, 0.18), rgba(4, 16, 30, 0.72) 42%, rgba(1, 5, 12, 0.96) 100%),
+        linear-gradient(135deg, rgba(125, 233, 255, 0.10), rgba(24, 116, 180, 0.16), rgba(1, 6, 14, 0.78)),
+        url('frosted_futuristic_nebula_with_ui_overlay.png') !important;
+    background-position: center, center, center !important;
+    background-size: 100% 100%, 100% 100%, cover !important;
+    background-repeat: no-repeat, no-repeat, no-repeat !important;
+    background-attachment: fixed, fixed, fixed !important;
+    color: var(--frost-white) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    font-size: 22px !important;
+    cursor: crosshair !important;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background:
+        radial-gradient(circle at 24% 24%, rgba(216, 251, 255, 0.08), transparent 28%),
+        radial-gradient(circle at 78% 12%, rgba(56, 200, 255, 0.08), transparent 32%),
+        linear-gradient(rgba(167, 246, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(167, 246, 255, 0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 26px 26px, 26px 26px;
+    mix-blend-mode: screen;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(216, 251, 255, 0.018) 3px,
+            rgba(56, 200, 255, 0.018) 5px
+        );
+    mix-blend-mode: screen;
+    opacity: 0.75;
+}
+
+.sidebar {
+    background: linear-gradient(180deg, rgba(1, 8, 18, 0.96), rgba(4, 18, 34, 0.88)) !important;
+    border-right: 2px solid var(--frost-line) !important;
+    position: relative !important;
+    z-index: 10000 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow:
+        inset -14px 0 32px rgba(125, 233, 255, 0.10),
+        0 0 22px rgba(56, 200, 255, 0.18) !important;
+}
+
+.sidebar .sidebar-section-label,
+.sidebar .app-version-label {
+    color: var(--frost-cyan) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-shadow: none !important;
+}
+
+.sidebar .sb-item {
+    color: var(--frost-white) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-shadow: none !important;
+}
+
+.sidebar .sb-map {
+    color: var(--frost-line) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    font-weight: bold !important;
+    text-shadow: none !important;
+}
+
+.sidebar .sb-date,
+.sidebar .sb-id {
+    color: var(--frost-muted) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-shadow: none !important;
+}
+
+.sidebar .history-page-btn,
+.sidebar .history-page-info {
+    color: var(--frost-cyan) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-shadow: none !important;
+}
+
+.history-pagination {
+    display: grid !important;
+    grid-template-columns: minmax(84px, 1fr) 42px minmax(84px, 1fr) !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.history-page-btn {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    white-space: nowrap !important;
+}
+
+.history-page-info {
+    min-width: 42px !important;
+    white-space: nowrap !important;
+}
+
+.header,
+.header-camo h1,
+h1 {
+    color: var(--frost-cyan) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 4px rgba(167, 246, 255, 0.35) !important;
+}
+
+.card-title,
+.theme-header {
+    color: var(--frost-ice) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    font-size: 0.95em !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 4px rgba(167, 246, 255, 0.35) !important;
+    border-bottom: 1px solid rgba(167, 246, 255, 0.28) !important;
+}
+
+.card,
+.chal-card {
+    background: rgba(2, 10, 22, 0.42) !important;
+    border: 1px solid rgba(167, 246, 255, 0.38) !important;
+    border-top: 2px solid rgba(238, 250, 255, 0.72) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 0 18px rgba(56, 200, 255, 0.16) !important;
+}
+
+.nav-btn,
+.config-btn {
+    color: var(--frost-cyan) !important;
+    background: rgba(3, 13, 26, 0.78) !important;
+    border-left: 2px solid transparent !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 4px rgba(167, 246, 255, 0.35) !important;
+}
+
+.header {
+    background: rgba(2, 10, 22, 0.70) !important;
+    border-left: 4px solid var(--frost-line) !important;
+    border-bottom: 2px solid rgba(216, 251, 255, 0.32) !important;
+    box-shadow: inset 0 0 18px rgba(125, 233, 255, 0.10) !important;
+}
+
+.nav-btn,
+.config-btn {
+    color: var(--frost-cyan) !important;
+    background: rgba(3, 13, 26, 0.78) !important;
+    border-left: 2px solid transparent !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-shadow: none !important;
+}
+
+.nav-btn:hover,
+.nav-btn.active,
+.config-btn:hover,
+.config-btn.active {
+    background: linear-gradient(90deg, rgba(125, 233, 255, 0.22), rgba(4, 18, 34, 0.72)) !important;
+    border-left-color: var(--frost-white) !important;
+    color: #ffffff !important;
+    box-shadow:
+        inset 0 0 16px rgba(125, 233, 255, 0.24),
+        0 0 14px rgba(56, 200, 255, 0.22) !important;
+}
+
+.card,
+.chal-card {
+    background: #020812 !important;
+    border: 2px solid var(--frost-line) !important;
+    border-radius: 0 !important;
+    box-shadow: 4px 4px 0 rgba(125, 233, 255, 0.15) !important;
+}
+
+.nav-btn,
+.config-btn {
+    color: var(--frost-cyan) !important;
+    background: #020812 !important;
+    border: 2px solid transparent !important;
+    border-left: 4px solid var(--frost-cyan) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 4px rgba(167, 246, 255, 0.35) !important;
+    box-shadow: 4px 4px 0 rgba(125, 233, 255, 0.1) !important;
+}
+
+.card-title,
+.theme-header {
+    color: var(--frost-ice) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    font-size: 0.95em !important;
+    letter-spacing: 1px !important;
+    text-shadow:
+        0 0 8px rgba(216, 251, 255, 0.72),
+        0 0 16px rgba(56, 200, 255, 0.35) !important;
+    border-bottom: 1px solid rgba(167, 246, 255, 0.28) !important;
+}
+
+button,
+.nav-btn-small,
+.chal-btn {
+    background: linear-gradient(180deg, rgba(125, 233, 255, 0.20), rgba(8, 35, 58, 0.72)) !important;
+    border: 1px solid rgba(167, 246, 255, 0.72) !important;
+    border-radius: 6px !important;
+    color: var(--frost-white) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 8px rgba(167, 246, 255, 0.55) !important;
+    box-shadow: inset 0 0 12px rgba(216, 251, 255, 0.08), 0 0 10px rgba(56, 200, 255, 0.16) !important;
+}
+
+button:hover,
+.nav-btn-small:hover,
+.chal-btn:hover {
+    background: linear-gradient(180deg, rgba(216, 251, 255, 0.30), rgba(56, 200, 255, 0.22)) !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+    box-shadow:
+        0 0 16px rgba(167, 246, 255, 0.48),
+        inset 0 0 12px rgba(238, 250, 255, 0.22) !important;
+}
+
+select,
+input,
+textarea {
+    background: rgba(1, 7, 15, 0.88) !important;
+    color: var(--frost-white) !important;
+    border: 1px solid rgba(167, 246, 255, 0.46) !important;
+    border-radius: 6px !important;
+    box-shadow: inset 0 0 10px rgba(56, 200, 255, 0.10) !important;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+    outline: none !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(167, 246, 255, 0.42), inset 0 0 10px rgba(56, 200, 255, 0.14) !important;
+}
+
+.stat-big,
+#d_map,
+#career-rmain,
+#life_kills,
+#life_matches,
+#life_rounds,
+#life_time {
+    color: var(--frost-ice) !important;
+    text-shadow:
+        0 0 10px rgba(216, 251, 255, 0.82),
+        0 0 20px rgba(56, 200, 255, 0.45) !important;
+}
+
+.detail-row,
+.stat-sub,
+p,
+li {
+    color: var(--frost-muted) !important;
+}
+
+.progress-bar,
+.xp-bar {
+    background: rgba(1, 7, 15, 0.84) !important;
+    border: 1px solid rgba(167, 246, 255, 0.30) !important;
+    box-shadow: inset 0 0 12px rgba(1, 5, 12, 0.9) !important;
+}
+
+.progress-fill,
+.xp-fill,
+#career-xp-bar,
+.fill {
+    background: linear-gradient(90deg, #1a82c5, #7de9ff, #eefaff) !important;
+    box-shadow:
+        0 0 12px rgba(125, 233, 255, 0.52),
+        0 0 22px rgba(216, 251, 255, 0.24) !important;
+}
+
+.status-bar {
+    background: rgba(2, 10, 22, 0.72) !important;
+    border-left-color: var(--frost-line) !important;
+    color: var(--frost-white) !important;
+    box-shadow: inset 0 0 12px rgba(125, 233, 255, 0.10) !important;
+}
+
+.xpm-container-base {
+    background: rgba(2, 10, 22, 0.58) !important;
+    border: 1px solid rgba(167, 246, 255, 0.38) !important;
+    border-left: 3px solid var(--frost-line) !important;
+    border-radius: 8px !important;
+    box-shadow:
+        inset 0 0 20px rgba(125, 233, 255, 0.10),
+        0 0 18px rgba(56, 200, 255, 0.14) !important;
+}
+
+.xpm-scroll-wrapper {
+    background-image:
+        linear-gradient(rgba(167, 246, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(167, 246, 255, 0.035) 1px, transparent 1px) !important;
+    background-size: 22px 22px !important;
+}
+
+::-webkit-scrollbar {
+    width: 10px !important;
+    height: 10px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(1, 7, 15, 0.9) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(216, 251, 255, 0.72), rgba(56, 200, 255, 0.38)) !important;
+    border: 1px solid rgba(167, 246, 255, 0.45) !important;
+    border-radius: 8px !important;
+}
+
+.nav-btn:hover, button:hover, .sb-item:hover, .config-btn:hover,
+.camo-option:hover, .star-btn:hover, .header:hover, input:hover, select:hover {
+    cursor: crosshair !important;
+}
+
+table {
+    border-spacing: 0 6px !important;
+}
+
+th {
+    color: var(--frost-cyan) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    font-size: 0.85em !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 6px rgba(167, 246, 255, 0.40) !important;
+    border-bottom: 1px solid rgba(125, 233, 255, 0.20) !important;
+    padding: 10px 12px !important;
+}
+
+td {
+    background: rgba(2, 10, 22, 0.50) !important;
+    color: var(--frost-white) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    padding: 12px 12px !important;
+    border-top: 1px solid rgba(125, 233, 255, 0.15) !important;
+    border-bottom: 1px solid rgba(125, 233, 255, 0.15) !important;
+}
+
+td:first-child {
+    border-left: 1px solid rgba(125, 233, 255, 0.15) !important;
+    border-radius: 6px 0 0 6px !important;
+}
+
+td:last-child {
+    border-right: 1px solid rgba(125, 233, 255, 0.15) !important;
+    border-radius: 0 6px 6px 0 !important;
+}
+
+tr:hover td {
+    background: rgba(3, 16, 34, 0.70) !important;
+    border-color: rgba(125, 233, 255, 0.35) !important;
+    box-shadow: inset 0 0 14px rgba(125, 233, 255, 0.08) !important;
+}
+
+.weapon-row .weapon-name-cell {
+    color: var(--frost-cyan) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    font-weight: bold !important;
+    text-shadow: none !important;
+}
+
+.weapon-number-cell {
+    color: var(--frost-line) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-shadow: none !important;
+}
+
+.weapon-status-cell {
+    color: var(--frost-blue) !important;
+    font-family: 'Iceland', 'Iceberg', sans-serif !important;
+    text-shadow: none !important;
+}
+
+/* --- GLACIAL FROST CURSORS --- */
+
+/* Main cursor: icy crystal shard */
+body {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><defs><filter id='glow'><feDropShadow dx='0.8' dy='1.1' stdDeviation='1.2' flood-color='%2374d9ff' flood-opacity='0.55'/></filter></defs><path d='M5 3L23 14.5L15.3 16.8L20.8 28L14.8 30L9.8 18.5L4 22.3Z' fill='%23dff7ff' stroke='%2374d9ff' stroke-width='1.7' stroke-linejoin='round' filter='url(%23glow)'/><path d='M7 5.4L18.8 13.3' stroke='%23ffffff' stroke-width='1.1' stroke-linecap='round' opacity='0.95'/><path d='M8.6 9L15 13.3' stroke='%23b8ecff' stroke-width='1' stroke-linecap='round' opacity='0.95'/><path d='M10 18L15 28.3' stroke='%23f8fdff' stroke-width='1.1' stroke-linecap='round' opacity='0.9'/><circle cx='12.8' cy='17.9' r='1.2' fill='%23ffffff' stroke='%2374d9ff' stroke-width='0.7'/></svg>") 4 3, auto !important;
+}
+
+/* Hover cursor: frosty snowflake sparkle */
+button:hover,
+.config-btn:hover,
+.nav-btn:hover,
+.nav-btn.active,
+.nav-btn-small:hover,
+.chal-btn:hover,
+.sb-item:hover,
+.star-btn:hover,
+select:hover,
+input:hover,
+.card:hover,
+.chal-card:hover,
+.perk-item:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'><defs><filter id='glow'><feDropShadow dx='0.9' dy='1.1' stdDeviation='1.4' flood-color='%23bfefff' flood-opacity='0.8'/></filter></defs><g filter='url(%23glow)'><path d='M17 4v26M4 17h26M8 8l18 18M26 8L8 26' stroke='%23dff7ff' stroke-width='2.2' stroke-linecap='round'/><path d='M17 4l1.8 3.2L17 9.2l-1.8-2zM17 24.8l1.8 2.8L17 30l-1.8-2.4zM4 17l3.2-1.8L9.2 17l-2 1.8zM24.8 17l2.8-1.8L30 17l-2.4 1.8zM8 8l2.3.8.8 2.3-2.5-.6zM26 8l-2.3.8-.8 2.3 2.5-.6zM8 26l2.3-.8.8-2.3-2.5.6zM26 26l-2.3-.8-.8-2.3 2.5.6z' fill='%23ffffff'/><circle cx='17' cy='17' r='4.3' fill='%2374d9ff' stroke='%23ffffff' stroke-width='1.2'/><circle cx='26.5' cy='8' r='2.3' fill='%23ffe08a' stroke='%23ffffff' stroke-width='0.9'/></g></svg>") 17 17, pointer !important;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
+}

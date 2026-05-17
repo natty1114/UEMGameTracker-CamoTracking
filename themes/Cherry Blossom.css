@@ -1,0 +1,809 @@
+/* --- CHERRY BLOSSOM: Spring Pink Theme --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
+:root {
+    --weapon-name-color: #ff8fbd;
+    --weapon-table-text: #fff2f6;
+    --career-accent: #ff8fbd;
+    --career-value: #fff8fa;
+    --career-muted: #c98aa3;
+    --settings-title: #e91e63;
+    --settings-help: #8b415d;
+    --settings-description: #5a3e4b;
+    --settings-status: #c2185b;
+    --settings-note: #8b5b70;
+}
+
+:root {
+  --cb-pink: #f48fb1;
+  --cb-pink-light: #ffd6e9;
+  --cb-pink-deep: #e91e63;
+  --cb-rose: #ff6b9a;
+  /* Chart colors for theming */
+  --chart-color-1: #f48fb1;
+  --chart-color-2: #e91e63;
+  --chart-color-3: #ff6b9a;
+  --chart-color-4: #ffd6e9;
+  --chart-bg: rgba(255, 240, 245, 0.8);
+  --chart-grid: rgba(244, 143, 177, 0.2);
+  /* Overlay theme variables */
+  --overlay-bg: #fff0f5;
+  --overlay-panel: #ffe4ef;
+  --overlay-border: #e91e63;
+  --overlay-title: #e91e63;
+  --overlay-text: #2b1b2a;
+  --overlay-muted: #5a3e4b;
+  --overlay-damage: #f48fb1;
+  --overlay-divider: #f8bbd0;
+  --overlay-fallback: #ffe4ef;
+  --overlay-shadow: 0 0 14px rgba(244, 143, 177, 0.25);
+}
+
+body {
+  background: url('cherry_blossom_anime_flowers.png') center/cover no-repeat fixed !important;
+  background-color: #fff0f5 !important;
+  color: #2b1b2a !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* --- CARDS --- */
+.card, .chal-card {
+  background: rgba(255, 240, 245, 0.95) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border: 1px solid rgba(244, 143, 177, 0.8) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.1) !important;
+  color: #2b1b2a !important;
+  overflow: hidden;
+}
+
+.card:hover, .chal-card:hover {
+  border-color: rgba(233, 30, 99, 0.9) !important;
+  transform: translateY(-1px);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+/* --- SIDEBAR --- */
+html body .sidebar {
+  border-right: 1px solid rgba(244, 143, 177, 0.4) !important;
+  background: rgb(255, 248, 250) !important;
+}
+
+/* Sidebar items */
+html body .sidebar .sb-item {
+  background: rgba(255, 248, 250, 0.85) !important;
+  color: #2b1b2a !important;
+  border-left: 3px solid transparent !important;
+}
+
+html body .sidebar .sb-item:hover,
+html body .sidebar .sb-item.active {
+  background: rgba(244, 143, 177, 0.3) !important;
+  border-left-color: #e91e63 !important;
+  color: #2b1b2a !important;
+}
+
+/* --- HEADER --- */
+.header {
+  color: #e91e63 !important;
+  text-shadow: 0 2px 8px rgba(233, 30, 99, 0.2) !important;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* --- BUTTONS (ALL TYPES) --- */
+/* Main buttons */
+button, .config-btn {
+  background: rgb(255, 235, 245) !important;
+  border: 2px solid rgba(233, 30, 99, 0.8) !important;
+  color: #2b1b2a !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+button:hover, .config-btn:hover {
+  background: rgba(233, 30, 99, 0.4) !important;
+  border-color: #e91e63 !important;
+  color: #2b1b2a !important;
+  box-shadow: 0 0 14px rgba(233, 30, 99, 0.3) !important;
+}
+
+/* Nav and special buttons - LIVE FEED, ARCHIVED MATCH, etc. */
+.nav-btn-small,
+.chal-btn,
+.star-btn,
+.camo-option,
+.live-feed-btn,
+.archived-match-btn,
+.live-feed,
+.archived-match,
+[class*="live"],
+[class*="feed"],
+[class*="archive"],
+[class*="match"] {
+  background: rgba(255, 248, 250, 0.98) !important;
+  border: 2px solid rgba(233, 30, 99, 0.8) !important;
+  border-radius: 4px !important;
+  color: #2b1b2a !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  cursor: pointer !important;
+  padding: 8px 12px !important;
+}
+
+/* Force override any blue borders from default theme */
+html body .nav-btn-small,
+html body .chal-btn,
+html body .live-feed-btn,
+html body .archived-match-btn,
+html body [class*="live"],
+html body [class*="feed"],
+html body [class*="archive"] {
+  border-left: 2px solid rgba(233, 30, 99, 0.8) !important;
+  border-right: 2px solid rgba(233, 30, 99, 0.8) !important;
+  border-color: rgba(233, 30, 99, 0.8) !important;
+}
+
+.nav-btn-small:hover,
+.chal-btn:hover,
+.chal-btn.active:hover,
+.star-btn:hover,
+.camo-option:hover,
+.live-feed-btn:hover,
+.archived-match-btn:hover,
+.live-feed:hover,
+.archived-match:hover,
+[class*="live"]:hover,
+[class*="feed"]:hover,
+[class*="archive"]:hover,
+[class*="match"]:hover {
+  background: rgba(233, 30, 99, 0.4) !important;
+  border-color: #e91e63 !important;
+  color: #2b1b2a !important;
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.3) !important;
+}
+
+/* Force remove any blue left-border from default theme */
+html body .nav-btn-small,
+html body .chal-btn,
+html body .live-feed-btn,
+html body .archived-match-btn,
+html body [class*="live"],
+html body [class*="feed"],
+html body [class*="archive"] {
+  border-left: 2px solid rgba(233, 30, 99, 0.8) !important;
+  border-right: 2px solid rgba(233, 30, 99, 0.8) !important;
+}
+
+html body .nav-btn-small:hover,
+html body .chal-btn:hover,
+html body .live-feed-btn:hover,
+html body .archived-match-btn:hover,
+html body [class*="live"]:hover,
+html body [class*="feed"]:hover,
+html body [class*="archive"]:hover {
+  border-left-color: #e91e63 !important;
+  border-right-color: #e91e63 !important;
+}
+
+button:hover, .config-btn:hover {
+  background: rgba(233, 30, 99, 0.25) !important;
+  border-color: #e91e63 !important;
+  color: #2b1b2a !important;
+  box-shadow: 0 0 14px rgba(233, 30, 99, 0.3) !important;
+}
+
+button:hover, .config-btn:hover,
+input:hover, select:hover, textarea:hover {
+  color: #2b1b2a !important;
+}
+
+/* --- NAV BUTTONS --- */
+.nav-btn:hover, .nav-btn.active {
+  background: rgba(244, 143, 177, 0.2) !important;
+  color: #e91e63 !important;
+  box-shadow: inset 0 0 12px rgba(244, 143, 177, 0.15) !important;
+}
+
+/* --- STATS --- */
+.stat-big {
+  color: #e91e63 !important;
+  text-shadow: 0 0 10px rgba(233, 30, 99, 0.3) !important;
+}
+
+.stat-rank { color: #e91e63 !important; }
+
+/* --- LIVE STATUS --- */
+.status-bar {
+  background: rgba(255, 248, 250, 0.96) !important;
+  border-left-color: #e91e63 !important;
+  color: #2b1b2a !important;
+  box-shadow: 0 4px 14px rgba(244, 143, 177, 0.18) !important;
+}
+
+#d_map,
+#career-rmain,
+#life_kills,
+#life_matches,
+#life_rounds,
+#life_time {
+  color: #e91e63 !important;
+}
+
+/* --- CHART & GRAPH STYLING (SVG/HTML charts) --- */
+/* Bar charts - keep these narrow so status-bar/progress-bar text stays readable. */
+.bar,
+.chart-bar,
+.bar-chart rect,
+.bar-fill,
+canvas[data-chart-type="bar"] {
+  fill: #f48fb1 !important;
+  background-color: #f48fb1 !important;
+  color: #2b1b2a !important;
+}
+
+/* Line graph strokes */
+.line,
+.chart-line,
+.line-chart path,
+[class*="line"],
+[class*="Line"] {
+  stroke: #e91e63 !important;
+  border-color: #e91e63 !important;
+}
+
+/* Chart.js specific classes */
+.chart-js,
+canvas.chart-js {
+  color: #2b1b2a !important;
+}
+
+/* Chart grid lines */
+.grid line,
+.tick line,
+.grid path,
+.chart-grid,
+[class*="grid"] {
+  stroke: rgba(244, 143, 177, 0.3) !important;
+  stroke-width: 1px !important;
+}
+
+/* Chart text */
+.chart text,
+.axis text,
+.tick text,
+.chart-label,
+text {
+  fill: #5a3e4b !important;
+  color: #5a3e4b !important;
+}
+
+/* Chart background */
+.chart,
+.chart-container,
+canvas,
+.chart-area {
+  background: rgba(255, 240, 245, 0.3) !important;
+}
+
+/* Specific xpm chart overrides */
+.xpm-container-base canvas,
+.xpm-scroll-wrapper canvas {
+  background: transparent !important;
+}
+
+/* Legend */
+.legend,
+.chart-legend {
+  color: #5a3e4b !important;
+  background: rgba(255, 240, 245, 0.8) !important;
+}
+
+/* --- CANVAS CHART FALLBACK --- */
+/* These will only work if the charts use SVG, not Canvas */
+svg rect {
+  fill: #f48fb1 !important;
+}
+
+svg path {
+  stroke: #e91e63 !important;
+}
+
+svg text {
+  fill: #5a3e4b !important;
+}
+
+/* --- PROGRESS BARS --- */
+.fill {
+  background: linear-gradient(90deg, #f48fb1, #e91e63) !important;
+  box-shadow: 0 0 12px rgba(244, 143, 177, 0.4) !important;
+}
+
+.progress-bar,
+.xp-bar {
+  background: rgba(255, 240, 245, 0.8) !important;
+  border: 1px solid rgba(244, 143, 177, 0.3) !important;
+}
+
+.progress-fill,
+.xp-fill,
+#career-xp-bar {
+  background: linear-gradient(90deg, #f48fb1, #e91e63) !important;
+}
+
+/* --- GRAPH SURFACE --- */
+.xpm-container-base {
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  background: rgba(255, 240, 245, 0.4) !important;
+  border: 1px solid rgba(244, 143, 177, 0.5) !important;
+  box-shadow: inset 0 0 16px rgba(244, 143, 177, 0.1), 0 0 14px rgba(0,0,0,0.05) !important;
+}
+
+.xpm-scroll-wrapper {
+  width: 100% !important;
+  min-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  background-image: linear-gradient(rgba(244, 143, 177, 0.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(233, 30, 99, 0.06) 1px, transparent 1px) !important;
+  background-size: 20px 20px;
+}
+
+.xpm-scroll-wrapper canvas {
+  width: 100% !important;
+  min-width: 100%;
+}
+
+/* --- MAIN VIEW --- */
+.main-view {
+  background: rgba(255, 240, 245, 0.3) !important;
+}
+
+/* --- SIDEBAR ITEMS --- */
+.sb-item {
+  background: rgba(255, 240, 245, 0.5) !important;
+  border-left: 2px solid transparent !important;
+  color: #2b1b2a !important;
+}
+
+.sb-item:hover,
+.sb-item.active {
+  background: rgba(244, 143, 177, 0.3) !important;
+  border-left-color: #e91e63 !important;
+  color: #2b1b2a !important;
+}
+
+.list {
+  scrollbar-color: #f48fb1 #fff0f5;
+}
+
+/* --- CARD TITLE --- */
+.card-title,
+.theme-header,
+h1 {
+  color: #e91e63 !important;
+  border-bottom: 1px solid rgba(244, 143, 177, 0.3) !important;
+  font-family: 'Playfair Display', Georgia, serif !important;
+  letter-spacing: 1.5px !important;
+}
+
+.card:first-of-type {
+  border-color: #e91e63 !important;
+  box-shadow: 0 0 0 2px rgba(233, 30, 99, 0.3), 0 16px 36px rgba(0,0,0,0.15) !important;
+}
+
+/* --- TEXT ELEMENTS --- */
+.detail-row,
+.stat-sub,
+p,
+li,
+span,
+div {
+  color: #5a3e4b !important;
+}
+
+/* --- FORM ELEMENTS --- */
+select,
+input,
+textarea {
+  background: rgba(255, 240, 245, 0.9) !important;
+  color: #2b1b2a !important;
+  border: 1px solid rgba(244, 143, 177, 0.6) !important;
+  border-radius: 4px !important;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+/* --- NAV BUTTONS SMALL & CHAL BUTTONS --- */
+.nav-btn-small,
+.chal-btn,
+.star-btn,
+.camo-option,
+.live-feed-btn,
+.archived-match-btn,
+[class*="live"],
+[class*="feed"],
+[class*="archive"],
+[class*="match"] {
+  background: rgb(255, 235, 245) !important;
+  border: 2px solid rgba(233, 30, 99, 0.8) !important;
+  border-radius: 4px !important;
+  color: #2b1b2a !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  cursor: pointer;
+  padding: 8px 12px !important;
+}
+
+html body .nav-btn-small,
+html body .chal-btn,
+html body .star-btn,
+html body .camo-option,
+html body [class*="live"],
+html body [class*="feed"],
+html body [class*="archive"],
+html body [class*="match"] {
+  background: rgb(255, 235, 245) !important;
+  color: #2b1b2a !important;
+}
+
+/* Catch any other buttons that might be missing */
+input[type="button"],
+input[type="submit"],
+.btn,
+.btn-primary,
+.btn-secondary,
+a[class*="btn"],
+a[class*="button"],
+.live-feed,
+.archived-match,
+[class*="live"],
+[class*="feed"],
+[class*="archive"] {
+  background: rgba(244, 143, 177, 0.25) !important;
+  border: 1px solid rgba(244, 143, 177, 0.8) !important;
+  color: #2b1b2a !important;
+  border-radius: 4px !important;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+input[type="button"]:hover,
+input[type="submit"]:hover,
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+a[class*="btn"]:hover,
+a[class*="button"]:hover,
+.live-feed:hover,
+.archived-match:hover,
+[class*="live"]:hover,
+[class*="feed"]:hover,
+[class*="archive"]:hover {
+  background: rgba(233, 30, 99, 0.3) !important;
+  border-color: #e91e63 !important;
+  color: #2b1b2a !important;
+}
+
+.nav-btn-small:hover,
+.chal-btn:hover,
+.chal-btn.active:hover,
+.star-btn:hover,
+.camo-option:hover,
+.live-feed-btn:hover,
+.archived-match-btn:hover {
+  background: rgba(233, 30, 99, 0.3) !important;
+  border-color: #e91e63 !important;
+  color: #2b1b2a !important;
+  box-shadow:0 0 10px rgba(233, 30, 99, 0.2) !important;
+}
+
+/* Catch generic hover states */
+input[type="button"]:hover,
+input[type="submit"]:hover,
+.btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover {
+  background: rgba(233, 30, 99, 0.3) !important;
+  border-color: #e91e63 !important;
+  color: #2b1b2a !important;
+}
+
+/* --- GRAPH POP-OUT MODE (AGGRESSIVE OVERRIDE) --- */
+html body .graph-popout-mode,
+html body .graph-popout,
+body .graph-popout-mode,
+body .graph-popout {
+  position: fixed !important;
+  top: 2% !important;
+  left: 2% !important;
+  width: 96% !important;
+  height: 96vh !important;
+  background: rgba(255, 240, 245, 0.98) !important;
+  background-color: rgba(255, 240, 245, 0.98) !important;
+  border: 1px solid rgba(244, 143, 177, 0.6) !important;
+  border-top: 3px solid #e91e63 !important;
+  z-index: 9999 !important;
+  padding: 20px !important;
+  box-shadow: 0 10px 50px rgba(233, 30, 99, 0.15), inset 0 0 30px rgba(244, 143, 177, 0.1) !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  box-sizing: border-box !important;
+  color: #2b1b2a !important;
+}
+
+/* Force all children to inherit proper colors */
+html body .graph-popout-mode *,
+html body .graph-popout * {
+  color: #2b1b2a !important;
+  background-color: transparent !important;
+}
+
+/* Headers stay pink */
+html body .graph-popout-mode .header,
+html body .graph-popout-mode h1,
+html body .graph-popout-mode h2,
+html body .graph-popout-mode h3,
+html body .graph-popout .header,
+html body .graph-popout h1,
+html body .graph-popout h2,
+html body .graph-popout h3 {
+  color: #e91e63 !important;
+  border-left: 3px solid #e91e63 !important;
+  padding-left: 10px !important;
+}
+
+/* Graph container inside popout */
+html body .graph-popout-mode .xpm-container-base,
+html body .graph-popout .xpm-container-base {
+  display: block !important;
+  background: rgba(255, 240, 245, 0.8) !important;
+  background-color: rgba(255, 240, 245, 0.8) !important;
+  border: 1px solid rgba(244, 143, 177, 0.5) !important;
+  border-left: 3px solid #e91e63 !important;
+  box-shadow: inset 0 0 20px rgba(244, 143, 177, 0.15) !important;
+  padding: 10px !important;
+  border-radius: 4px !important;
+  margin-top: 10px !important;
+}
+
+/* Force all text inside popout to be dark */
+html body .graph-popout-mode *,
+html body .graph-popout * {
+  color: #2b1b2a !important;
+}
+
+/* Except headers which should be pink */
+html body .graph-popout-mode .header,
+html body .graph-popout-mode h1,
+html body .graph-popout-mode h2,
+html body .graph-popout-mode h3,
+html body .graph-popout .header,
+html body .graph-popout h1,
+html body .graph-popout h2,
+html body .graph-popout h3 {
+  color: #e91e63 !important;
+}
+
+.graph-popout-mode h1,
+.graph-popout-mode h2,
+.graph-popout-mode h3,
+.graph-popout-mode .header,
+.graph-popout h1,
+.graph-popout h2,
+.graph-popout h3,
+.graph-popout .header {
+  color: #e91e63 !important;
+  border-left: 3px solid #e91e63 !important;
+  padding-left: 10px !important;
+}
+
+.graph-popout-mode .xpm-container-base,
+.graph-popout .xpm-container-base {
+  display: block !important;
+  background: rgba(255, 240, 245, 0.8) !important;
+  border: 1px solid rgba(244, 143, 177, 0.5) !important;
+  border-left: 3px solid #e91e63 !important;
+  box-shadow: inset 0 0 20px rgba(244, 143, 177, 0.15) !important;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.graph-popout-mode .xpm-scroll-wrapper,
+.graph-popout .xpm-scroll-wrapper {
+  background-image: linear-gradient(rgba(244, 143, 177, 0.08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(233, 30, 99, 0.08) 1px, transparent 1px) !important;
+  background-size: 20px 20px !important;
+}
+
+/* Also force styling on any div inside popout */
+.graph-popout-mode div,
+.graph-popout div {
+  color: #2b1b2a !important;
+}
+
+/* --- GRAPH POPOUT BUTTON --- */
+.graph-popout-btn {
+  background: rgba(255, 240, 245, 0.9) !important;
+  color: #e91e63 !important;
+  border: 1px solid rgba(244, 143, 177, 0.8) !important;
+  padding: 8px 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-family: 'Montserrat', sans-serif !important;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.graph-popout-btn:hover {
+  background: #e91e63 !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.4) !important;
+}
+
+/* --- CURSOR --- */
+body {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='%23fff0f5' stroke='%23e91e63' stroke-width='1.5'><path d='M14.5 12.5L14.5 3.5C14.5 2.1 13.4 1 12 1C10.6 1 9.5 2.1 9.5 3.5L9.5 10.5L8.2 10.2C8.1 10.2 7.7 10.2 7.4 10.5L6 11.9L11.6 17.5C12 17.9 12.6 18.2 13.2 18.2H18C18.8 18.2 19.5 17.5 19.5 16.7V14C19.5 13.2 18.8 12.5 18 12.5H14.5Z'/></svg>"), auto !important;
+}
+
+.nav-btn:hover, button:hover, .sb-item:hover, .config-btn:hover,
+.camo-option:hover, .star-btn:hover, .header:hover, input:hover, select:hover {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%23fff0f5' stroke='%23e91e63' stroke-width='1.5'><path d='M14.5 12.5L14.5 3.5C14.5 2.1 13.4 1 12 1C10.6 1 9.5 2.1 9.5 3.5L9.5 10.5L8.2 10.2C8.1 10.2 7.7 10.2 7.4 10.5L6 11.9L11.6 17.5C12 17.9 12.6 18.2 13.2 18.2H18C18.8 18.2 19.5 17.5 19.5 16.7V14C19.5 13.2 18.8 12.5 18 12.5H14.5Z'/></svg>"), pointer !important;
+}
+
+/* --- CLEANUP: keep hover styling targeted to actual controls only --- */
+.controls.initially-hidden,
+.initially-hidden {
+  display: none;
+}
+
+html body .live-mission-card,
+html body .live-card-content,
+html body .live-mission-row,
+html body .live-mission-left,
+html body .live-mission-details,
+html body .live-workshop-container,
+html body .best-match-row,
+html body .best-match-row-inner,
+html body .best-match-actions,
+html body .stacked-list,
+html body .settings-row,
+html body .changelog-header-row {
+  border: initial !important;
+  box-shadow: initial !important;
+  padding: initial;
+}
+
+html body .live-mission-card,
+html body .best-match-row {
+  border: 1px solid rgba(244, 143, 177, 0.8) !important;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.1) !important;
+  padding: 20px !important;
+}
+
+html body .live-card-content,
+html body .live-mission-row,
+html body .live-mission-left,
+html body .live-mission-details,
+html body .best-match-row-inner,
+html body .best-match-actions,
+html body .stacked-list,
+html body .settings-row,
+html body .changelog-header-row {
+  background: transparent !important;
+}
+
+html body .controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  background: rgba(255, 240, 245, 0.88) !important;
+  border: 1px solid rgba(244, 143, 177, 0.45) !important;
+  border-radius: 8px !important;
+  padding: 15px !important;
+  box-shadow: 0 6px 18px rgba(244, 143, 177, 0.12) !important;
+}
+
+html body .controls.initially-hidden {
+  display: none;
+}
+
+html body .nav-btn-small:hover,
+html body button:hover,
+html body .config-btn:hover,
+html body .chal-btn:hover,
+html body .camo-option:hover,
+html body .star-btn:hover {
+  background: rgba(233, 30, 99, 0.22) !important;
+  border-color: #e91e63 !important;
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.18) !important;
+}
+
+/* Live dashboard layout containers are not buttons. */
+html body .live-card-content,
+html body .live-card-title-row,
+html body .live-mission-row,
+html body .live-mission-left,
+html body .live-mission-details {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+html body .live-card-content:hover,
+html body .live-card-title-row:hover,
+html body .live-mission-row:hover,
+html body .live-mission-left:hover,
+html body .live-mission-details:hover,
+html body .live-workshop-container:hover,
+html body .live-map-name:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+html body .live-card-title-row {
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid rgba(244, 143, 177, 0.3) !important;
+}
+
+html body .live-card-title-row:hover {
+  border-bottom: 1px solid rgba(244, 143, 177, 0.3) !important;
+}
+
+html body .live-map-name {
+  display: block !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
+}

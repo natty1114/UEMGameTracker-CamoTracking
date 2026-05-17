@@ -1,0 +1,280 @@
+/* --- SHI NO NUMA: SWAMP OUTPOST --- */
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@500;700&display=swap');
+
+:root {
+    --weapon-name-color: #d8c889;
+    --weapon-table-text: #e5eadc;
+    --career-accent: #b7d97b;
+    --career-value: #f0f5e8;
+    --career-muted: #9aa88c;
+    --settings-title: #d8c889;
+    --settings-help: #b7d97b;
+    --settings-description: #d9e0cf;
+    --settings-status: #f0d66a;
+    --settings-note: #8d9880;
+}
+
+body {
+    background:
+        radial-gradient(circle at 26% 20%, rgba(210, 190, 105, 0.14), transparent 28%),
+        linear-gradient(135deg, #071111 0%, #122219 36%, #26301d 66%, #050908 100%) !important;
+    color: #d9e0cf !important;
+    font-family: 'Special Elite', Consolas, monospace !important;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        radial-gradient(circle at 15% 78%, rgba(179, 146, 59, 0.16), transparent 22%),
+        radial-gradient(circle at 88% 16%, rgba(109, 143, 98, 0.16), transparent 26%),
+        repeating-linear-gradient(115deg, rgba(220, 224, 190, 0.02) 0, rgba(220, 224, 190, 0.02) 2px, transparent 2px, transparent 9px);
+    opacity: 0.9;
+}
+
+.main-view {
+    background-color: #071111 !important;
+    background-image:
+        linear-gradient(rgba(7, 17, 17, 0.38), rgba(8, 15, 11, 0.58)),
+        radial-gradient(circle at 50% 18%, rgba(190, 220, 205, 0.12), transparent 30%),
+        url('shi_no_numa_swamp_background.png') !important;
+    background-position: center, center, center !important;
+    background-size: cover, cover, cover !important;
+    background-repeat: no-repeat, no-repeat, no-repeat !important;
+    background-attachment: local, local, local !important;
+}
+
+.sidebar {
+    background: linear-gradient(180deg, rgba(6, 14, 13, 0.98), rgba(18, 28, 19, 0.98) 48%, rgba(5, 9, 8, 0.98)) !important;
+    border-right: 5px solid #475735 !important;
+    box-shadow: inset -18px 0 32px rgba(0, 0, 0, 0.55) !important;
+}
+
+.header,
+.header-camo h1,
+h1 {
+    color: #d8c889 !important;
+    font-family: 'Oswald', 'Segoe UI', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.9), 0 0 14px rgba(216, 200, 137, 0.18) !important;
+    text-transform: uppercase;
+}
+
+.header {
+    background: rgba(16, 28, 22, 0.92) !important;
+    border-left: 4px solid #b7d97b !important;
+    border-bottom: 2px solid rgba(216, 200, 137, 0.45) !important;
+}
+
+.nav-btn,
+.config-btn {
+    background: rgba(13, 24, 20, 0.86) !important;
+    border-color: rgba(126, 142, 85, 0.34) !important;
+    color: #cbd5bf !important;
+    font-family: 'Oswald', 'Segoe UI', sans-serif !important;
+    letter-spacing: 0.8px !important;
+}
+
+.nav-btn:hover,
+.nav-btn.active,
+.config-btn:hover,
+.config-btn.active {
+    background: rgba(63, 78, 45, 0.92) !important;
+    color: #f0d66a !important;
+    box-shadow: inset 4px 0 0 #b7d97b, 0 0 12px rgba(183, 217, 123, 0.14) !important;
+}
+
+.sb-item {
+    background: rgba(11, 21, 18, 0.62) !important;
+    border-left: 2px solid transparent !important;
+    color: #cbd5bf !important;
+}
+
+.sb-item:hover,
+.sb-item.active {
+    background: rgba(48, 62, 40, 0.86) !important;
+    border-left-color: #d8c889 !important;
+}
+
+.card,
+.chal-card {
+    background: rgba(9, 18, 16, 0.86) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    border: 1px solid rgba(133, 150, 91, 0.42) !important;
+    border-radius: 3px !important;
+    box-shadow:
+        inset 0 0 24px rgba(0, 0, 0, 0.56),
+        0 14px 32px rgba(0, 0, 0, 0.34) !important;
+}
+
+.card-title,
+.theme-header {
+    color: #d8c889 !important;
+    border-bottom: 1px solid rgba(216, 200, 137, 0.18) !important;
+    font-family: 'Oswald', 'Segoe UI', sans-serif !important;
+    letter-spacing: 1.2px !important;
+}
+
+.card:first-of-type {
+    border-color: rgba(183, 217, 123, 0.78) !important;
+    box-shadow:
+        inset 0 0 26px rgba(0, 0, 0, 0.62),
+        0 0 0 1px rgba(216, 200, 137, 0.24),
+        0 16px 36px rgba(0, 0, 0, 0.34) !important;
+}
+
+select,
+input,
+textarea {
+    background: rgba(5, 12, 11, 0.95) !important;
+    color: #e5eadc !important;
+    border: 1px solid rgba(133, 150, 91, 0.62) !important;
+    border-radius: 3px !important;
+    font-family: 'Special Elite', Consolas, monospace !important;
+}
+
+button,
+.nav-btn-small,
+.chal-btn {
+    background: rgba(50, 67, 40, 0.92) !important;
+    border: 1px solid #7e8e55 !important;
+    border-radius: 3px !important;
+    color: #f0d66a !important;
+    font-family: 'Oswald', 'Segoe UI', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.8px !important;
+    text-transform: uppercase;
+}
+
+button:hover,
+.nav-btn-small:hover,
+.chal-btn.active:hover {
+    background: rgba(93, 105, 57, 0.96) !important;
+    border-color: #d8c889 !important;
+    color: #fff0a8 !important;
+    box-shadow: 0 0 12px rgba(240, 214, 106, 0.16) !important;
+}
+
+.detail-row,
+.stat-sub,
+p,
+li {
+    color: #cbd5bf !important;
+}
+
+.stat-big,
+.stat-rank,
+.highlight-value,
+.score-value,
+.weapon-name,
+.best-match-xp {
+    color: #b7d97b !important;
+}
+
+.danger-value,
+.error-empty {
+    color: #d17554 !important;
+}
+
+.muted-empty,
+.rank-subtitle,
+.sb-date {
+    color: #9aa88c !important;
+}
+
+.xpm-container-base {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: rgba(5, 12, 11, 0.92) !important;
+    border: 1px solid rgba(126, 142, 85, 0.48) !important;
+    border-left: 3px solid #b7d97b !important;
+    border-radius: 3px !important;
+    box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.72) !important;
+}
+
+.xpm-scroll-wrapper {
+    width: 100% !important;
+    min-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    background-image:
+        linear-gradient(rgba(183, 217, 123, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(216, 200, 137, 0.028) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+.xpm-scroll-wrapper canvas {
+    width: 100% !important;
+    min-width: 100%;
+}
+
+@media (max-width: 760px) {
+    .main-view {
+        background-image:
+            linear-gradient(rgba(7, 17, 17, 0.62), rgba(8, 15, 11, 0.76)),
+            url('shi_no_numa_swamp_background.png') !important;
+    }
+
+    .card,
+    .chal-card {
+        background: rgba(9, 18, 16, 0.94) !important;
+    }
+}
+
+/* --- SHI NO NUMA STYLE ZOMBIES CURSORS --- */
+
+/* Main cursor: swampy bone-and-rust pointer */
+body {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'><defs><filter id='glow'><feDropShadow dx='1.2' dy='1.2' stdDeviation='1.2' flood-color='%23000000' flood-opacity='0.55'/><feDropShadow dx='0' dy='0' stdDeviation='1.4' flood-color='%2378ff5a' flood-opacity='0.35'/></filter></defs><path d='M5 3L24 15L16.3 17.3L21.8 29.2L15.3 31.5L10.1 19.2L3.8 23.6Z' fill='%236b4a2e' stroke='%23180f09' stroke-width='1.9' stroke-linejoin='round' filter='url(%23glow)'/><path d='M7.2 5.8L20.2 14.1' stroke='%23a87944' stroke-width='1.2' stroke-linecap='round'/><path d='M8.7 9.5L15.7 14.1' stroke='%23312f1e' stroke-width='1.1' stroke-linecap='round'/><path d='M10.2 18.8L15.7 29.6' stroke='%23d8c28a' stroke-width='1.1' stroke-linecap='round'/><path d='M13.1 16.9c1.2-1.8 3.4-1.4 4.1.4-.8 1.5-3.1 1.7-4.1-.4z' fill='%2378ff5a' stroke='%23180f09' stroke-width='0.8'/><path d='M22.5 7.5c1.6-1.7 4.5-.7 4.7 1.8.2 2.3-2.1 4-4.1 3.1l-1.9 2-1.5-1.5 1.9-2c-.7-1.1-.6-2.4.9-3.4z' fill='%23c7b680' stroke='%23180f09' stroke-width='1.1'/><circle cx='24.5' cy='9.7' r='0.8' fill='%23180f09'/><path d='M5.8 22.1c1.8.5 3.1.2 4.1-.9' stroke='%2378ff5a' stroke-width='1' stroke-linecap='round' opacity='0.75'/></svg>") 4 3, auto !important;
+}
+
+/* Hover cursor: glowing zombie swamp skull */
+button:hover,
+.config-btn:hover,
+.nav-btn:hover,
+.nav-btn.active,
+.nav-btn-small:hover,
+.chal-btn:hover,
+.sb-item:hover,
+.star-btn:hover,
+select:hover,
+input:hover,
+.card:hover,
+.chal-card:hover,
+.perk-item:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><defs><filter id='glow'><feDropShadow dx='1.2' dy='1.2' stdDeviation='1.2' flood-color='%23000000' flood-opacity='0.6'/><feDropShadow dx='0' dy='0' stdDeviation='2.2' flood-color='%2378ff5a' flood-opacity='0.72'/></filter></defs><g filter='url(%23glow)'><path d='M18 4c6.1 0 10.5 4.5 10.5 10.4 0 3.8-1.8 6.2-4.2 8v4.2c0 1.2-.9 2.1-2.1 2.1H13.8c-1.2 0-2.1-.9-2.1-2.1v-4.2c-2.5-1.8-4.2-4.2-4.2-8C7.5 8.5 11.9 4 18 4z' fill='%23c7b680' stroke='%23180f09' stroke-width='1.8'/><path d='M10.5 21.6c2.2 1.4 4.8 2.1 7.5 2.1s5.3-.7 7.5-2.1' fill='none' stroke='%236b4a2e' stroke-width='1.1' stroke-linecap='round'/><circle cx='14.1' cy='15.2' r='2.6' fill='%23180f09'/><circle cx='21.9' cy='15.2' r='2.6' fill='%23180f09'/><circle cx='14.1' cy='15.2' r='1.1' fill='%2378ff5a'/><circle cx='21.9' cy='15.2' r='1.1' fill='%2378ff5a'/><path d='M18 17.8l-1.7 3h3.4z' fill='%23180f09'/><path d='M14 24.2h8M15.5 26.4h5' stroke='%23180f09' stroke-width='1.2' stroke-linecap='round'/><path d='M7 27c2.2-1.1 4.8-.8 6.7.8M29 27c-2.2-1.1-4.8-.8-6.7.8' stroke='%2378ff5a' stroke-width='1.2' stroke-linecap='round' opacity='0.85'/><path d='M26.3 7.2l2.7-2.1M28.4 10.2l3.3-.4M9.7 7.2L7 5.1M7.6 10.2l-3.3-.4' stroke='%23d8c28a' stroke-width='1.2' stroke-linecap='round'/></g></svg>") 18 18, pointer !important;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
+}

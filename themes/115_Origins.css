@@ -1,6 +1,19 @@
 /* --- ORIGINS 115: ULTIMATE EDITION (REMASTERED) --- */
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
+:root {
+    --weapon-name-color: #58a6ff;
+    --weapon-table-text: #d7f3ff;
+    --career-accent: #58a6ff;
+    --career-value: #e6f5ff;
+    --career-muted: #879aa7;
+    --settings-title: #d7f3ff;
+    --settings-help: #8fb8d8;
+    --settings-description: #879aa7;
+    --settings-status: #58a6ff;
+    --settings-note: #6f8798;
+}
+
 /* --- TACTICAL 115 CURSORS --- */
 body {
     background: #0b0f14 !important;
@@ -45,6 +58,127 @@ body::after {
     text-shadow: 0 0 10px #00a8ff, 0 0 20px rgba(0, 168, 255, 0.5);
     background: linear-gradient(90deg, rgba(0,168,255,0.1), transparent);
     padding-left: 15px !important;
+}
+
+.nav-btn,
+.config-btn,
+.sidebar-section-label,
+.history-page-info,
+.history-page-btn {
+    color: #8fb8d8 !important;
+    text-shadow: 0 0 6px rgba(0, 168, 255, 0.16) !important;
+}
+
+.nav-btn:hover,
+.nav-btn.active,
+.config-btn:hover,
+.config-btn.active,
+.history-page-btn:hover {
+    color: #ffffff !important;
+    background: rgba(0, 168, 255, 0.14) !important;
+    text-shadow: 0 0 10px rgba(0, 168, 255, 0.7) !important;
+}
+
+.history-pagination {
+    display: grid !important;
+    grid-template-columns: minmax(84px, 1fr) 42px minmax(84px, 1fr) !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.history-page-btn {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    white-space: nowrap !important;
+}
+
+.history-page-info {
+    min-width: 42px !important;
+    white-space: nowrap !important;
+}
+
+.sidebar-section-label,
+.card-title,
+.theme-header,
+.header-subtitle,
+.setting-help,
+.setting-description,
+.setting-status,
+.setting-note,
+.update-status,
+.rank-icon-label,
+.rank-subtitle,
+.career-rsub,
+.career-title,
+.career-map-name,
+.version-value,
+.stat-label,
+.camo-label,
+.challenge-desc,
+.compact-scroll-list,
+.muted-loading,
+.muted-empty,
+.list-name,
+.sb-date,
+.sb-id {
+    color: #879aa7 !important;
+}
+
+.card-title,
+.theme-header,
+.setting-title,
+.release-heading,
+.challenge-category,
+.list-highlight,
+.xp-map-value,
+.map-title-progress,
+.highlight-value,
+.highlight-large-value,
+.career-rmain,
+.round-value {
+    color: #58a6ff !important;
+    text-shadow: 0 0 8px rgba(0, 168, 255, 0.34) !important;
+}
+
+.setting-title,
+.challenge-title,
+.map-title-name,
+.score-value,
+.loadout-value,
+.xp-map-name,
+.detail-row span:last-child,
+.sb-map {
+    color: #e6f5ff !important;
+}
+
+.detail-row,
+.compact-stat-row,
+.compact-list-row,
+.xp-map-row {
+    color: #9fb0ba !important;
+    border-bottom-color: rgba(88, 166, 255, 0.18) !important;
+}
+
+.gum-value {
+    color: #b47cff !important;
+    text-shadow: 0 0 8px rgba(180, 124, 255, 0.28) !important;
+}
+
+.gold-value,
+.orange-value {
+    color: #ffb347 !important;
+    text-shadow: 0 0 8px rgba(255, 179, 71, 0.3) !important;
+}
+
+.danger-value,
+.missing-archive-label,
+.error-empty,
+.render-error {
+    color: #ff6b6b !important;
 }
 
 /* Weathered Metal Card Look */
@@ -194,4 +328,31 @@ button:hover, .config-btn:hover {
 .xpm-scroll-wrapper canvas {
     width: 100% !important;
     min-width: 100%;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
 }

@@ -1,0 +1,410 @@
+/* --- PACIFIC PARADISE: TROPICAL SERENE ESCAPE --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Josefin+Slate:wght@400;700&display=swap');
+
+:root {
+    --weapon-name-color: #08351f;
+    --weapon-table-text: #2a2a2a;
+    --career-accent: #1a4d2e;
+    --career-value: #1a1a1a;
+    --career-muted: #315948;
+    --settings-title: #08351f;
+    --settings-help: #2e8b57;
+    --settings-description: #2a2a2a;
+    --settings-status: #ff69b4;
+    --settings-note: #315948;
+}
+
+/* Override the global tactical variables so they don't bleed through */
+:root {
+    --bg-dark: #f0f8ff !important;
+    --bg-panel: rgba(255, 255, 255, 0.75) !important;
+    --bg-panel-hover: rgba(255, 255, 255, 0.9) !important;
+    --accent: #FF69B4 !important; /* Hot Pink */
+    --primary: #151515 !important; /* Dark Text */
+    --highlight: #2E8B57 !important; /* Sea Green */
+    --gold: #FF8C00 !important; /* Tropical Orange */
+    --danger: #FF4500 !important;
+    --font-main: 'Poppins', sans-serif !important;
+}
+
+body {
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1), transparent 40%),
+        linear-gradient(135deg, #87CEEB 0%, #98FB98 35%, #FFDAB9 65%, #FFB6C1 100%),
+        url('pacific_paradise_beach_background.jpg') !important;
+    background-position: center, center, center !important;
+    background-size: 1000px 1000px, 100% 100%, cover !important;
+    background-repeat: repeat, no-repeat, no-repeat !important;
+    background-attachment: fixed, fixed, fixed !important;
+    color: #151515 !important;
+    font-family: 'Poppins', sans-serif !important;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232E8B57' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L15 9L22 9L13 11L15 18L12 15L9 18L11 11L2 9L9 9Z'/></svg>"), auto !important;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 150px 150px, 200px 200px;
+    animation: tropicalDrift 50s linear infinite;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.03) 10px,
+            rgba(255, 255, 255, 0.03) 20px
+        );
+    animation: sunGlare 8s ease-in-out infinite alternate;
+}
+
+/* --- TROPICAL SCROLLBARS --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(46, 139, 87, 0.6);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(46, 139, 87, 0.9);
+}
+
+/* --- SIDEBAR OVERRIDES --- */
+html body .sidebar {
+    background: rgba(248, 255, 249, 0.98) !important;
+    border-right: 2px solid #2E8B57 !important;
+    box-shadow: inset 5px 0 15px rgba(46, 139, 87, 0.1), 0 0 20px rgba(255, 255, 255, 0.3) !important;
+    color: #08351f !important;
+}
+
+html body .sidebar .sb-item,
+html body .sidebar .nav-btn,
+html body .sidebar .config-btn,
+html body .sidebar button {
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: #08351f !important;
+    border-left: 3px solid transparent !important;
+    text-shadow: none !important;
+    font-weight: 800 !important;
+}
+
+html body .sidebar .sb-map {
+    color: #052615 !important;
+    font-weight: 900 !important;
+    font-size: 0.95em !important;
+}
+
+html body .sidebar .sb-date {
+    color: #315948 !important;
+    font-size: 0.75em !important;
+    margin-top: 3px !important;
+}
+
+html body .sidebar .sb-id {
+    color: #1a3a2a !important;
+    font-size: 0.65em !important;
+    font-family: var(--font-mono) !important;
+    margin-top: 3px !important;
+    word-break: break-all !important;
+    line-height: 1.2 !important;
+}
+
+html body .sidebar .sb-item:hover,
+html body .sidebar .sb-item.active,
+html body .sidebar .nav-btn:hover,
+html body .sidebar .nav-btn.active,
+html body .sidebar .config-btn:hover,
+html body .sidebar .config-btn.active,
+html body .sidebar button:hover {
+    background: rgba(46, 139, 87, 0.25) !important;
+    border-left-color: #2E8B57 !important;
+    color: #052615 !important;
+    text-shadow: none !important;
+}
+
+html body .sidebar .match-log-title,
+html body .sidebar .match-log-meta,
+html body .sidebar .match-log-coords,
+html body .sidebar .match-log-empty,
+html body .sidebar .match-log-page {
+    color: #102f22 !important;
+    text-shadow: none !important;
+}
+
+html body .sidebar .match-log-meta,
+html body .sidebar .match-log-coords {
+    color: #315948 !important;
+}
+
+.app-version-label {
+    padding: 8px 20px 14px 20px;
+    color: #000000 !important;
+    font-size: 0.68em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* --- HEADER & CARDS --- */
+.header,
+.header-camo h1,
+h1 {
+    color: #1a4d2e !important;
+    font-family: 'Josefin Slate', 'Poppins', sans-serif !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 1px 1px 0 rgba(46, 139, 87, 0.5) !important;
+    font-weight: 700 !important;
+}
+
+.header {
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-left: 4px solid #2E8B57 !important;
+    border-bottom: 2px solid #FFDAB9 !important;
+}
+
+.card,
+.chal-card,
+.camo-card,
+.controls {
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    border: 1px solid rgba(46, 139, 87, 0.3) !important;
+    border-top: 2px solid #FFB6C1 !important;
+    border-radius: 6px !important;
+    box-shadow:
+        inset 0 0 12px rgba(255, 255, 255, 0.6),
+        0 0 10px rgba(46, 139, 87, 0.15),
+        0 0 18px rgba(255, 182, 193, 0.1) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-title,
+.theme-header {
+    color: #FF69B4 !important;
+    font-family: 'Josefin Slate', 'Poppins', sans-serif !important;
+    font-size: 0.75em !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.8) !important;
+    border-bottom: 1px solid rgba(255, 182, 193, 0.3) !important;
+}
+
+/* --- BUTTONS & TABS --- */
+button,
+.nav-btn-small,
+.chal-btn,
+.player-tab {
+    background: rgba(255, 182, 193, 0.25) !important;
+    border: 1px solid #FF69B4 !important;
+    border-radius: 4px !important;
+    color: #000000 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 600 !important;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.7) !important;
+}
+
+button:hover,
+.nav-btn-small:hover,
+.chal-btn:hover,
+.player-tab:hover,
+.player-tab.active {
+    background: rgba(255, 105, 180, 0.35) !important;
+    border-color: #FF1493 !important;
+    color: #1C1C1C !important;
+    box-shadow: 0 0 12px rgba(255, 105, 180, 0.4), inset 0 0 6px rgba(255, 255, 255, 0.5) !important;
+}
+
+select,
+input,
+textarea {
+    background: rgba(255, 255, 255, 0.85) !important;
+    color: #1a1a1a !important;
+    border: 1px solid rgba(46, 139, 87, 0.4) !important;
+    border-radius: 4px !important;
+}
+
+/* --- TEXT & STATS --- */
+.stat-big,
+#d_map,
+#career-rmain,
+#life_kills,
+#life_matches,
+#life_rounds,
+#life_time,
+.w-name {
+    color: #0d3b1e !important;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.9), 0 0 8px rgba(46, 139, 87, 0.25) !important;
+    font-weight: 600 !important;
+}
+
+.stat-sub,
+p,
+li,
+.w-type,
+.detail-row,
+.sb-date,
+.sb-id {
+    color: #1a3a2a !important;
+}
+
+/* --- TABLES AND LIST READABILITY FIXES --- */
+table th {
+    color: #1a4d2e !important;
+    font-weight: 700 !important;
+    border-bottom: 1px solid rgba(46, 139, 87, 0.3) !important;
+}
+
+table td {
+    background: rgba(255, 255, 255, 0.5) !important;
+    color: #151515 !important;
+    border-bottom: 1px solid rgba(46, 139, 87, 0.1) !important;
+}
+
+table td:first-child {
+    color: #08351f !important; 
+    font-weight: 700 !important;
+}
+
+table td:last-child {
+    color: #151515 !important;
+    font-weight: 700 !important;
+}
+
+/* Fixes for the Logistics list items and similar lists */
+.detail-row {
+    border-bottom: 1px solid rgba(46, 139, 87, 0.2) !important;
+    color: #151515 !important;
+}
+
+.detail-row span,
+.detail-row span:last-child {
+    color: #08351f !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+
+/* --- PROGRESS BARS --- */
+.progress-bar,
+.xp-bar {
+    background: rgba(240, 248, 255, 0.6) !important;
+    border: 1px solid rgba(135, 206, 235, 0.4) !important;
+}
+
+.progress-fill,
+.xp-fill,
+#career-xp-bar,
+.fill {
+    background: linear-gradient(90deg, #FFB6C1, #87CEEB, #98FB98) !important;
+    box-shadow: 0 0 8px rgba(135, 206, 235, 0.3) !important;
+}
+
+.status-bar {
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-left-color: #FF69B4 !important;
+    color: #1a1a1a !important;
+}
+
+/* --- GRAPH SURFACE (NORMAL & POPOUT) --- */
+.xpm-container-base {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(46, 139, 87, 0.35) !important;
+    border-left: 3px solid #FF69B4 !important;
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.4), 0 0 12px rgba(46, 139, 87, 0.1) !important;
+}
+
+.xpm-scroll-wrapper {
+    background-image: 
+        linear-gradient(rgba(135, 206, 235, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(46, 139, 87, 0.15) 1px, transparent 1px) !important;
+    background-size: 24px 24px !important;
+}
+
+.graph-popout-mode {
+    background-color: #f0f8ff !important;
+    background-image: 
+        linear-gradient(135deg, rgba(135, 206, 235, 0.3) 0%, rgba(152, 251, 152, 0.3) 35%, rgba(255, 218, 185, 0.3) 65%, rgba(255, 182, 193, 0.3) 100%) !important;
+    border: 2px solid #2E8B57 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(46, 139, 87, 0.3) !important;
+}
+
+.graph-popout-btn {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #1a4d2e !important;
+    border: 2px solid #2E8B57 !important;
+    font-weight: 700 !important;
+}
+
+.graph-popout-btn:hover {
+    background: rgba(46, 139, 87, 0.2) !important;
+    color: #052615 !important;
+}
+
+/* --- TROPICAL ANIMATIONS --- */
+@keyframes tropicalDrift {
+    0% { background-position: 0% 0%, 0% 0%; }
+    100% { background-position: 100% 100%, 100% 100%; }
+}
+
+@keyframes sunGlare {
+    0% { opacity: 0; }
+    100% { opacity: 0.3; }
+}
+
+@keyframes breezeSweep {
+    0% { left: -150%; }
+    100% { left: 150%; }
+}
+
+/* --- HOVER CURSOR --- */
+.nav-btn:hover, button:hover, .sb-item:hover, .config-btn:hover, 
+.camo-option:hover, .star-btn:hover, .header:hover, input:hover, select:hover, .player-tab:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232E8B57' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L15 9L22 9L13 11L15 18L12 15L9 18L11 11L2 9L9 9Z'/></svg>"), pointer !important;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
+}

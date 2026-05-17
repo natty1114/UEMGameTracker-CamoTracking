@@ -1,0 +1,19 @@
+# Local/runtime config and upload state
+config.json
+global_stats_state.json
+
+# Server-side secrets and local Namecheap test config
+namecheap/backend/config.php
+namecheap/python/global_stats_config.json
+namecheap/python/global_stats_state.json
+
+# Build/runtime output
+build/
+dist/
+Release_Build/
+__pycache__/
+*.pyc
+
+# Local management tool state
+dev_tools/admin_state.json
+dev_tools/ftp_config.json

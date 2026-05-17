@@ -1,11 +1,35 @@
 /* --- RETROWAVE: ULTIMATE EDITION --- */
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
+:root {
+    --weapon-name-color: #00ffff;
+    --weapon-table-text: #f3f3ff;
+    --career-accent: #ff00ff;
+    --career-value: #f3f3ff;
+    --career-muted: #9d8dcc;
+    --settings-title: #ff00ff;
+    --settings-help: #00ffff;
+    --settings-description: #f3f3ff;
+    --settings-status: #ffcc00;
+    --settings-note: #9d8dcc;
+}
+
 body {
     background-color: #12001f !important;
     color: #00f2ff !important;
     font-family: 'VT323', monospace !important;
     font-size: 1.2em; /* Pixel fonts render small */
+}
+
+.main-view {
+    background-color: #12001f !important;
+    background-image:
+        linear-gradient(rgba(18, 0, 31, 0.18), rgba(18, 0, 31, 0.36)),
+        url('retro_retrowave_background.jpg') !important;
+    background-position: center, center !important;
+    background-size: 100% 100%, cover !important;
+    background-repeat: no-repeat, no-repeat !important;
+    background-attachment: local, local !important;
 }
 
 /* --- CRT SCANLINES --- */
@@ -102,4 +126,31 @@ button:hover { background: #ff00ff !important; color: #000 !important; }
 .xpm-scroll-wrapper canvas {
     width: 100% !important;
     min-width: 100%;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
 }

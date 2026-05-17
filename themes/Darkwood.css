@@ -1,0 +1,270 @@
+/* --- DARKWOOD: GILDED WALNUT OPERATIONS ROOM --- */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Libre+Baskerville:wght@400;700&display=swap');
+
+:root {
+    --weapon-name-color: #e2c13d;
+    --weapon-table-text: #e8dcc5;
+    --career-accent: #e2c13d;
+    --career-value: #f0e5ca;
+    --career-muted: #a8956d;
+    --settings-title: #f3d446;
+    --settings-help: #c6ad68;
+    --settings-description: #d8cba8;
+    --settings-status: #e2c13d;
+    --settings-note: #9d8a5a;
+}
+
+body {
+    background-image:
+        linear-gradient(rgba(255, 205, 96, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 205, 96, 0.02) 1px, transparent 1px),
+        radial-gradient(circle at 25% 12%, rgba(171, 105, 40, 0.2), transparent 32%),
+        linear-gradient(135deg, #130806 0%, #281105 34%, #3a1d0e 62%, #0b0604 100%) !important;
+    background-position: top left, top left, center, center !important;
+    background-size: 18px 18px, 18px 18px, 100% 100%, 100% 100% !important;
+    background-repeat: repeat, repeat, no-repeat, no-repeat !important;
+    background-attachment: fixed, fixed, fixed, fixed !important;
+    color: #d9b37b !important;
+    font-family: 'Libre Baskerville', Georgia, serif !important;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 216, 120, 0.018) 0,
+            rgba(255, 216, 120, 0.018) 2px,
+            transparent 2px,
+            transparent 8px
+        );
+    opacity: 0.8;
+}
+
+.main-view {
+    background-color: #130806 !important;
+    background-image:
+        linear-gradient(rgba(255, 205, 96, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 205, 96, 0.02) 1px, transparent 1px),
+        linear-gradient(135deg, rgba(19, 8, 6, 0.58) 0%, rgba(40, 17, 5, 0.46) 34%, rgba(58, 29, 14, 0.4) 62%, rgba(11, 6, 4, 0.72) 100%),
+        url('darkwood_wooden_board_background.jpg') !important;
+    background-position: top left, top left, center, center !important;
+    background-size: 18px 18px, 18px 18px, 100% 100%, contain !important;
+    background-repeat: repeat, repeat, no-repeat, no-repeat !important;
+    background-attachment: local, local, local, local !important;
+}
+
+.sidebar {
+    background: linear-gradient(180deg, #170804 0%, #1f0c04 48%, #120603 100%) !important;
+    border-right: 5px solid #6f3f18 !important;
+    box-shadow: inset -18px 0 34px rgba(0, 0, 0, 0.45) !important;
+}
+
+.header,
+.header-camo h1,
+h1 {
+    color: #e2c13d !important;
+    font-family: 'Cinzel', Georgia, serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 1px 0 #1b0b04, 0 0 12px rgba(226, 193, 61, 0.18) !important;
+}
+
+.header {
+    border-left: 4px solid #e2c13d !important;
+    border-bottom: 3px solid #6f3f18 !important;
+    background: rgba(35, 14, 6, 0.92) !important;
+}
+
+.nav-btn,
+.config-btn {
+    color: #d9b37b !important;
+    font-family: 'Cinzel', Georgia, serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    background: rgba(28, 10, 5, 0.82) !important;
+    border-color: rgba(111, 63, 24, 0.42) !important;
+}
+
+.nav-btn:hover,
+.nav-btn.active,
+.config-btn:hover,
+.config-btn.active {
+    background: #5a3318 !important;
+    color: #f3d446 !important;
+    box-shadow: inset 4px 0 0 #e2c13d !important;
+}
+
+.list {
+    scrollbar-color: #b98b45 #210d05;
+}
+
+.sb-item {
+    background: rgba(39, 15, 6, 0.58) !important;
+    border-left: 2px solid transparent !important;
+    color: #d9b37b !important;
+}
+
+.sb-item:hover,
+.sb-item.active {
+    background: rgba(86, 45, 18, 0.82) !important;
+    border-left-color: #e2c13d !important;
+}
+
+.card,
+.chal-card {
+    background: rgba(48, 20, 10, 0.82) !important;
+    border: 1px solid #7a471f !important;
+    border-radius: 3px !important;
+    box-shadow:
+        inset 0 0 0 4px rgba(17, 6, 2, 0.36),
+        0 0 0 1px rgba(230, 190, 70, 0.08),
+        0 14px 34px rgba(0, 0, 0, 0.25) !important;
+}
+
+.card-title,
+.theme-header {
+    color: #d9b37b !important;
+    border-bottom: 1px solid rgba(217, 179, 123, 0.16) !important;
+    font-family: 'Cinzel', Georgia, serif !important;
+    letter-spacing: 1.5px !important;
+}
+
+.card:first-of-type {
+    border-color: #e2c13d !important;
+    box-shadow:
+        inset 0 0 0 4px rgba(28, 10, 4, 0.48),
+        0 0 0 2px rgba(226, 193, 61, 0.65),
+        0 16px 36px rgba(0, 0, 0, 0.28) !important;
+}
+
+select,
+input,
+textarea {
+    background: #1b0b04 !important;
+    color: #d9b37b !important;
+    border: 1px solid #7a471f !important;
+    border-radius: 4px !important;
+    font-family: 'Libre Baskerville', Georgia, serif !important;
+}
+
+button,
+.nav-btn-small,
+.chal-btn {
+    background: #6a3d1d !important;
+    border: 1px solid #8d5a2d !important;
+    border-radius: 4px !important;
+    color: #f3d446 !important;
+    font-family: 'Cinzel', Georgia, serif !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8) !important;
+}
+
+button:hover,
+.nav-btn-small:hover,
+.chal-btn.active:hover {
+    background: #805128 !important;
+    border-color: #e2c13d !important;
+    color: #ffe873 !important;
+    box-shadow: 0 0 10px rgba(226, 193, 61, 0.16) !important;
+}
+
+.detail-row,
+.stat-sub,
+p,
+li {
+    color: #c79662 !important;
+}
+
+.stat-big,
+#d_map,
+#career-rmain,
+#life_kills,
+#life_matches,
+#life_rounds,
+#life_time {
+    color: #e2c13d !important;
+}
+
+.progress-bar,
+.xp-bar {
+    background: #4b2716 !important;
+    border: 1px solid rgba(217, 179, 123, 0.24) !important;
+}
+
+.progress-fill,
+.xp-fill,
+#career-xp-bar {
+    background: linear-gradient(90deg, #e2c13d, #f6d86b) !important;
+}
+
+.xpm-container-base {
+    background: rgba(35, 14, 7, 0.86) !important;
+    border: 1px solid #7a471f !important;
+    border-left: 3px solid #e2c13d !important;
+    border-radius: 3px !important;
+    box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+.xpm-scroll-wrapper {
+    background-image:
+        linear-gradient(rgba(226, 193, 61, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(226, 193, 61, 0.035) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* --- DARK OAK WOOD CURSORS --- */
+
+/* Main cursor: dark oak pointer */
+body {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><defs><filter id='shadow'><feDropShadow dx='1.2' dy='1.2' stdDeviation='1.2' flood-color='%23000000' flood-opacity='0.35'/></filter></defs><path d='M5 3L22 14.5L15 16.5L20 28L14.8 30L10 18.5L4 22Z' fill='%2351331f' stroke='%2326160d' stroke-width='1.8' stroke-linejoin='round' filter='url(%23shadow)'/><path d='M7.2 5.2L18.2 13' stroke='%238a5a37' stroke-width='1.2' stroke-linecap='round' opacity='0.95'/><path d='M8.5 9L15 13.2' stroke='%236b4429' stroke-width='1' stroke-linecap='round' opacity='0.9'/><path d='M9 17.7L14.3 28.4' stroke='%23956a45' stroke-width='1.1' stroke-linecap='round' opacity='0.85'/><circle cx='12.7' cy='17.8' r='1.2' fill='%23b99162' stroke='%2326160d' stroke-width='0.8'/></svg>") 4 3, auto !important;
+}
+
+/* Hover cursor: carved oak with warm highlight */
+button:hover,
+.config-btn:hover,
+.nav-btn:hover,
+.nav-btn.active,
+.nav-btn-small:hover,
+.chal-btn:hover,
+.sb-item:hover,
+.star-btn:hover,
+select:hover,
+input:hover,
+.card:hover,
+.chal-card:hover,
+.perk-item:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'><defs><filter id='shadow'><feDropShadow dx='1.3' dy='1.3' stdDeviation='1.3' flood-color='%23000000' flood-opacity='0.38'/></filter></defs><path d='M5 3L23.5 14.8L16 17L21.3 29.5L15.7 31.5L10.5 18.8L4 22.6Z' fill='%23643f25' stroke='%2323130b' stroke-width='1.8' stroke-linejoin='round' filter='url(%23shadow)'/><path d='M7.1 5.1L19.5 13.2' stroke='%23a57246' stroke-width='1.3' stroke-linecap='round'/><path d='M8.4 8.8L15.2 13.4' stroke='%2373492c' stroke-width='1' stroke-linecap='round'/><path d='M9.8 17.8L15.1 29.1' stroke='%23b88957' stroke-width='1.1' stroke-linecap='round'/><circle cx='13.1' cy='17.9' r='1.2' fill='%23d8bb8a' stroke='%2323130b' stroke-width='0.8'/><path d='M25.8 6.5l1.1 2.3 2.5 0.4-1.8 1.7 0.4 2.5-2.2-1.2-2.2 1.2 0.4-2.5-1.8-1.7 2.5-0.4z' fill='%23d8bb8a' stroke='%2373492c' stroke-width='0.7'/></svg>") 4 3, pointer !important;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
+}

@@ -1,0 +1,905 @@
+/* --- TOON TAG: CARTOON GRAFFITI THEME ---
+   Inspired by the structure of the provided Origins 115 theme,
+   rebuilt with a brighter comic-book / street-art identity.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap');
+
+:root {
+    --toon-bg: #14071f;
+    --toon-panel: rgba(28, 13, 45, 0.92);
+    --toon-panel-deep: rgba(17, 7, 29, 0.96);
+    --toon-ink: #1a0826;
+    --toon-white: #fff8dc;
+    --toon-text: #ffe9ff;
+    --toon-muted: #c5a9d8;
+    --toon-pink: #ff3bd4;
+    --toon-yellow: #ffe94f;
+    --toon-cyan: #23f6ff;
+    --toon-green: #56ff7b;
+    --toon-orange: #ff8b2b;
+    --toon-purple: #9b5cff;
+    --toon-danger: #ff3864;
+
+    --weapon-name-color: var(--toon-cyan);
+    --weapon-table-text: var(--toon-text);
+    --career-accent: var(--toon-yellow);
+    --career-value: var(--toon-white);
+    --career-muted: var(--toon-muted);
+    --settings-title: var(--toon-yellow);
+    --settings-help: var(--toon-cyan);
+    --settings-description: var(--toon-muted);
+    --settings-status: var(--toon-green);
+    --settings-note: #a982bb;
+
+
+}
+
+/* --- BASE CARTOON WALL --- */
+body {
+    background: var(--toon-bg) !important;
+    color: var(--toon-text) !important;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive !important;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M3 15L21 3l4 4L13 25 9 18z' fill='%23ffe94f' stroke='%231a0826' stroke-width='2'/><circle cx='21' cy='7' r='3' fill='%23ff3bd4'/></svg>") 9 20, auto !important;
+}
+
+/* Override all style.css cursor:pointer elements with graffiti cursors */
+.player-tab, .nav-btn, .sb-item, .config-btn, button.nav-btn-small,
+.camo-option, .star-btn, .graph-popout-btn, .slider,
+.chal-btn.active, .card-selector-img, .graph-toggle-btn,
+.compact-select, .best-match-row, #tab-help details {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><path d='M3 15L21 3l4 4L13 25 9 18z' fill='%23ffe94f' stroke='%231a0826' stroke-width='2'/><circle cx='21' cy='7' r='3' fill='%23ff3bd4'/></svg>") 9 20, auto !important;
+}
+.player-tab:hover, .nav-btn:hover, .sb-item:hover, .config-btn:hover,
+button.nav-btn-small:hover, .camo-option:hover, .star-btn:hover,
+.graph-popout-btn:hover, .slider:hover, .chal-btn.active:hover,
+.card-selector-img:hover, .graph-toggle-btn:hover,
+.compact-select:hover, .best-match-row:hover, #tab-help details:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M5 23c7-1 10-8 12-18 7 3 11 9 10 17-5-4-11-3-22 1z' fill='%2323f6ff' stroke='%231a0826' stroke-width='2'/><circle cx='20' cy='10' r='3' fill='%23ff3bd4'/></svg>") 14 16, pointer !important;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background-image:
+        linear-gradient(135deg, rgba(255, 59, 212, 0.18), rgba(35, 246, 255, 0.12)),
+        url("grafftiimage.png"),
+        radial-gradient(circle at 15% 20%, rgba(255, 233, 79, 0.28), transparent 28%),
+        radial-gradient(circle at 85% 80%, rgba(86, 255, 123, 0.22), transparent 32%),
+        linear-gradient(145deg, #260a3c 0%, #12051d 70%);
+    background-size: cover, cover, auto, auto, cover;
+    background-position: center;
+    background-attachment: fixed;
+    filter: saturate(1.12) contrast(1.04);
+}
+
+/* Halftone comic overlay */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.28;
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,0.22) 1px, transparent 1.8px),
+        linear-gradient(90deg, rgba(255, 59, 212, 0.07), rgba(35, 246, 255, 0.05));
+    background-size: 14px 14px, 100% 100%;
+    mix-blend-mode: screen;
+}
+
+/* --- LAYOUT PANELS --- */
+.sidebar {
+    background: var(--toon-panel-deep) !important;
+    border-right: 5px solid var(--toon-ink) !important;
+    box-shadow: 8px 0 0 var(--toon-pink), 14px 0 26px rgba(0, 0, 0, 0.45) !important;
+}
+
+.header {
+    color: var(--toon-yellow) !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, rgba(255, 59, 212, 0.34), rgba(35, 246, 255, 0.14), transparent) !important;
+    border-left: 8px solid var(--toon-yellow) !important;
+    border-bottom: 4px solid var(--toon-ink) !important;
+    text-shadow:
+        3px 3px 0 var(--toon-ink),
+        5px 5px 0 var(--toon-pink),
+        0 0 18px rgba(255, 233, 79, 0.55) !important;
+    padding-left: 16px !important;
+    transform: rotate(-0.35deg);
+}
+
+.header-subtitle,
+.sidebar-section-label,
+.history-page-info,
+.setting-description,
+.setting-note,
+.update-status,
+.rank-subtitle,
+.career-rsub,
+.version-value,
+.stat-label,
+.camo-label,
+.challenge-desc,
+.compact-scroll-list,
+.muted-loading,
+.muted-empty,
+.list-name,
+.sb-date,
+.sb-id {
+    color: var(--toon-muted) !important;
+}
+
+.nav-btn,
+.config-btn,
+.history-page-btn {
+    color: var(--toon-text) !important;
+    border: 3px solid transparent !important;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+.nav-btn:hover,
+.nav-btn.active,
+.config-btn:hover,
+.config-btn.active,
+.history-page-btn:hover {
+    color: var(--toon-ink) !important;
+    background: var(--toon-yellow) !important;
+    border-color: var(--toon-ink) !important;
+    box-shadow: 4px 4px 0 var(--toon-pink), 0 0 18px rgba(255, 233, 79, 0.45) !important;
+    text-shadow: none !important;
+    transform: rotate(-1deg) scale(1.025);
+}
+
+.history-pagination {
+    display: grid !important;
+    grid-template-columns: minmax(84px, 1fr) 42px minmax(84px, 1fr) !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.history-page-btn {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    white-space: nowrap !important;
+}
+
+.history-page-info {
+    min-width: 42px !important;
+    white-space: nowrap !important;
+}
+
+/* --- TITLES AND VALUES --- */
+.card-title,
+.theme-header,
+.setting-title,
+.release-heading,
+.challenge-category,
+.list-highlight,
+.xp-map-value,
+.map-title-progress,
+.highlight-value,
+.highlight-large-value,
+.career-rmain,
+.round-value {
+    color: var(--toon-cyan) !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    letter-spacing: 1px;
+    text-shadow: 3px 3px 0 var(--toon-ink), 0 0 12px rgba(35, 246, 255, 0.46) !important;
+}
+
+.challenge-title,
+.map-title-name,
+.score-value,
+.loadout-value,
+.xp-map-name,
+.detail-row span:last-child,
+.sb-map {
+    color: var(--toon-white) !important;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+.detail-row,
+.compact-stat-row,
+.compact-list-row,
+.xp-map-row {
+    color: var(--toon-text) !important;
+    border-bottom-color: rgba(255, 233, 79, 0.24) !important;
+}
+
+.gum-value {
+    color: var(--toon-purple) !important;
+    text-shadow: 2px 2px 0 var(--toon-ink), 0 0 10px rgba(155, 92, 255, 0.55) !important;
+}
+
+.gold-value,
+.orange-value {
+    color: var(--toon-orange) !important;
+    text-shadow: 2px 2px 0 var(--toon-ink), 0 0 12px rgba(255, 139, 43, 0.45) !important;
+}
+
+.danger-value,
+.missing-archive-label,
+.error-empty,
+.render-error {
+    color: var(--toon-danger) !important;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+/* --- STICKER CARD LOOK --- */
+.card,
+.chal-card {
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.09), transparent 30%),
+        var(--toon-panel) !important;
+    border: 4px solid var(--toon-ink) !important;
+    border-radius: 18px !important;
+    box-shadow:
+        7px 7px 0 var(--toon-ink),
+        11px 11px 0 rgba(255, 59, 212, 0.75),
+        0 20px 34px rgba(0,0,0,0.38) !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.card:hover,
+.chal-card:hover {
+    transform: translateY(-5px) rotate(-0.6deg);
+    filter: saturate(1.15);
+    box-shadow:
+        7px 7px 0 var(--toon-ink),
+        13px 13px 0 rgba(35, 246, 255, 0.72),
+        0 24px 42px rgba(0,0,0,0.48) !important;
+}
+
+/* --- BIG COMIC STATS --- */
+.stat-big {
+    color: var(--toon-yellow) !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-shadow:
+        4px 4px 0 var(--toon-ink),
+        7px 7px 0 var(--toon-pink),
+        0 0 22px rgba(255, 233, 79, 0.62) !important;
+    animation: sprayPulse 2.8s ease-in-out infinite;
+}
+
+.fill {
+    background: linear-gradient(90deg, var(--toon-pink), var(--toon-yellow), var(--toon-cyan), var(--toon-green), var(--toon-pink)) !important;
+    background-size: 260% 100% !important;
+    border: 2px solid var(--toon-ink) !important;
+    box-shadow: 0 0 18px rgba(35, 246, 255, 0.45) !important;
+    animation: paintRoll 3s linear infinite;
+}
+
+/* --- BUTTONS --- */
+button,
+.config-btn,
+.graph-popout-btn {
+    background: var(--toon-pink) !important;
+    color: var(--toon-white) !important;
+    border: 4px solid var(--toon-ink) !important;
+    border-radius: 14px !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 5px 5px 0 var(--toon-ink), 0 0 18px rgba(255, 59, 212, 0.32) !important;
+    transition: all 0.16s ease;
+}
+
+button:hover,
+.config-btn:hover,
+.graph-popout-btn:hover {
+    background: var(--toon-yellow) !important;
+    color: var(--toon-ink) !important;
+    box-shadow: 5px 5px 0 var(--toon-cyan), 0 0 24px rgba(255, 233, 79, 0.56) !important;
+    transform: translate(-2px, -2px) rotate(-1deg);
+    animation: wiggleTag 0.28s infinite;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M5 23c7-1 10-8 12-18 7 3 11 9 10 17-5-4-11-3-22 1z' fill='%2323f6ff' stroke='%231a0826' stroke-width='2'/><circle cx='20' cy='10' r='3' fill='%23ff3bd4'/></svg>") 14 16, pointer !important;
+}
+
+input,
+select,
+textarea {
+    background: rgba(255, 248, 220, 0.1) !important;
+    color: var(--toon-white) !important;
+    border: 3px solid var(--toon-ink) !important;
+    border-radius: 12px !important;
+    box-shadow: inset 3px 3px 0 rgba(0,0,0,0.25) !important;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    border-color: var(--toon-yellow) !important;
+    box-shadow: 0 0 0 3px var(--toon-pink), 0 0 20px rgba(255, 233, 79, 0.35) !important;
+}
+
+select option {
+    background: var(--toon-bg) !important;
+    color: var(--toon-text) !important;
+}
+
+/* --- GRAPH POP-OUT MODE --- */
+.graph-popout-mode {
+    position: fixed !important;
+    top: 2% !important;
+    left: 2% !important;
+    width: 96% !important;
+    height: 96vh !important;
+    background:
+        linear-gradient(145deg, rgba(255, 59, 212, 0.18), rgba(35, 246, 255, 0.12)),
+        var(--toon-panel-deep) !important;
+    border: 5px solid var(--toon-ink) !important;
+    border-radius: 22px !important;
+    z-index: 9999 !important;
+    padding: 20px;
+    box-shadow: 10px 10px 0 var(--toon-pink), 0 18px 60px rgba(0,0,0,0.8) !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+
+.xpm-container-base {
+    display: none;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+    background: rgba(20, 7, 31, 0.82) !important;
+    padding: 12px;
+    border-radius: 16px;
+    border: 4px solid var(--toon-ink) !important;
+    box-shadow: inset 0 0 18px rgba(255, 59, 212, 0.18), 5px 5px 0 rgba(35, 246, 255, 0.42) !important;
+}
+
+.xpm-scroll-wrapper {
+    width: 100% !important;
+    height: 300px;
+    min-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    position: relative;
+    background-image:
+        linear-gradient(rgba(255, 233, 79, 0.10) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(35, 246, 255, 0.10) 2px, transparent 2px),
+        radial-gradient(circle, rgba(255, 59, 212, 0.15) 1px, transparent 2px);
+    background-size: 28px 28px, 28px 28px, 12px 12px;
+    border-radius: 12px;
+}
+
+.xpm-scroll-wrapper canvas {
+    width: 100% !important;
+    min-width: 100%;
+}
+
+/* --- SPRAY CAN MICRO-INTERACTIONS --- */
+.nav-btn:hover,
+button:hover,
+.sb-item:hover,
+.config-btn:hover,
+.camo-option:hover,
+.star-btn:hover,
+.header:hover,
+input:hover,
+select:hover {
+    filter: saturate(1.2) contrast(1.04);
+}
+
+@keyframes paintRoll {
+    from { background-position: 260% 0; }
+    to { background-position: -260% 0; }
+}
+
+@keyframes sprayPulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.035) rotate(-0.4deg); filter: brightness(1.18); }
+}
+
+@keyframes wiggleTag {
+    0%, 100% { transform: translate(-2px, -2px) rotate(-1deg); }
+    33% { transform: translate(-1px, -3px) rotate(1deg); }
+    66% { transform: translate(-3px, -1px) rotate(-0.5deg); }
+}
+
+/* --- GRAFFITI CHART THEME: BARS, LINES, DOTS --- */
+/* These selectors target common SVG chart libraries such as Recharts, Nivo, Victory,
+   plus generic app classes. They are intentionally broad so they can theme most chart output. */
+
+.recharts-wrapper,
+.chart,
+.chart-container,
+.xpm-scroll-wrapper {
+    filter: drop-shadow(0 10px 0 rgba(26, 8, 38, 0.42));
+}
+
+.recharts-cartesian-grid line,
+.recharts-polar-grid-angle line,
+.recharts-polar-grid-concentric circle,
+.chart-grid line,
+.grid-line {
+    stroke: rgba(255, 233, 79, 0.22) !important;
+    stroke-width: 2 !important;
+    stroke-dasharray: 2 8 !important;
+    stroke-linecap: round !important;
+}
+
+.recharts-xAxis .recharts-cartesian-axis-line,
+.recharts-yAxis .recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line,
+.axis path,
+.axis line {
+    stroke: var(--toon-ink) !important;
+    stroke-width: 4 !important;
+    filter: drop-shadow(2px 2px 0 var(--toon-pink));
+}
+
+.recharts-text,
+.recharts-label,
+.axis text,
+.tick text,
+.chart-label,
+.chart-tooltip,
+.recharts-tooltip-wrapper {
+    fill: var(--toon-white) !important;
+    color: var(--toon-white) !important;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive !important;
+    font-weight: 700 !important;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+/* Spray-painted bar fills */
+.recharts-bar-rectangle path,
+.recharts-bar-rectangle rect,
+.bar,
+.bar-chart rect,
+svg rect.chart-bar {
+    fill: var(--toon-pink) !important;
+    stroke: var(--toon-ink) !important;
+    stroke-width: 3 !important;
+    rx: 7px;
+    ry: 7px;
+    filter:
+        drop-shadow(4px 4px 0 var(--toon-ink))
+        drop-shadow(0 0 10px rgba(255, 59, 212, 0.45));
+    transition: transform 0.18s ease, filter 0.18s ease, fill 0.18s ease;
+}
+
+.recharts-bar-rectangle:nth-of-type(2n) path,
+.recharts-bar-rectangle:nth-of-type(2n) rect,
+.bar:nth-of-type(2n),
+.bar-chart rect:nth-of-type(2n),
+svg rect.chart-bar:nth-of-type(2n) {
+    fill: var(--toon-cyan) !important;
+    filter:
+        drop-shadow(4px 4px 0 var(--toon-ink))
+        drop-shadow(0 0 10px rgba(35, 246, 255, 0.45));
+}
+
+.recharts-bar-rectangle:nth-of-type(3n) path,
+.recharts-bar-rectangle:nth-of-type(3n) rect,
+.bar:nth-of-type(3n),
+.bar-chart rect:nth-of-type(3n),
+svg rect.chart-bar:nth-of-type(3n) {
+    fill: var(--toon-yellow) !important;
+    filter:
+        drop-shadow(4px 4px 0 var(--toon-ink))
+        drop-shadow(0 0 10px rgba(255, 233, 79, 0.48));
+}
+
+.recharts-bar-rectangle:hover path,
+.recharts-bar-rectangle:hover rect,
+.bar:hover,
+.bar-chart rect:hover,
+svg rect.chart-bar:hover {
+    fill: var(--toon-green) !important;
+    transform: translateY(-4px) scaleY(1.03);
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    filter:
+        drop-shadow(5px 5px 0 var(--toon-ink))
+        drop-shadow(0 0 18px rgba(86, 255, 123, 0.62));
+}
+
+/* Graffiti splatter effect behind bar groups where SVG foreign paint is supported */
+.recharts-bar::before,
+.bar-series::before,
+.chart-bars::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image:
+        radial-gradient(circle at 12% 84%, var(--toon-pink) 0 3px, transparent 4px),
+        radial-gradient(circle at 34% 30%, var(--toon-cyan) 0 2px, transparent 3px),
+        radial-gradient(circle at 72% 70%, var(--toon-yellow) 0 4px, transparent 5px),
+        radial-gradient(circle at 90% 22%, var(--toon-green) 0 2px, transparent 3px);
+    background-size: 90px 90px;
+    mix-blend-mode: screen;
+}
+
+/* Line graph: bold marker-pen stroke */
+.recharts-line-curve,
+.line-chart path,
+.chart-line,
+svg path.line,
+.nivo-line path,
+.victory-line path {
+    stroke: var(--toon-yellow) !important;
+    stroke-width: 5 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    filter:
+        drop-shadow(3px 3px 0 var(--toon-ink))
+        drop-shadow(0 0 12px rgba(255, 233, 79, 0.52));
+}
+
+.recharts-line:nth-of-type(2n) .recharts-line-curve,
+.line-chart path:nth-of-type(2n),
+.chart-line:nth-of-type(2n) {
+    stroke: var(--toon-cyan) !important;
+    filter:
+        drop-shadow(3px 3px 0 var(--toon-ink))
+        drop-shadow(0 0 12px rgba(35, 246, 255, 0.52));
+}
+
+/* Sticker-style dots on line charts */
+.recharts-line-dot,
+.recharts-dot,
+.line-dot,
+.chart-dot,
+svg circle.dot,
+.nivo-line circle,
+.victory-scatter circle {
+    fill: var(--toon-pink) !important;
+    stroke: var(--toon-ink) !important;
+    stroke-width: 4 !important;
+    r: 6;
+    filter:
+        drop-shadow(3px 3px 0 var(--toon-yellow))
+        drop-shadow(0 0 11px rgba(255, 59, 212, 0.62));
+    transition: transform 0.16s ease, filter 0.16s ease, fill 0.16s ease;
+}
+
+.recharts-line-dot:nth-of-type(2n),
+.recharts-dot:nth-of-type(2n),
+.line-dot:nth-of-type(2n),
+.chart-dot:nth-of-type(2n),
+svg circle.dot:nth-of-type(2n) {
+    fill: var(--toon-cyan) !important;
+    filter:
+        drop-shadow(3px 3px 0 var(--toon-pink))
+        drop-shadow(0 0 11px rgba(35, 246, 255, 0.62));
+}
+
+.recharts-line-dot:hover,
+.recharts-dot:hover,
+.line-dot:hover,
+.chart-dot:hover,
+svg circle.dot:hover,
+.nivo-line circle:hover,
+.victory-scatter circle:hover {
+    fill: var(--toon-green) !important;
+    stroke: var(--toon-ink) !important;
+    transform: scale(1.45) rotate(-8deg);
+    transform-box: fill-box;
+    transform-origin: center;
+    filter:
+        drop-shadow(4px 4px 0 var(--toon-ink))
+        drop-shadow(0 0 18px rgba(86, 255, 123, 0.8));
+}
+
+/* Tooltip as a sprayed sticker */
+.recharts-default-tooltip,
+.chart-tooltip,
+.tooltip,
+.nivo-tooltip {
+    background: var(--toon-yellow) !important;
+    color: var(--toon-ink) !important;
+    border: 4px solid var(--toon-ink) !important;
+    border-radius: 14px !important;
+    box-shadow: 5px 5px 0 var(--toon-pink), 0 0 20px rgba(255, 233, 79, 0.42) !important;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive !important;
+    font-weight: 700 !important;
+}
+
+.recharts-tooltip-label,
+.recharts-tooltip-item,
+.tooltip * {
+    color: var(--toon-ink) !important;
+}
+
+/* Legend chips */
+.recharts-legend-item-text,
+.legend,
+.chart-legend {
+    color: var(--toon-white) !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+/* --- CAMO MATRIX / WEAPONS PAGE --- */
+.camo-card {
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.07), transparent 30%),
+        var(--toon-panel) !important;
+    border: 4px solid var(--toon-ink) !important;
+    border-radius: 18px !important;
+    box-shadow:
+        6px 6px 0 var(--toon-ink),
+        10px 10px 0 rgba(255, 59, 212, 0.55),
+        0 16px 30px rgba(0,0,0,0.35) !important;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.camo-card:hover {
+    transform: translateY(-4px) rotate(-0.4deg);
+    box-shadow:
+        6px 6px 0 var(--toon-ink),
+        12px 12px 0 rgba(35, 246, 255, 0.55),
+        0 20px 38px rgba(0,0,0,0.45) !important;
+}
+
+.controls {
+    background: var(--toon-panel) !important;
+    border: 4px solid var(--toon-ink) !important;
+    border-radius: 16px !important;
+    box-shadow: 5px 5px 0 var(--toon-pink), 0 0 20px rgba(255, 59, 212, 0.18) !important;
+}
+
+.controls input,
+.controls select {
+    background: rgba(26, 8, 38, 0.7) !important;
+    border: 3px solid var(--toon-ink) !important;
+    border-radius: 10px !important;
+    color: var(--toon-white) !important;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive !important;
+}
+
+.controls input:focus,
+.controls select:focus {
+    border-color: var(--toon-yellow) !important;
+    box-shadow: 0 0 0 3px var(--toon-pink) !important;
+}
+
+.controls select option {
+    background: var(--toon-bg) !important;
+    color: var(--toon-text) !important;
+}
+
+.w-name {
+    color: var(--toon-cyan) !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    letter-spacing: 1px;
+    text-shadow: 3px 3px 0 var(--toon-ink), 0 0 12px rgba(35, 246, 255, 0.35) !important;
+}
+
+.w-type {
+    color: var(--toon-muted) !important;
+    font-family: 'Comic Neue', cursive !important;
+}
+
+.w-packed {
+    color: var(--toon-yellow) !important;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+.camo-tray {
+    gap: 6px !important;
+    margin-top: 14px !important;
+}
+
+.camo-option {
+    width: 28px !important;
+    height: 28px !important;
+    border: 3px solid var(--toon-ink) !important;
+    border-radius: 6px !important;
+    background: #0d0518 !important;
+    box-shadow: 2px 2px 0 var(--toon-ink) !important;
+    transition: transform 0.12s ease, box-shadow 0.12s ease !important;
+}
+
+.camo-option:hover {
+    transform: scale(1.25) rotate(-3deg) !important;
+    border-color: var(--toon-yellow) !important;
+    box-shadow: 3px 3px 0 var(--toon-pink), 0 0 14px rgba(255, 233, 79, 0.4) !important;
+    z-index: 3 !important;
+}
+
+.camo-option.active {
+    border-color: var(--toon-yellow) !important;
+    box-shadow: 3px 3px 0 var(--toon-cyan), 0 0 14px rgba(35, 246, 255, 0.4) !important;
+}
+
+.camo-option.active .camo-img-ref,
+.camo-option:hover .camo-img-ref {
+    opacity: 1 !important;
+}
+
+.camo-img-ref {
+    opacity: 0.5 !important;
+    transition: opacity 0.15s ease;
+}
+
+.camo-display {
+    background: rgba(26, 8, 38, 0.7) !important;
+    border: 3px solid var(--toon-ink) !important;
+    border-radius: 12px !important;
+    box-shadow: inset 3px 3px 0 rgba(0,0,0,0.3) !important;
+}
+
+.camo-text {
+    color: var(--toon-yellow) !important;
+    font-family: 'Bangers', cursive !important;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+.camo-img-box {
+    background: #0d0518 !important;
+    border: 3px solid var(--toon-ink) !important;
+    border-radius: 8px !important;
+    box-shadow: 2px 2px 0 var(--toon-pink) !important;
+}
+
+.camo-label {
+    color: var(--toon-muted) !important;
+    font-family: 'Comic Neue', cursive !important;
+}
+
+.header-camo {
+    border-bottom-color: rgba(255, 233, 79, 0.2) !important;
+}
+
+.header-camo h1 {
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    color: var(--toon-yellow) !important;
+    text-shadow: 4px 4px 0 var(--toon-ink), 0 0 20px rgba(255, 233, 79, 0.35) !important;
+    letter-spacing: 3px;
+}
+
+.user-badge {
+    background: rgba(255, 59, 212, 0.2) !important;
+    color: var(--toon-pink) !important;
+    border: 3px solid var(--toon-ink) !important;
+    border-radius: 10px !important;
+    font-family: 'Bangers', cursive !important;
+    letter-spacing: 2px;
+    box-shadow: 3px 3px 0 var(--toon-ink) !important;
+}
+
+.game-tag {
+    background: var(--toon-ink) !important;
+    border: 2px solid var(--toon-pink) !important;
+    border-radius: 8px !important;
+    color: var(--toon-text) !important;
+    font-family: 'Comic Neue', cursive !important;
+    box-shadow: 2px 2px 0 rgba(255, 59, 212, 0.3) !important;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0 6px !important;
+}
+
+th {
+    color: var(--toon-muted) !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+td {
+    background: var(--toon-panel) !important;
+    border: 3px solid var(--toon-ink) !important;
+    color: var(--toon-text) !important;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive !important;
+}
+
+td:first-child {
+    border-radius: 12px 0 0 12px !important;
+    font-family: 'Bangers', 'Comic Neue', cursive !important;
+}
+
+td:last-child {
+    border-radius: 0 12px 12px 0 !important;
+}
+
+.weapon-row .weapon-name-cell {
+    color: var(--toon-cyan) !important;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+.weapon-number-cell,
+.weapon-status-cell {
+    color: var(--toon-text) !important;
+}
+
+.weapon-status-pap {
+    color: var(--toon-pink) !important;
+    font-weight: 700;
+    text-shadow: 2px 2px 0 var(--toon-ink) !important;
+}
+
+.weapon-status-std {
+    color: var(--toon-muted) !important;
+}
+
+.card-head .star-btn {
+    filter: drop-shadow(2px 2px 0 var(--toon-ink));
+}
+
+.card-head .star-btn.active {
+    filter: drop-shadow(2px 2px 0 var(--toon-ink)) drop-shadow(0 0 8px rgba(255, 233, 79, 0.5));
+}
+
+.card-head .game-tag {
+    border-color: var(--toon-cyan) !important;
+    box-shadow: 2px 2px 0 rgba(35, 246, 255, 0.3) !important;
+}
+
+.progress-bar {
+    background: var(--toon-ink) !important;
+    border: 2px solid var(--toon-ink) !important;
+    border-radius: 4px !important;
+    height: 8px !important;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.4) !important;
+}
+
+.progress-bar .fill {
+    background: linear-gradient(90deg, var(--toon-pink), var(--toon-yellow), var(--toon-cyan), var(--toon-green), var(--toon-pink)) !important;
+    background-size: 260% 100% !important;
+    border: none !important;
+    animation: paintRoll 3s linear infinite;
+}
+
+/* --- ACCESSIBILITY: REDUCED MOTION --- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
+}

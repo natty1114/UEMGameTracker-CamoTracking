@@ -1,7 +1,32 @@
 /* themes/matrix.css */
-body { background-color: #000 !important; color: #0f0 !important; }
-.card { border: 1px solid #0f0 !important; background: #000 !important; box-shadow: 0 0 5px #0f0; }
-.sidebar { border-right: 1px solid #0f0 !important; }
+:root {
+    --weapon-name-color: #00ff66;
+    --weapon-table-text: #b7ffb7;
+    --career-accent: #00ff66;
+    --career-value: #b7ffb7;
+    --career-muted: #00aa44;
+    --settings-title: #00ff66;
+    --settings-help: #00cc55;
+    --settings-description: #b7ffb7;
+    --settings-status: #00ff00;
+    --settings-note: #008f3a;
+}
+
+body {
+    background-image:
+        linear-gradient(rgba(0, 255, 70, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 70, 0.028) 1px, transparent 1px),
+        radial-gradient(circle at 50% 0%, rgba(0, 255, 70, 0.2), rgba(0, 0, 0, 0.84) 58%),
+        linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 18, 5, 0.7)),
+        url('matrix_cracked_code_background.jpg') !important;
+    background-position: top left, top left, center, center, center !important;
+    background-size: 18px 18px, 18px 18px, 100% 100%, 100% 100%, cover !important;
+    background-repeat: repeat, repeat, no-repeat, no-repeat, no-repeat !important;
+    background-attachment: fixed, fixed, fixed, fixed, fixed !important;
+    color: #0f0 !important;
+}
+.card { border: 1px solid #0f0 !important; background: rgba(0, 0, 0, 0.88) !important; box-shadow: 0 0 5px #0f0; }
+.sidebar { border-right: 1px solid #0f0 !important; background: rgba(0, 0, 0, 0.92) !important; }
 div, span, h1 { color: #0f0 !important; font-family: 'Courier New', monospace !important; }
 
 /* --- MATRIX: ACTIVE HAND CURSOR --- */
@@ -34,4 +59,31 @@ div, span, h1 { color: #0f0 !important; font-family: 'Courier New', monospace !i
 .xpm-scroll-wrapper canvas {
     width: 100% !important;
     min-width: 100%;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
 }

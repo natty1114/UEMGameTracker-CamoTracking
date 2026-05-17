@@ -1,0 +1,230 @@
+/* --- DEADOPS ARCADE: NEON ZOMBIE CABINET --- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap');
+
+:root {
+    --weapon-name-color: #ffd340;
+    --weapon-table-text: #f8f6d8;
+    --career-accent: #ffd340;
+    --career-value: #f8f6d8;
+    --career-muted: #c5d7dd;
+    --settings-title: #ffd340;
+    --settings-help: #00f5ff;
+    --settings-description: #f8f6d8;
+    --settings-status: #ff304f;
+    --settings-note: #c5d7dd;
+}
+
+body {
+    background-image:
+        radial-gradient(circle at 48% 18%, rgba(255, 55, 55, 0.14), rgba(6, 8, 18, 0.76) 46%, rgba(3, 4, 9, 0.92) 100%),
+        linear-gradient(135deg, rgba(0, 245, 255, 0.12), rgba(255, 35, 85, 0.18), rgba(3, 4, 9, 0.7)),
+        url('deadops_arcade_corner_background.jpg') !important;
+    background-position: center, center, center !important;
+    background-size: 100% 100%, 100% 100%, cover !important;
+    background-repeat: no-repeat, no-repeat, no-repeat !important;
+    background-attachment: fixed, fixed, fixed !important;
+    color: #f8f6d8 !important;
+    font-family: 'Orbitron', sans-serif !important;
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34' viewBox='0 0 34 34'><defs><filter id='glow'><feDropShadow dx='1.1' dy='1.1' stdDeviation='1.1' flood-color='%23000000' flood-opacity='0.65'/><feDropShadow dx='0' dy='0' stdDeviation='1.7' flood-color='%23ff3b1f' flood-opacity='0.75'/></filter></defs><path d='M5 3L24 15L16.2 17.4L21.9 29.3L15.2 31.6L10 19.3L3.8 23.6Z' fill='%23200a12' stroke='%23ffb000' stroke-width='1.9' stroke-linejoin='round' filter='url(%23glow)'/><path d='M7.2 5.8L20.1 14' stroke='%23ff3b1f' stroke-width='1.4' stroke-linecap='round'/><path d='M9 9.8L15.8 14.2' stroke='%23ffb000' stroke-width='1.1' stroke-linecap='round'/><path d='M10.2 18.9L15.8 29.5' stroke='%23ff6a00' stroke-width='1.1' stroke-linecap='round'/><rect x='20.8' y='6.4' width='8.4' height='8.4' rx='1.1' fill='%230b0610' stroke='%23ffb000' stroke-width='1.2'/><rect x='22.4' y='8.4' width='1.8' height='1.8' fill='%23ff3b1f'/><rect x='25.8' y='8.4' width='1.8' height='1.8' fill='%23ff3b1f'/><rect x='24' y='11.5' width='3.2' height='1.2' fill='%23ffb000'/><circle cx='13.3' cy='17.8' r='1.25' fill='%23ffb000' stroke='%230b0610' stroke-width='0.8'/></svg>") 4 3, auto !important;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 245, 255, 0.018) 2px,
+            rgba(255, 35, 85, 0.018) 4px
+        );
+    mix-blend-mode: screen;
+}
+
+.sidebar {
+    background: rgba(3, 4, 9, 0.94) !important;
+    border-right: 2px solid #ff304f !important;
+    box-shadow: inset -12px 0 28px rgba(255, 48, 79, 0.12), 0 0 18px rgba(0, 245, 255, 0.14) !important;
+}
+
+.header,
+.header-camo h1,
+h1 {
+    color: #00f5ff !important;
+    font-family: 'Press Start 2P', 'Orbitron', sans-serif !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.65), 3px 3px 0 rgba(255, 48, 79, 0.55) !important;
+}
+
+.header {
+    background: rgba(7, 9, 18, 0.68) !important;
+    border-left: 4px solid #00f5ff !important;
+    border-bottom: 2px solid rgba(255, 211, 64, 0.42) !important;
+}
+
+.nav-btn,
+.config-btn {
+    color: #b8f7ff !important;
+    background: rgba(5, 7, 16, 0.78) !important;
+    border-left: 2px solid transparent !important;
+    font-family: 'Orbitron', sans-serif !important;
+    text-transform: uppercase !important;
+}
+
+.nav-btn:hover,
+.nav-btn.active,
+.config-btn:hover,
+.config-btn.active {
+    background: rgba(255, 48, 79, 0.22) !important;
+    border-left-color: #ff304f !important;
+    color: #fff5a6 !important;
+    box-shadow: inset 0 0 14px rgba(255, 48, 79, 0.28), 0 0 12px rgba(0, 245, 255, 0.18) !important;
+}
+
+.card,
+.chal-card {
+    background: rgba(5, 7, 16, 0.34) !important;
+    backdrop-filter: blur(3px) !important;
+    -webkit-backdrop-filter: blur(3px) !important;
+    border: 1px solid rgba(0, 245, 255, 0.34) !important;
+    border-top: 2px solid #ff304f !important;
+    border-radius: 4px !important;
+    box-shadow:
+        inset 0 0 18px rgba(0, 0, 0, 0.55),
+        0 0 16px rgba(0, 245, 255, 0.12),
+        0 0 24px rgba(255, 48, 79, 0.08) !important;
+}
+
+.card-title,
+.theme-header {
+    color: #ffd340 !important;
+    font-family: 'Press Start 2P', 'Orbitron', sans-serif !important;
+    font-size: 0.72em !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 0 8px rgba(255, 211, 64, 0.55) !important;
+    border-bottom: 1px solid rgba(0, 245, 255, 0.22) !important;
+}
+
+button,
+.nav-btn-small,
+.chal-btn {
+    background: rgba(255, 48, 79, 0.18) !important;
+    border: 1px solid #ff304f !important;
+    border-radius: 4px !important;
+    color: #fff5a6 !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 8px rgba(255, 48, 79, 0.65) !important;
+}
+
+button:hover,
+.nav-btn-small:hover,
+.chal-btn:hover {
+    background: rgba(0, 245, 255, 0.18) !important;
+    border-color: #00f5ff !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 14px rgba(0, 245, 255, 0.42), inset 0 0 10px rgba(255, 48, 79, 0.18) !important;
+}
+
+select,
+input,
+textarea {
+    background: rgba(3, 4, 9, 0.9) !important;
+    color: #f8f6d8 !important;
+    border: 1px solid rgba(0, 245, 255, 0.42) !important;
+    border-radius: 4px !important;
+}
+
+.stat-big,
+#d_map,
+#career-rmain,
+#life_kills,
+#life_matches,
+#life_rounds,
+#life_time {
+    color: #ff304f !important;
+    text-shadow: 0 0 12px rgba(255, 48, 79, 0.72), 0 0 18px rgba(255, 211, 64, 0.22) !important;
+}
+
+.detail-row,
+.stat-sub,
+p,
+li {
+    color: #c5d7dd !important;
+}
+
+.progress-bar,
+.xp-bar {
+    background: rgba(3, 4, 9, 0.82) !important;
+    border: 1px solid rgba(0, 245, 255, 0.28) !important;
+}
+
+.progress-fill,
+.xp-fill,
+#career-xp-bar,
+.fill {
+    background: linear-gradient(90deg, #ff304f, #ffd340, #00f5ff) !important;
+    box-shadow: 0 0 12px rgba(255, 211, 64, 0.45) !important;
+}
+
+.status-bar {
+    background: rgba(5, 7, 16, 0.7) !important;
+    border-left-color: #ff304f !important;
+    color: #fff5a6 !important;
+}
+
+.xpm-container-base {
+    background: rgba(3, 4, 9, 0.64) !important;
+    border: 1px solid rgba(0, 245, 255, 0.36) !important;
+    border-left: 3px solid #ff304f !important;
+    border-radius: 4px !important;
+    box-shadow: inset 0 0 18px rgba(0, 245, 255, 0.1), 0 0 16px rgba(255, 48, 79, 0.12) !important;
+}
+
+.xpm-scroll-wrapper {
+    background-image:
+        linear-gradient(rgba(0, 245, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 48, 79, 0.045) 1px, transparent 1px) !important;
+    background-size: 20px 20px !important;
+}
+
+/* --- DEAD OPS ARCADE STYLE CURSORS --- */
+
+/* Main cursor: retro arcade skull pointer */
+.nav-btn:hover, button:hover, .sb-item:hover, .config-btn:hover,
+.camo-option:hover, .star-btn:hover, .header:hover, input:hover, select:hover,
+.chal-btn:hover, .card:hover, .chal-card:hover, .perk-item:hover,
+.nav-btn.active, .nav-btn-small:hover {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><defs><filter id='glow'><feDropShadow dx='0' dy='0' stdDeviation='2' flood-color='%23ff3b1f' flood-opacity='0.85'/><feDropShadow dx='0' dy='0' stdDeviation='3.2' flood-color='%23ffb000' flood-opacity='0.45'/></filter></defs><g filter='url(%23glow)'><circle cx='18' cy='18' r='12.5' fill='%230b0610' stroke='%23ffb000' stroke-width='2'/><circle cx='18' cy='18' r='7.4' fill='none' stroke='%23ff3b1f' stroke-width='2'/><circle cx='18' cy='18' r='2.5' fill='%23ffb000' stroke='%23ffffff' stroke-width='0.8'/><path d='M18 2.8v8M18 25.2v8M2.8 18h8M25.2 18h8' stroke='%23ff3b1f' stroke-width='2.2' stroke-linecap='round'/><path d='M11.7 9.7h3.1v3.1h-3.1zM21.2 9.7h3.1v3.1h-3.1zM14.3 22.6h7.4v2.1h-7.4z' fill='%23ffb000'/><path d='M8 28l2.5-2.5M28 8l-2.5 2.5M8 8l2.5 2.5M28 28l-2.5-2.5' stroke='%23ff6a00' stroke-width='1.7' stroke-linecap='round'/></g></svg>") 18 18, pointer !important;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
+}

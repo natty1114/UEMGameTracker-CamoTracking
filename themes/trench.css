@@ -1,6 +1,19 @@
 /* --- TRENCH: WW2 ZOMBIES EDITION --- */
 @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
 
+:root {
+    --weapon-name-color: #d4b56a;
+    --weapon-table-text: #e0e0e0;
+    --career-accent: #d4b56a;
+    --career-value: #e0e0e0;
+    --career-muted: #9f927e;
+    --settings-title: #d4b56a;
+    --settings-help: #c9bca7;
+    --settings-description: #e0d6c8;
+    --settings-status: #b19cd9;
+    --settings-note: #9f927e;
+}
+
 body {
     /* Grimy, muddy gradient: deep olive, rusted iron, and pitch black */
     background: linear-gradient(135deg, #151515, #2b2e22, #38251e, #0a0a0a) !important;
@@ -10,6 +23,17 @@ body {
     font-family: 'Special Elite', monospace !important;
     /* Custom Crimson Crosshair */
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238b0000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><line x1='12' y1='2' x2='12' y2='22'/><line x1='2' y1='12' x2='22' y2='12'/></svg>"), crosshair !important;
+}
+
+.main-view {
+    background-color: #151515 !important;
+    background-image:
+        linear-gradient(rgba(21, 21, 21, 0.28), rgba(43, 46, 34, 0.42)),
+        url('trench_bunker_background.jpg') !important;
+    background-position: center, center !important;
+    background-size: 100% 100%, cover !important;
+    background-repeat: no-repeat, no-repeat !important;
+    background-attachment: local, local !important;
 }
 
 /* --- BUNKER TERMINAL CARDS --- */
@@ -142,4 +166,31 @@ button:hover {
 .xpm-scroll-wrapper canvas {
     width: 100% !important;
     min-width: 100%;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
 }

@@ -1,11 +1,31 @@
 /* --- GOLDEN DIVINIUM: ULTIMATE EDITION (ANIMATED) --- */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
 
+:root {
+    --weapon-name-color: #ffd700;
+    --weapon-table-text: #fff8d8;
+    --career-accent: #ffd700;
+    --career-value: #fff8d8;
+    --career-muted: #b8a45d;
+    --settings-title: #fff3a6;
+    --settings-help: #d8bd52;
+    --settings-description: #fff8d8;
+    --settings-status: #ffd700;
+    --settings-note: #b8a45d;
+}
+
 /* --- CUSTOM IMPERIAL GOLD CURSOR --- */
 body {
     /* New Dual-Tone Imperial Nib Cursor */
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'><path d='M7 2l12 11-5 1 4 7-3 1-4-7-4 4z' fill='%23b8860b'/><path d='M8 4l10 9-5 1 4 7-2 1-4-7-3 3z' fill='%23ffd700'/></svg>"), auto !important;
-    background: #080808 !important;
+    background-image:
+        radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.18) 0%, rgba(51, 42, 0, 0.24) 24%, rgba(0, 0, 0, 0.84) 68%),
+        linear-gradient(135deg, rgba(0, 0, 0, 0.84), rgba(16, 12, 0, 0.66)),
+        url('golden_divinium_background.jpg') !important;
+    background-position: center, center, center !important;
+    background-size: 100% 100%, 100% 100%, cover !important;
+    background-repeat: no-repeat, no-repeat, no-repeat !important;
+    background-attachment: fixed, fixed, fixed !important;
     color: #e0d0b0 !important;
     font-family: 'Cinzel', serif !important;
 }
@@ -18,8 +38,12 @@ html {
 /* Radial Shine Background */
 body::before {
     content: "";
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle at 50% 0%, #332a00 0%, #000000 60%);
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background:
+        linear-gradient(rgba(255, 215, 0, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 215, 0, 0.018) 1px, transparent 1px);
+    background-size: 26px 26px;
+    pointer-events: none;
     z-index: -1;
 }
 
@@ -184,4 +208,31 @@ button:hover, .config-btn:hover {
     border-color: #ffd700 !important;
     color: #ffd700 !important;
     background: #000 !important;
+}
+
+/* --- 4.0 shared support surfaces (Help, Customization, Weapon Usage) --- */
+:root {
+    --support-panel-border: color-mix(in srgb, var(--career-accent) 42%, transparent);
+    --support-chip-bg: color-mix(in srgb, var(--career-accent) 14%, transparent);
+    --support-chip-border: color-mix(in srgb, var(--career-accent) 45%, transparent);
+    --support-chip-text: var(--settings-status);
+    --support-table-head-bg: color-mix(in srgb, var(--bg-panel, rgba(0,0,0,0.72)) 82%, #000 18%);
+    --support-table-text: var(--career-value);
+    --support-scrollbar: var(--career-accent);
+}
+
+#tab-customization .card-title,
+#tab-help .card-title,
+#tab-weaponusage .card-title {
+    color: var(--settings-title) !important;
+}
+
+.help-link-strip a,
+#tab-help details,
+.weapon-usage-table-wrap {
+    border-color: var(--support-panel-border) !important;
+}
+
+.weapon-usage-table th {
+    color: var(--settings-title) !important;
 }
