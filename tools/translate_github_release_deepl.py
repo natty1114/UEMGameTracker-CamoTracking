@@ -54,8 +54,36 @@ def release_from_event() -> dict:
 def release_from_tag(repo: str, token: str, tag: str) -> dict:
     if not tag:
         return {}
-    url = f"https://api.github.com/repos/{repo}/releases/tags/{tag}"
-    return github_request(url, token)
+    candidates = []
+    raw = tag.strip()
+    for candidate in (
+        raw,
+        raw[:1].lower() + raw[1:],
+        raw[:1].upper() + raw[1:],
+        raw.lstrip("vV"),
+        "v" + raw.lstrip("vV"),
+        "V" + raw.lstrip("vV"),
+    ):
+        if candidate and candidate not in candidates:
+            candidates.append(candidate)
+
+    last_error = None
+    for candidate in candidates:
+        url = f"https://api.github.com/repos/{repo}/releases/tags/{candidate}"
+        try:
+            release = github_request(url, token)
+            print(f"Found release tag: {candidate}")
+            return release
+        except urllib.error.HTTPError as exc:
+            last_error = exc
+            if exc.code != 404:
+                raise
+    if last_error:
+        print(
+            "Could not find a release for tag variants: " + ", ".join(candidates),
+            file=sys.stderr,
+        )
+    return {}
 
 
 def main() -> int:
@@ -90,7 +118,7 @@ def main() -> int:
         print("Release body is empty; nothing to translate.")
         return 0
     if "<!-- changelog:" in source_text and not force:
-        print("Release already contains changelog language blocks; skipping.")
+        print("Release already contains changelog language blocks; skipping. Run with force=true to rebuild them.")
         return 0
 
     languages = DEFAULT_LANGUAGES

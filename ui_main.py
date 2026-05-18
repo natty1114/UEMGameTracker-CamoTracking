@@ -801,12 +801,12 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 </div>
 
                 <div class="card">
-                    <div class="card-title">ULTIMATE EXPERIENCE MOD COMMUNITY TOOL DISCORD PRESENCE</div>
+                    <div class="card-title" data-i18n="settings.discord_presence_card">ULTIMATE EXPERIENCE MOD COMMUNITY TOOL DISCORD PRESENCE</div>
                     <div class="settings-row">
                         <div>
-                            <div class="setting-title">Enable Ultimate Experience Mod Community Tool Discord Card</div>
-                            <div class="setting-description">Shows tracker data on your Discord profile, including map, round, prestige/level, match XP, weapon usage, kills, and XP progress.</div>
-                            <div id="discord-presence-status" class="setting-status">Status: Not connected</div>
+                            <div class="setting-title" data-i18n="settings.enable_discord_presence">Enable Ultimate Experience Mod Community Tool Discord Card</div>
+                            <div class="setting-description" data-i18n="settings.discord_presence_description">Shows tracker data on your Discord profile, including map, round, prestige/level, match XP, weapon usage, kills, and XP progress.</div>
+                            <div id="discord-presence-status" class="setting-status" data-i18n="status.not_connected">Status: Not connected</div>
                         </div>
                         <label class="switch">
                             <input id="discord-presence-toggle" type="checkbox" onchange="saveDiscordPresenceSettings()" """ + discord_presence_chk_str + """>
@@ -814,21 +814,21 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         </label>
                     </div>
                     <details class="advanced-settings">
-                        <summary>Advanced Discord settings</summary>
+                        <summary data-i18n="settings.advanced_discord_settings">Advanced Discord settings</summary>
                         <div class="settings-row discord-presence-fields">
-                            <input id="discord-client-id" class="settings-input" placeholder="Discord application client ID" onchange="saveDiscordPresenceSettings()">
-                            <input id="discord-large-image" class="settings-input" placeholder="Optional large image asset key" onchange="saveDiscordPresenceSettings()">
+                            <input id="discord-client-id" class="settings-input" placeholder="Discord application client ID" data-i18n-placeholder="settings.discord_client_id_placeholder" onchange="saveDiscordPresenceSettings()">
+                            <input id="discord-large-image" class="settings-input" placeholder="Optional large image asset key" data-i18n-placeholder="settings.discord_large_image_placeholder" onchange="saveDiscordPresenceSettings()">
                         </div>
                     </details>
                 </div>
 
                 <div class="card">
-                    <div class="card-title">OFFICIAL UEM/T7 DISCORD PRESENCE</div>
+                    <div class="card-title" data-i18n="settings.t7_discord_presence_card">OFFICIAL UEM/T7 DISCORD PRESENCE</div>
                     <div class="settings-row">
                         <div>
-                            <div class="setting-title">Enable Official UEM/T7 Discord Card</div>
-                            <div class="setting-description">Controls the built-in UEM/T7 Discord card from BO3's players/t7.json. If this is on, Discord may show it instead of the tracker card. Restart BO3/UEM after changing this.</div>
-                            <div id="t7-discord-status" class="setting-status">Status: Checking t7.json...</div>
+                            <div class="setting-title" data-i18n="settings.enable_t7_discord_presence">Enable Official UEM/T7 Discord Card</div>
+                            <div class="setting-description" data-i18n="settings.t7_discord_presence_description">Controls the built-in UEM/T7 Discord card from BO3's players/t7.json. If this is on, Discord may show it instead of the tracker card. Restart BO3/UEM after changing this.</div>
+                            <div id="t7-discord-status" class="setting-status" data-i18n="status.checking_t7_json">Status: Checking t7.json...</div>
                         </div>
                         <label class="switch">
                             <input id="t7-discord-toggle" type="checkbox" onchange="saveT7DiscordPresenceSetting()">
@@ -1014,6 +1014,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             let globalStatsEnabled = """ + global_stats_js + """;
             let showGlobalStatsPrompt = """ + global_stats_prompt_js + """;
         let activeLocale = {};
+        let activeLanguage = 'en';
         let defaultI18nText = {};
 
         function openMapCompat() {
@@ -2154,6 +2155,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             }
 
             async function loadLocaleStrings(languageCode) {
+                activeLanguage = languageCode || 'en';
                 activeLocale = await window.pywebview.api.get_locale_strings(languageCode || 'en') || {};
                 applyLocaleStrings();
             }
@@ -2182,6 +2184,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 const select = document.getElementById('language-selector');
                 const label = select && select.options[select.selectedIndex] ? select.options[select.selectedIndex].textContent : languageCode;
                 setLanguageStatus(res && res.success ? ('Status: ' + label) : 'Status: Could not save language');
+                renderChangelog();
             }
 
             function setGlobalStatsStatus(text) {
@@ -2235,20 +2238,20 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 if (toggle) toggle.checked = !!(settings && settings.enabled);
                 if (clientId) clientId.value = settings && settings.client_id ? settings.client_id : '';
                 if (largeImage) largeImage.value = settings && settings.large_image ? settings.large_image : '';
-                setDiscordPresenceStatus('Status: ' + ((settings && settings.status) || 'Not connected'));
+                setDiscordPresenceStatus(localeText('common.status', 'Status') + ': ' + ((settings && settings.status) || localeText('status.not_connected_value', 'Not connected')));
             }
 
             async function saveDiscordPresenceSettings() {
                 const toggle = document.getElementById('discord-presence-toggle');
                 const clientId = document.getElementById('discord-client-id');
                 const largeImage = document.getElementById('discord-large-image');
-                setDiscordPresenceStatus('Status: Saving...');
+                setDiscordPresenceStatus(localeText('status.saving', 'Status: Saving...'));
                 const res = await window.pywebview.api.save_discord_presence_settings(
                     toggle ? toggle.checked : false,
                     clientId ? clientId.value : '',
                     largeImage ? largeImage.value : ''
                 );
-                setDiscordPresenceStatus('Status: ' + (res && res.msg ? res.msg : 'Saved.'));
+                setDiscordPresenceStatus(localeText('common.status', 'Status') + ': ' + (res && res.msg ? res.msg : localeText('status.saved_value', 'Saved.')));
             }
 
             function setT7DiscordStatus(text) {
@@ -2263,27 +2266,26 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     toggle.disabled = !(res && res.success);
                     toggle.checked = !!(res && res.enabled);
                 }
-                setT7DiscordStatus('Status: ' + (res && res.msg ? res.msg : 'Could not read t7.json.'));
+                setT7DiscordStatus(localeText('common.status', 'Status') + ': ' + (res && res.msg ? res.msg : localeText('status.could_not_read_t7_json_value', 'Could not read t7.json.')));
             }
 
             async function saveT7DiscordPresenceSetting() {
                 const toggle = document.getElementById('t7-discord-toggle');
                 if (toggle && !toggle.checked) {
                     const confirmed = confirm(
-                        'Turn off the official UEM/T7 Discord Presence?\\n\\n' +
-                        'This changes discord_enabled in BO3\\'s players/t7.json and may stop the built-in UEM/T7 Discord card from showing. ' +
-                        'Restart BO3/UEM after changing it.'
+                        localeText('settings.confirm_disable_t7_discord_title', 'Turn off the official UEM/T7 Discord Presence?') + '\\n\\n' +
+                        localeText('settings.confirm_disable_t7_discord_body', 'This changes discord_enabled in BO3\\'s players/t7.json and may stop the built-in UEM/T7 Discord card from showing. Restart BO3/UEM after changing it.')
                     );
                     if (!confirmed) {
                         toggle.checked = true;
-                        setT7DiscordStatus('Status: Official UEM/T7 Discord presence was left enabled.');
+                        setT7DiscordStatus(localeText('status.t7_left_enabled', 'Status: Official UEM/T7 Discord presence was left enabled.'));
                         return;
                     }
                 }
-                setT7DiscordStatus('Status: Saving...');
+                setT7DiscordStatus(localeText('status.saving', 'Status: Saving...'));
                 const res = await window.pywebview.api.set_t7_discord_presence(toggle ? toggle.checked : false);
                 if (toggle && res && typeof res.enabled === 'boolean') toggle.checked = res.enabled;
-                setT7DiscordStatus('Status: ' + (res && res.msg ? res.msg : 'Could not update t7.json.'));
+                setT7DiscordStatus(localeText('common.status', 'Status') + ': ' + (res && res.msg ? res.msg : localeText('status.could_not_update_t7_json_value', 'Could not update t7.json.')));
             }
 
             function maybeShowGlobalStatsPrompt() {
@@ -2367,6 +2369,37 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     .replace(/\\n/g, '<br>');
             }
 
+            let latestChangelogInfo = null;
+
+            function extractLocalizedReleaseNotes(notes, languageCode) {
+                const raw = String(notes || '').trim();
+                if (!raw) return '';
+                const blocks = {};
+                const blockRegex = /<!--\\s*(?:changelog|lang):([a-z]{2}(?:-[a-z0-9]+)?)\\s*-->([\\s\\S]*?)<!--\\s*\\/(?:changelog|lang):\\1\\s*-->/gi;
+                let match;
+                while ((match = blockRegex.exec(raw)) !== null) {
+                    blocks[String(match[1] || '').toLowerCase()] = String(match[2] || '').trim();
+                }
+                const codes = Object.keys(blocks);
+                if (!codes.length) return raw;
+                const requested = String(languageCode || 'en').toLowerCase();
+                const base = requested.split('-')[0];
+                return blocks[requested] || blocks[base] || blocks.en || blocks[codes[0]] || raw;
+            }
+
+            function renderChangelog() {
+                const status = document.getElementById('changelog-status');
+                const title = document.getElementById('changelog-release-title');
+                const notes = document.getElementById('changelog-notes');
+                const info = latestChangelogInfo;
+                if (!notes || !info || !info.success) return;
+                const version = info.version || 'latest';
+                if (title) title.innerText = `${info.name || 'BO3 Tracker'} (${version})`;
+                if (status) status.innerText = info.is_current ? `Latest release matches this app (${version}).` : `Latest GitHub release is ${version}.`;
+                if (status && info.is_older_than_app) status.innerText = `Latest GitHub release is ${version}; this app is """ + app_version + """.`;
+                notes.innerHTML = formatReleaseNotes(extractLocalizedReleaseNotes(info.notes, activeLanguage));
+            }
+
             async function loadChangelog(forceRefresh=false) {
                 const status = document.getElementById('changelog-status');
                 const title = document.getElementById('changelog-release-title');
@@ -2380,11 +2413,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         notes.innerHTML = '<div class="muted-empty">Release notes are unavailable right now.</div>';
                         return;
                     }
-                    const version = info.version || 'latest';
-                    if (title) title.innerText = `${info.name || 'BO3 Tracker'} (${version})`;
-                    if (status) status.innerText = info.is_current ? `Latest release matches this app (${version}).` : `Latest GitHub release is ${version}.`;
-                    if (status && info.is_older_than_app) status.innerText = `Latest GitHub release is ${version}; this app is """ + app_version + """.`;
-                    notes.innerHTML = formatReleaseNotes(info.notes);
+                    latestChangelogInfo = info;
+                    renderChangelog();
                 } catch(e) {
                     if (status) status.innerText = 'Could not load GitHub release notes.';
                     notes.innerHTML = '<div class="muted-empty">Release notes are unavailable right now.</div>';

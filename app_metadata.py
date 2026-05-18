@@ -6,7 +6,7 @@ import sys
 
 
 VERSION_FILE = "app_version.json"
-DEFAULT_VERSION = "4.6.1"
+DEFAULT_VERSION = "4.6.2"
 
 
 def get_base_path():

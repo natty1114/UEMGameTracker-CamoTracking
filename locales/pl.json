@@ -32,7 +32,18 @@
         "enable_xp_debug_window": "Włącz okno debugowania XP",
         "xp_description": "Pokazuje identyfikator meczu na żywo, mapę, gracza, rundę, XP poziomu, XP na tick, XP na rundę oraz zmiany rangi.",
         "experimental_xp_overflow_recovery": "Eksperymentalne odzyskiwanie po przepełnieniu XP",
-        "xp_overflow_warning": "Ostrzeżenie: szacuje dane przy niemożliwych odczytach ujemnego XP lub resetach rangi. Pozostaw wyłączone, chyba że widzisz skoki poziomu spowodowane przepełnieniem."
+        "xp_overflow_warning": "Ostrzeżenie: szacuje dane przy niemożliwych odczytach ujemnego XP lub resetach rangi. Pozostaw wyłączone, chyba że widzisz skoki poziomu spowodowane przepełnieniem.",
+        "discord_presence_card": "Obecność Discord narzędzia społeczności Ultimate Experience Mod",
+        "enable_discord_presence": "Włącz kartę Discord narzędzia społeczności Ultimate Experience Mod",
+        "discord_presence_description": "Pokazuje dane trackera na profilu Discord, w tym mapę, rundę, prestiż/poziom, XP meczu, użycie broni, zabójstwa i postęp XP.",
+        "advanced_discord_settings": "Zaawansowane ustawienia Discord",
+        "discord_client_id_placeholder": "ID klienta aplikacji Discord",
+        "discord_large_image_placeholder": "Opcjonalny klucz zasobu dużego obrazu",
+        "t7_discord_presence_card": "Oficjalna obecność Discord UEM/T7",
+        "enable_t7_discord_presence": "Włącz oficjalną kartę Discord UEM/T7",
+        "t7_discord_presence_description": "Steruje wbudowaną kartą Discord UEM/T7 z pliku players/t7.json BO3. Jeśli jest włączona, Discord może pokazywać ją zamiast karty trackera. Uruchom ponownie BO3/UEM po zmianie.",
+        "confirm_disable_t7_discord_title": "Wyłączyć oficjalną obecność Discord UEM/T7?",
+        "confirm_disable_t7_discord_body": "To zmienia discord_enabled w pliku players/t7.json BO3 i może zatrzymać wyświetlanie wbudowanej karty Discord UEM/T7. Uruchom ponownie BO3/UEM po zmianie."
     },
     "buttons": {
         "check": "Sprawdź",
@@ -62,7 +73,15 @@
         "spanish": "Status: Hiszpański",
         "could_not_save_language": "Status: Nie udało się zapisać języka",
         "automatic_daily_check_enabled": "Status: automatyczne codzienne sprawdzanie włączone",
-        "not_synced_this_session": "Status: nie synchronizowano w tej sesji"
+        "not_synced_this_session": "Status: nie synchronizowano w tej sesji",
+        "not_connected": "Status: brak połączenia",
+        "not_connected_value": "Brak połączenia",
+        "checking_t7_json": "Status: sprawdzanie t7.json...",
+        "saving": "Status: zapisywanie...",
+        "saved_value": "Zapisano.",
+        "could_not_read_t7_json_value": "Nie można odczytać t7.json.",
+        "could_not_update_t7_json_value": "Nie można zaktualizować t7.json.",
+        "t7_left_enabled": "Status: oficjalna obecność Discord UEM/T7 pozostała włączona."
     },
     "customization": {
         "heading": "Personalizacja",
