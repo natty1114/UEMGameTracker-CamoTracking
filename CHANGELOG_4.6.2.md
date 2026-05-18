@@ -10,6 +10,7 @@
 - Added localized GitHub changelog block support so the Help changelog can switch release-note language with the selected app language when the release body includes matching `<!-- changelog:xx -->` sections.
 - Added a local DeepL changelog translation helper with per-changelog caching to generate GitHub-ready localized release blocks without re-translating unchanged notes.
 - Added a GitHub Actions workflow that can translate a published GitHub release automatically using the `DEEPL_API_KEY` repository secret.
+- Generated GitHub release translations are now collapsed under language dropdowns so release assets stay easy to reach.
 
 ## Website Recent Matches
 - Recent matches now returns the latest 50 uploaded matches and displays them 6 per page.

@@ -95,12 +95,37 @@ def changelog_block(language: str, text: str) -> str:
     )
 
 
+def language_label(language: str) -> str:
+    return {
+        "de": "German",
+        "es": "Spanish",
+        "fr": "French",
+        "it": "Italiano",
+        "pt": "Portuguese",
+        "pl": "Polish",
+        "ru": "Russian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "zh": "Chinese",
+    }.get(language, language)
+
+
 def build_release_body(source_text: str, translations: dict[str, str], languages: list[str]) -> str:
     blocks = [changelog_block("en", source_text)]
     for language in languages:
         text = translations.get(language, "").strip()
         if text:
-            blocks.append(changelog_block(language, text))
+            blocks.append(
+                "\n".join(
+                    [
+                        f"<details><summary>{language_label(language)} changelog</summary>",
+                        "",
+                        changelog_block(language, text),
+                        "",
+                        "</details>",
+                    ]
+                )
+            )
     return "\n\n".join(blocks) + "\n"
 
 
