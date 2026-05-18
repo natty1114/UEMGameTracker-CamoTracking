@@ -180,7 +180,7 @@ def prune_old_backups(install_dir):
         shutil.rmtree(old_backup, ignore_errors=True)
 
 
-def create_update_backup(install_dir, target_version, status):
+def create_update_backup(install_dir, target_version, status, progress_bar):
     status.set("Backing up current version...")
     root = backup_root(install_dir)
     root.mkdir(parents=True, exist_ok=True)
@@ -188,12 +188,17 @@ def create_update_backup(install_dir, target_version, status):
     backup_dir = root / f"{UPDATE_BACKUP_PREFIX}{stamp}_to_{safe_name(target_version)}"
     backup_dir.mkdir(parents=True, exist_ok=False)
 
+    existing = [name for name in MANAGED_PATHS if (install_dir / name).exists()]
+    progress_bar["maximum"] = max(len(existing), 1)
+    progress_bar["value"] = 0
     copied = []
-    for name in MANAGED_PATHS:
+    for idx, name in enumerate(existing, start=1):
         source = install_dir / name
-        if source.exists():
-            copy_path(source, backup_dir / name)
-            copied.append(name)
+        status.set(f"Backing up: {name}")
+        copy_path(source, backup_dir / name)
+        copied.append(name)
+        progress_bar["value"] = idx
+        progress_bar.winfo_toplevel().update_idletasks()
 
     metadata = {
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -205,26 +210,32 @@ def create_update_backup(install_dir, target_version, status):
     return backup_dir
 
 
-def install_update(payload_dir, install_dir, status):
-    status.set("Installing update...")
-    for name in MANAGED_PATHS:
-        source = payload_dir / name
-        if not source.exists():
-            continue
-        if name in PRESERVED_PATHS:
-            continue
-        copy_path(source, install_dir / name)
+def install_update(payload_dir, install_dir, status, progress_bar):
+    to_install = [
+        name for name in MANAGED_PATHS
+        if (payload_dir / name).exists() and name not in PRESERVED_PATHS
+    ]
+    progress_bar["maximum"] = max(len(to_install), 1)
+    progress_bar["value"] = 0
+    for idx, name in enumerate(to_install, start=1):
+        status.set(f"Installing: {name}")
+        copy_path(payload_dir / name, install_dir / name)
+        progress_bar["value"] = idx
+        progress_bar.winfo_toplevel().update_idletasks()
 
 
-def restore_backup(backup_dir, install_dir, status):
+def restore_backup(backup_dir, install_dir, status, progress_bar):
     if not backup_dir or not backup_dir.exists():
         fail("No update backup was found to restore.")
 
-    status.set("Restoring previous version...")
-    for name in MANAGED_PATHS:
-        source = backup_dir / name
-        if source.exists():
-            copy_path(source, install_dir / name)
+    existing = [name for name in MANAGED_PATHS if (backup_dir / name).exists()]
+    progress_bar["maximum"] = max(len(existing), 1)
+    progress_bar["value"] = 0
+    for idx, name in enumerate(existing, start=1):
+        status.set(f"Restoring: {name}")
+        copy_path(backup_dir / name, install_dir / name)
+        progress_bar["value"] = idx
+        progress_bar.winfo_toplevel().update_idletasks()
 
 
 def restart_app(install_dir, exe_name):
@@ -280,7 +291,7 @@ def main():
                 status.set("Waiting for BO3 Tracker to close...")
                 root.update_idletasks()
                 wait_for_process(args.app_pid)
-                restore_backup(backup_dir, install_dir, status)
+                restore_backup(backup_dir, install_dir, status, progress_bar)
                 status.set("Previous version restored. Restarting BO3 Tracker...")
                 root.update_idletasks()
                 restart_app(install_dir, args.exe_name)
@@ -295,13 +306,20 @@ def main():
                 progress_bar["value"] = progress_bar["maximum"]
                 status.set("Unpacking update...")
                 with zipfile.ZipFile(zip_path, "r") as archive:
-                    archive.extractall(extract_dir)
+                    members = [m for m in archive.infolist() if not m.filename.startswith("__MACOSX")]
+                    progress_bar["maximum"] = max(len(members), 1)
+                    progress_bar["value"] = 0
+                    for idx, member in enumerate(members, start=1):
+                        archive.extract(member, extract_dir)
+                        status.set(f"Extracting: {member.filename}")
+                        progress_bar["value"] = idx
+                        root.update_idletasks()
                 payload_dir = first_payload_root(extract_dir)
                 status.set("Waiting for BO3 Tracker to close...")
                 root.update_idletasks()
                 wait_for_process(args.app_pid)
-                create_update_backup(install_dir, args.version, status)
-                install_update(payload_dir, install_dir, status)
+                create_update_backup(install_dir, args.version, status, progress_bar)
+                install_update(payload_dir, install_dir, status, progress_bar)
             status.set("Update installed. Restarting BO3 Tracker...")
             root.update_idletasks()
             restart_app(install_dir, args.exe_name)

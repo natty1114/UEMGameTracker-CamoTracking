@@ -671,7 +671,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_scythe_upgraded",
                 "upgraded_display_name": "Your Mori",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "special_laserkraftwerk",
@@ -721,7 +721,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "sniper_pdp70",
@@ -1279,7 +1279,7 @@
                 "seen_count": 516,
                 "upgraded_console_name": "t5_commando_up",
                 "upgraded_display_name": "Predator",
-                "category": "other"
+                "category": "smg"
             },
             {
                 "console_name": "t5_stakeout",
@@ -1563,7 +1563,7 @@
                 "first_seen": 1778783801,
                 "last_seen": 1778794546,
                 "seen_count": 456,
-                "category": "other"
+                "category": "lmg"
             }
         ]
     },
@@ -1589,7 +1589,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_jug_up",
                 "upgraded_display_name": "Running and Juggin",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "s4_3line_scope",
@@ -1949,7 +1949,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_seasonal_pipe_upgraded",
                 "upgraded_display_name": "Copper Cleaver",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "smg_fastfire",
@@ -1989,7 +1989,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "pistol_standard",
@@ -2049,7 +2049,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
                 "upgraded_display_name": "Noahj456's Jedi's Wrath",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "smg_ppsh",
@@ -2079,7 +2079,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_me_knife_russian_up",
                 "upgraded_display_name": "Closing Argument",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "raygun_mark2",
@@ -2119,7 +2119,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "s4_double_barrel_up",
                 "upgraded_display_name": "24 Bore Long Range",
-                "category": "other"
+                "category": "shotgun"
             },
             {
                 "console_name": "cymbal_monkey",
@@ -2199,7 +2199,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "s2_thompsonm1a1",
@@ -2239,7 +2239,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "sniper_fastbolt",
@@ -2279,7 +2279,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "s4_gorenko_rifle",
@@ -2385,7 +2385,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "t6_tac45",
@@ -2505,7 +2505,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "t6_ksg",
@@ -2655,7 +2655,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t6_stinger_up",
                 "upgraded_display_name": "Fatal Impairitive Malice-92000",
-                "category": "other"
+                "category": "launcher"
             },
             {
                 "console_name": "t6_stg44",
@@ -3015,7 +3015,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "t6_qbb_lsw",
@@ -3076,7 +3076,7 @@
             {
                 "console_name": "t6_m16a1_up",
                 "display_name": "Skullcrusher",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778856469,
                 "last_seen": 1778856469,
                 "seen_count": 1
@@ -3125,7 +3125,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "sw_lightsaber_obi_wan",
@@ -3135,7 +3135,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
                 "upgraded_display_name": "Noahj456's Jedi's Wrath",
-                "category": "special"
+                "category": "melee"
             },
             {
                 "console_name": "smg_capacity",
@@ -3305,7 +3305,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "shotgun_fullauto",
@@ -3465,7 +3465,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "pistol_m1911",
@@ -3485,7 +3485,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "smg_thompson",
@@ -3698,6 +3698,22 @@
                 "last_seen": 1778813684,
                 "seen_count": 160,
                 "category": "shotgun"
+            },
+            {
+                "console_name": "staff_water_upgraded",
+                "display_name": "Ull's Arrow",
+                "category": "special",
+                "first_seen": 1779041214,
+                "last_seen": 1779042252,
+                "seen_count": 519
+            },
+            {
+                "console_name": "raygun_mark2",
+                "display_name": "Ray Gun Mark II",
+                "category": "special",
+                "first_seen": 1779041214,
+                "last_seen": 1779042252,
+                "seen_count": 519
             }
         ]
     },
@@ -3713,7 +3729,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_me_knife_russian_up",
                 "upgraded_display_name": "Closing Argument",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "t9_gallo_raygun",
@@ -3783,7 +3799,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "launcher_standard",
@@ -3843,7 +3859,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "pistol_standard",
@@ -3913,7 +3929,7 @@
                 "seen_count": 257,
                 "upgraded_console_name": "melee_seasonal_pipe_upgraded",
                 "upgraded_display_name": "Copper Cleaver",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "smg_longrange",
@@ -4123,7 +4139,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_jug_up",
                 "upgraded_display_name": "Running and Juggin",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "smg_standard",
@@ -4143,7 +4159,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
                 "upgraded_display_name": "Noahj456's Jedi's Wrath",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "t9_crossbow_skull_up",
@@ -4151,7 +4167,7 @@
                 "first_seen": 1778814072,
                 "last_seen": 1778814583,
                 "seen_count": 256,
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "melee_seasonal_pipe_upgraded",
@@ -4159,7 +4175,7 @@
                 "first_seen": 1778814072,
                 "last_seen": 1778814583,
                 "seen_count": 256,
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "zombie_bgb_grab",
@@ -4283,7 +4299,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
                 "upgraded_display_name": "Noahj456's Jedi's Wrath",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "melee_jug",
@@ -4293,7 +4309,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_jug_up",
                 "upgraded_display_name": "Running and Juggin",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "ar_m14",
@@ -4333,7 +4349,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "melee_seasonal_pipe",
@@ -4343,7 +4359,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_seasonal_pipe_upgraded",
                 "upgraded_display_name": "Copper Cleaver",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "pistol_m1911",
@@ -4393,7 +4409,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "shotgun_pump",
@@ -4683,7 +4699,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "sniper_fastbolt",
@@ -4723,7 +4739,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "tesla_gun_upgraded",
                 "upgraded_display_name": "Wunderwaffe DG-3 JZ",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "ray_gun",
@@ -4763,7 +4779,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "octobomb_upgraded",
                 "upgraded_display_name": "Li'l Arnie",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "t9_me_knife_russian",
@@ -4773,7 +4789,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_me_knife_russian_up",
                 "upgraded_display_name": "Closing Argument",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "thundergun",
@@ -4991,7 +5007,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_me_knife_russian_up",
                 "upgraded_display_name": "Closing Argument",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "ar_standard",
@@ -5021,7 +5037,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "shotgun_fullauto",
@@ -5071,7 +5087,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
                 "upgraded_display_name": "Noahj456's Jedi's Wrath",
-                "category": "special"
+                "category": "melee"
             },
             {
                 "console_name": "sniper_fastbolt",
@@ -5171,7 +5187,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "",
                 "upgraded_display_name": "",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "melee_seasonal_pipe",
@@ -5181,7 +5197,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_seasonal_pipe_upgraded",
                 "upgraded_display_name": "Copper Cleaver",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "smg_ppsh",
@@ -5211,7 +5227,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "bo3_mark2_upgraded",
                 "upgraded_display_name": "Porter's Mark II Ray Gun",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "smg_longrange",
@@ -5281,7 +5297,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "melee_jug_up",
                 "upgraded_display_name": "Running and Juggin",
-                "category": "other"
+                "category": "melee"
             },
             {
                 "console_name": "ar_marksman",
@@ -5411,7 +5427,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "ar_longburst",
@@ -5449,7 +5465,7 @@
                 "first_seen": 1778818740,
                 "last_seen": 1778819305,
                 "seen_count": 283,
-                "category": "other"
+                "category": "pistol"
             },
             {
                 "console_name": "zombie_bgb_grab",
@@ -5458,6 +5474,30 @@
                 "last_seen": 1778819305,
                 "seen_count": 283,
                 "category": "other"
+            },
+            {
+                "console_name": "bo3_stg44",
+                "display_name": "STG-44",
+                "category": "assault_rifle",
+                "first_seen": 1779047094,
+                "last_seen": 1779047317,
+                "seen_count": 111
+            },
+            {
+                "console_name": "ar_famas_upgraded",
+                "display_name": "FFORMLESS FFEARR",
+                "category": "assault_rifle",
+                "first_seen": 1779047518,
+                "last_seen": 1779048191,
+                "seen_count": 331
+            },
+            {
+                "console_name": "pistol_burst_upgraded",
+                "display_name": "WH1RL-3R",
+                "category": "pistol",
+                "first_seen": 1779047893,
+                "last_seen": 1779048191,
+                "seen_count": 147
             }
         ]
     },
@@ -5543,7 +5583,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t5_commando_up",
                 "upgraded_display_name": "Predator",
-                "category": "other"
+                "category": "smg"
             },
             {
                 "console_name": "t5_ak47",
@@ -5603,7 +5643,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t5_aug_up",
                 "upgraded_display_name": "AUG_5OM3",
-                "category": "other"
+                "category": "assault_rifle"
             },
             {
                 "console_name": "t5_fn_fal",
@@ -5683,7 +5723,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t5_makarov_up",
                 "upgraded_display_name": "TKB-023",
-                "category": "other"
+                "category": "pistol"
             },
             {
                 "console_name": "t5_olympia",
@@ -5713,7 +5753,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t9_crossbow_skull_up",
                 "upgraded_display_name": "Headhunter's Delight",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "t5_minigun",
@@ -5723,7 +5763,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t5_minigun_up",
                 "upgraded_display_name": "Da Shredda",
-                "category": "other"
+                "category": "lmg"
             },
             {
                 "console_name": "shotgun_fullauto",
@@ -5903,7 +5943,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "tesla_gun_upgraded",
                 "upgraded_display_name": "Wunderwaffe DG-3 JZ",
-                "category": "other"
+                "category": "special"
             },
             {
                 "console_name": "sniper_fastbolt",
@@ -5963,7 +6003,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t5_asp_up",
                 "upgraded_display_name": "ASP-1R3",
-                "category": "other"
+                "category": "pistol"
             },
             {
                 "console_name": "shotgun_energy",
@@ -6063,7 +6103,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t5_famas_up",
                 "upgraded_display_name": "G16-GL35",
-                "category": "other"
+                "category": "assault_rifle"
             },
             {
                 "console_name": "t5_m14",
@@ -6173,7 +6213,7 @@
                 "seen_count": 1,
                 "upgraded_console_name": "t5_m202_up",
                 "upgraded_display_name": "Angel of Death",
-                "category": "other"
+                "category": "launcher"
             },
             {
                 "console_name": "pistol_burst",
@@ -6189,7 +6229,7 @@
                 "first_seen": 1778819640,
                 "last_seen": 1778820094,
                 "seen_count": 227,
-                "category": "other"
+                "category": "smg"
             },
             {
                 "console_name": "iw6_p226",
@@ -6197,7 +6237,7 @@
                 "first_seen": 1778819731,
                 "last_seen": 1778820094,
                 "seen_count": 182,
-                "category": "other"
+                "category": "pistol"
             }
         ]
     },
@@ -6208,7 +6248,7 @@
             {
                 "console_name": "melee_seasonal_pipe",
                 "display_name": "Dawnbreaker",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778856091,
                 "last_seen": 1778856091,
                 "seen_count": 1,
@@ -6448,7 +6488,7 @@
             {
                 "console_name": "melee_jug",
                 "display_name": "Baby Jugg",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778856091,
                 "last_seen": 1778856091,
                 "seen_count": 1,
@@ -6478,7 +6518,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778856091,
                 "last_seen": 1778856279,
                 "seen_count": 3,
@@ -6498,7 +6538,7 @@
             {
                 "console_name": "sw_lightsaber_obi_wan",
                 "display_name": "Obi Wan's Lightsaber",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778856091,
                 "last_seen": 1778856091,
                 "seen_count": 1,
@@ -6548,7 +6588,7 @@
             {
                 "console_name": "bowie_knife",
                 "display_name": "Bowie Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778856091,
                 "last_seen": 1778856091,
                 "seen_count": 1,
@@ -6558,7 +6598,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778856091,
                 "last_seen": 1778856091,
                 "seen_count": 1,
@@ -6708,7 +6748,7 @@
             {
                 "console_name": "t9_crossbow_skull",
                 "display_name": "Skull Splitter Crossbow",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778856091,
                 "last_seen": 1778856091,
                 "seen_count": 1,
@@ -6914,7 +6954,7 @@
             {
                 "console_name": "t6_xl_m14_up",
                 "display_name": "Mnesia",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778856091,
                 "last_seen": 1778856279,
                 "seen_count": 2
@@ -6928,7 +6968,7 @@
             {
                 "console_name": "iw8_m13",
                 "display_name": "M13",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -6948,7 +6988,7 @@
             {
                 "console_name": "iw8_g36k",
                 "display_name": "G36K",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 2,
@@ -6988,7 +7028,7 @@
             {
                 "console_name": "t9_xm4",
                 "display_name": "XM4",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7008,7 +7048,7 @@
             {
                 "console_name": "iw8_m16a4",
                 "display_name": "M16A4",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7018,7 +7058,7 @@
             {
                 "console_name": "s2_m1928",
                 "display_name": "M1928",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7028,7 +7068,7 @@
             {
                 "console_name": "t9_krig6",
                 "display_name": "Krig 6",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778880478,
                 "seen_count": 866,
@@ -7058,7 +7098,7 @@
             {
                 "console_name": "iw8_asval",
                 "display_name": "AS Val",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7128,7 +7168,7 @@
             {
                 "console_name": "s2_mp40",
                 "display_name": "MP-40",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7138,7 +7178,7 @@
             {
                 "console_name": "iw8_vintorez",
                 "display_name": "VSS Vintorez",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7178,7 +7218,7 @@
             {
                 "console_name": "t9_nail_gun",
                 "display_name": "Nail Gun",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7188,7 +7228,7 @@
             {
                 "console_name": "s2_delisle",
                 "display_name": "De Lisle",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7198,7 +7238,7 @@
             {
                 "console_name": "t9_pelington703",
                 "display_name": "Pelington 703",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7218,7 +7258,7 @@
             {
                 "console_name": "s2_waffe28",
                 "display_name": "Waffe 28",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7248,7 +7288,7 @@
             {
                 "console_name": "iw8_50gs",
                 "display_name": "Deagle",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7328,7 +7368,7 @@
             {
                 "console_name": "t9_bullfrog",
                 "display_name": "Bullfrog",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7398,7 +7438,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7408,7 +7448,7 @@
             {
                 "console_name": "t9_lw3_tundra",
                 "display_name": "LW3 - Tundra",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778867314,
                 "last_seen": 1778881828,
                 "seen_count": 249,
@@ -7448,7 +7488,7 @@
             {
                 "console_name": "t9_tec9",
                 "display_name": "TEC-9",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7478,7 +7518,7 @@
             {
                 "console_name": "iw8_m4a1_classic",
                 "display_name": "M4 Classic",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7488,7 +7528,7 @@
             {
                 "console_name": "t9_mac10",
                 "display_name": "MAC-10",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7508,7 +7548,7 @@
             {
                 "console_name": "t9_m14classic",
                 "display_name": "M14 Classic",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7518,7 +7558,7 @@
             {
                 "console_name": "iw8_m4a1",
                 "display_name": "M4A1",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7538,7 +7578,7 @@
             {
                 "console_name": "t9_1911",
                 "display_name": "1911",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778867314,
                 "last_seen": 1778881828,
                 "seen_count": 1403,
@@ -7558,7 +7598,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7588,7 +7628,7 @@
             {
                 "console_name": "t9_streetsweeper",
                 "display_name": "Streetsweeper",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7618,7 +7658,7 @@
             {
                 "console_name": "octobomb",
                 "display_name": "Li'l Arnie",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7628,7 +7668,7 @@
             {
                 "console_name": "iw8_holger26",
                 "display_name": "Holger-26",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778867314,
                 "last_seen": 1778867314,
                 "seen_count": 1,
@@ -7676,7 +7716,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778880752,
                 "last_seen": 1778881828,
                 "seen_count": 536
@@ -7700,7 +7740,7 @@
             {
                 "console_name": "lightsaber_revan",
                 "display_name": "Lightsaber",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -7710,7 +7750,7 @@
             {
                 "console_name": "bf2_e11",
                 "display_name": "E-11",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -7790,7 +7830,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -7840,7 +7880,7 @@
             {
                 "console_name": "bf2_ec17",
                 "display_name": "Scout Trooper Pistol",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778880480,
                 "last_seen": 1778880750,
                 "seen_count": 137,
@@ -7930,7 +7970,7 @@
             {
                 "console_name": "bf2_dlt19x",
                 "display_name": "DLT-19X",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -7980,7 +8020,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778880480,
                 "last_seen": 1778880750,
                 "seen_count": 137,
@@ -8030,7 +8070,7 @@
             {
                 "console_name": "bf2_t21",
                 "display_name": "T-21",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -8060,7 +8100,7 @@
             {
                 "console_name": "bf2_e5",
                 "display_name": "E-5",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -8090,7 +8130,7 @@
             {
                 "console_name": "e11_blaster",
                 "display_name": "Dc15s",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -8130,7 +8170,7 @@
             {
                 "console_name": "bf2_dlt19",
                 "display_name": "DLT-19",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -8170,7 +8210,7 @@
             {
                 "console_name": "bf2_tl50",
                 "display_name": "TL-50",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -8180,7 +8220,7 @@
             {
                 "console_name": "bf2_t21b",
                 "display_name": "T-21B",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778880480,
                 "last_seen": 1778880480,
                 "seen_count": 1,
@@ -8216,7 +8256,7 @@
             {
                 "console_name": "h1_g3",
                 "display_name": "G3",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8226,7 +8266,7 @@
             {
                 "console_name": "t8_outlaw",
                 "display_name": "Outlaw",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778890517,
                 "seen_count": 207,
@@ -8236,7 +8276,7 @@
             {
                 "console_name": "t8_paladin_hb50",
                 "display_name": "Paladin HB50",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8246,7 +8286,7 @@
             {
                 "console_name": "t8_grav",
                 "display_name": "Grav",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778891677,
                 "seen_count": 578,
@@ -8256,7 +8296,7 @@
             {
                 "console_name": "h1_m60e4",
                 "display_name": "M60E4",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8286,7 +8326,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778881830,
                 "last_seen": 1778891677,
                 "seen_count": 1523,
@@ -8296,7 +8336,7 @@
             {
                 "console_name": "h1_rem700",
                 "display_name": "Remington 700",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8306,7 +8346,7 @@
             {
                 "console_name": "h1_m21",
                 "display_name": "M21",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8316,7 +8356,7 @@
             {
                 "console_name": "t8_saug9mm",
                 "display_name": "Saug 9mm",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8356,7 +8396,7 @@
             {
                 "console_name": "h1_bos14",
                 "display_name": "BOS14",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8366,7 +8406,7 @@
             {
                 "console_name": "h1_lynx_cq300",
                 "display_name": "Lynx CQ300",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8376,7 +8416,7 @@
             {
                 "console_name": "h1_ranger",
                 "display_name": "Ranger",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8386,7 +8426,7 @@
             {
                 "console_name": "t8_daemon3xb",
                 "display_name": "Daemon 3XB",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8396,7 +8436,7 @@
             {
                 "console_name": "h1_m1014",
                 "display_name": "Benelli M1014",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8416,7 +8456,7 @@
             {
                 "console_name": "t8_rk7",
                 "display_name": "RK 7 Garrison",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8446,7 +8486,7 @@
             {
                 "console_name": "h1_ranger_rdw",
                 "display_name": "Rangers",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8456,7 +8496,7 @@
             {
                 "console_name": "h1_xmlar",
                 "display_name": "XM-LAR",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8476,7 +8516,7 @@
             {
                 "console_name": "t8_kap45",
                 "display_name": "KAP 45",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8506,7 +8546,7 @@
             {
                 "console_name": "t8_rampart17",
                 "display_name": "Rampart 17",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8516,7 +8556,7 @@
             {
                 "console_name": "t8_strife",
                 "display_name": "Strife",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778881830,
                 "last_seen": 1778890721,
                 "seen_count": 1166,
@@ -8536,7 +8576,7 @@
             {
                 "console_name": "t8_vkm750",
                 "display_name": "VKM 750",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8546,7 +8586,7 @@
             {
                 "console_name": "h1_win1200",
                 "display_name": "Winchester 1200",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8576,7 +8616,7 @@
             {
                 "console_name": "t8_switchblade_x9",
                 "display_name": "Switchblade X9",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8616,7 +8656,7 @@
             {
                 "console_name": "h1_beretta_m9",
                 "display_name": "Beretta M9",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8626,7 +8666,7 @@
             {
                 "console_name": "h1_prokolot",
                 "display_name": "Prokolot",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8656,7 +8696,7 @@
             {
                 "console_name": "h1_mini_uzi",
                 "display_name": "Mini-Uzi",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8666,7 +8706,7 @@
             {
                 "console_name": "t8_koshka",
                 "display_name": "Koshka",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8696,7 +8736,7 @@
             {
                 "console_name": "t8_mx9",
                 "display_name": "MX9",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8706,7 +8746,7 @@
             {
                 "console_name": "h1_skorpion",
                 "display_name": "vz.61 Skorpion",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778890577,
                 "seen_count": 61,
@@ -8716,7 +8756,7 @@
             {
                 "console_name": "h1_mac10",
                 "display_name": "Mac-10",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8726,7 +8766,7 @@
             {
                 "console_name": "h1_ak74u",
                 "display_name": "AK-74u",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8746,7 +8786,7 @@
             {
                 "console_name": "h1_g36c",
                 "display_name": "G36C",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8786,7 +8826,7 @@
             {
                 "console_name": "t8_sdm",
                 "display_name": "SDM",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8796,7 +8836,7 @@
             {
                 "console_name": "h1_pkm",
                 "display_name": "PKM",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8806,7 +8846,7 @@
             {
                 "console_name": "h1_usp45",
                 "display_name": "USP .45",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8816,7 +8856,7 @@
             {
                 "console_name": "h1_m16a4",
                 "display_name": "M16A4",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8836,7 +8876,7 @@
             {
                 "console_name": "h1_m4_carbine",
                 "display_name": "M4 Carbine",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8846,7 +8886,7 @@
             {
                 "console_name": "t8_swordfish",
                 "display_name": "Swordfish",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8876,7 +8916,7 @@
             {
                 "console_name": "h1_pk_psd9",
                 "display_name": "PK-PSD9",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8886,7 +8926,7 @@
             {
                 "console_name": "h1_minigun",
                 "display_name": "M134 Minigun",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8906,7 +8946,7 @@
             {
                 "console_name": "h1_m249_saw",
                 "display_name": "M249 SAW",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8916,7 +8956,7 @@
             {
                 "console_name": "h1_m40a3",
                 "display_name": "M40A3",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8926,7 +8966,7 @@
             {
                 "console_name": "h1_kamchatka12",
                 "display_name": "Kamchatka-12",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778881830,
                 "last_seen": 1778881830,
                 "seen_count": 1,
@@ -8936,7 +8976,7 @@
             {
                 "console_name": "t8_cordite",
                 "display_name": "Cordite",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778881830,
                 "last_seen": 1778890096,
                 "seen_count": 2871
@@ -8952,7 +8992,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778882161,
                 "last_seen": 1778890096,
                 "seen_count": 2706
@@ -8960,7 +9000,7 @@
             {
                 "console_name": "t8_cordite_up",
                 "display_name": "Corpsemaker",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778882984,
                 "last_seen": 1778890096,
                 "seen_count": 2296
@@ -9008,7 +9048,7 @@
             {
                 "console_name": "t8_escargot",
                 "display_name": "Escargot",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778890579,
                 "last_seen": 1778891677,
                 "seen_count": 545
@@ -9016,7 +9056,7 @@
             {
                 "console_name": "t8_grav_up",
                 "display_name": "Gravestone",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778890634,
                 "last_seen": 1778891677,
                 "seen_count": 518
@@ -9288,7 +9328,7 @@
             {
                 "console_name": "octobomb",
                 "display_name": "Li'l Arnie",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778891679,
                 "last_seen": 1778891679,
                 "seen_count": 1,
@@ -9298,7 +9338,7 @@
             {
                 "console_name": "t6_zombie_tomahawk",
                 "display_name": "Hells Retriever",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778891679,
                 "last_seen": 1778891679,
                 "seen_count": 1,
@@ -9886,6 +9926,22 @@
                 "first_seen": 1778897047,
                 "last_seen": 1778937400,
                 "seen_count": 1350
+            },
+            {
+                "console_name": "t6_lmg_hamr",
+                "display_name": "HAMR",
+                "category": "lmg",
+                "first_seen": 1779053766,
+                "last_seen": 1779055860,
+                "seen_count": 1044
+            },
+            {
+                "console_name": "t6_lmg_hamr_upgraded",
+                "display_name": "SLDG HAMR",
+                "category": "lmg",
+                "first_seen": 1779054005,
+                "last_seen": 1779055860,
+                "seen_count": 925
             }
         ]
     },
@@ -9916,7 +9972,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778884368,
                 "last_seen": 1778884368,
                 "seen_count": 1,
@@ -9946,7 +10002,7 @@
             {
                 "console_name": "melee_jug",
                 "display_name": "Baby Jugg",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778884368,
                 "last_seen": 1778884580,
                 "seen_count": 107,
@@ -9986,7 +10042,7 @@
             {
                 "console_name": "t9_crossbow_skull",
                 "display_name": "Skull Splitter Crossbow",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778884368,
                 "last_seen": 1778884368,
                 "seen_count": 1,
@@ -10136,7 +10192,7 @@
             {
                 "console_name": "sw_lightsaber_obi_wan",
                 "display_name": "Obi Wan's Lightsaber",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778884368,
                 "last_seen": 1778884368,
                 "seen_count": 1,
@@ -10176,7 +10232,7 @@
             {
                 "console_name": "octobomb",
                 "display_name": "Li'l Arnie",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778884368,
                 "last_seen": 1778884368,
                 "seen_count": 1,
@@ -10366,7 +10422,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778884368,
                 "last_seen": 1778884368,
                 "seen_count": 1,
@@ -10466,7 +10522,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778937403,
                 "last_seen": 1778937403,
                 "seen_count": 1,
@@ -10516,7 +10572,7 @@
             {
                 "console_name": "t5_asp",
                 "display_name": "ASP",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778937403,
                 "last_seen": 1778937403,
                 "seen_count": 1,
@@ -10546,7 +10602,7 @@
             {
                 "console_name": "t9_me_wakizashi",
                 "display_name": "Wakizashi",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778937403,
                 "last_seen": 1778937403,
                 "seen_count": 1,
@@ -10596,7 +10652,7 @@
             {
                 "console_name": "t5_commando_up",
                 "display_name": "Predator",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778937403,
                 "last_seen": 1778955230,
                 "seen_count": 504,
@@ -10676,7 +10732,7 @@
             {
                 "console_name": "t5_makarov",
                 "display_name": "Makarov",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778937403,
                 "last_seen": 1778937403,
                 "seen_count": 1,
@@ -11086,7 +11142,7 @@
             {
                 "console_name": "t5_commando",
                 "display_name": "Commando",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778937403,
                 "last_seen": 1778955230,
                 "seen_count": 504,
@@ -11156,7 +11212,7 @@
             {
                 "console_name": "t5_aug",
                 "display_name": "AUG",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778937403,
                 "last_seen": 1778937403,
                 "seen_count": 1,
@@ -11400,7 +11456,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778937801,
                 "last_seen": 1778937801,
                 "seen_count": 1,
@@ -11490,6 +11546,196 @@
                 "first_seen": 1778937801,
                 "last_seen": 1778938386,
                 "seen_count": 293
+            },
+            {
+                "console_name": "sniper_fastbolt",
+                "display_name": "Kar98k Scoped",
+                "category": "sniper",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastbolt_upgraded",
+                "upgraded_display_name": "Spasmodic Profligator"
+            },
+            {
+                "console_name": "t9_crossbow_skull",
+                "display_name": "Skull Splitter Crossbow",
+                "category": "special",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_crossbow_skull_up",
+                "upgraded_display_name": "Headhunter's Delight"
+            },
+            {
+                "console_name": "t9_me_knife_russian",
+                "display_name": "Knife",
+                "category": "melee",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_me_knife_russian_up",
+                "upgraded_display_name": "Closing Argument"
+            },
+            {
+                "console_name": "smg_versatile",
+                "display_name": "Commando",
+                "category": "smg",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_versatile_upgraded",
+                "upgraded_display_name": "Predator"
+            },
+            {
+                "console_name": "sniper_powerbolt",
+                "display_name": "Barrett .50cal",
+                "category": "sniper",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_powerbolt_upgraded",
+                "upgraded_display_name": "Ravager's Roar"
+            },
+            {
+                "console_name": "shotgun_energy",
+                "display_name": ".44 Magnum",
+                "category": "shotgun",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_energy_upgraded",
+                "upgraded_display_name": "Viper Hugs 44"
+            },
+            {
+                "console_name": "smg_mp40_1940",
+                "display_name": "MP-40",
+                "category": "smg",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_mp40_1940_upgraded",
+                "upgraded_display_name": "The Afterburner"
+            },
+            {
+                "console_name": "hero_annihilator",
+                "display_name": "Annihilator",
+                "category": "special",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "hero_annihilator",
+                "upgraded_display_name": "Annihilator"
+            },
+            {
+                "console_name": "t9_gallo_raygun",
+                "display_name": "Blast-O-Matic",
+                "category": "special",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_gallo_raygun_up",
+                "upgraded_display_name": "MrDaleksJD's Blast-O-Matic"
+            },
+            {
+                "console_name": "ray_gun",
+                "display_name": "Ray Gun",
+                "category": "special",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "ray_gun_upgraded",
+                "upgraded_display_name": "Porter's X2 Ray Gun"
+            },
+            {
+                "console_name": "sniper_fastsemi",
+                "display_name": "Intervention",
+                "category": "sniper",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastsemi_upgraded",
+                "upgraded_display_name": "Thunderstrike Marksmen"
+            },
+            {
+                "console_name": "melee_jug",
+                "display_name": "Baby Jugg",
+                "category": "melee",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_jug_up",
+                "upgraded_display_name": "Running and Juggin"
+            },
+            {
+                "console_name": "melee_seasonal_pipe",
+                "display_name": "Dawnbreaker",
+                "category": "melee",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_seasonal_pipe_upgraded",
+                "upgraded_display_name": "Copper Cleaver"
+            },
+            {
+                "console_name": "sw_lightsaber_obi_wan",
+                "display_name": "Obi Wan's Lightsaber",
+                "category": "melee",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
+                "upgraded_display_name": "Noahj456's Jedi's Wrath"
+            },
+            {
+                "console_name": "ar_stg44",
+                "display_name": "STG44",
+                "category": "assault_rifle",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_stg44_upgraded",
+                "upgraded_display_name": "Spatz-447 +"
+            },
+            {
+                "console_name": "pistol_m1911",
+                "display_name": "1911",
+                "category": "pistol",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_m1911_upgraded",
+                "upgraded_display_name": "Manesco & Jabroni"
+            },
+            {
+                "console_name": "smg_thompson",
+                "display_name": "Thompson M1A1",
+                "category": "smg",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_thompson_upgraded",
+                "upgraded_display_name": "The Gibs-o-Matic"
+            },
+            {
+                "console_name": "smg_longrange",
+                "display_name": "A.C.R. Vengeance",
+                "category": "smg",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_longrange_upgraded",
+                "upgraded_display_name": "Watchful Wolf's A.C.R"
+            },
+            {
+                "console_name": "smg_ppsh",
+                "display_name": "PPSH-41",
+                "category": "smg",
+                "first_seen": 1779042254,
+                "last_seen": 1779042254,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_ppsh_upgraded",
+                "upgraded_display_name": "The Adopted Grim Reaper"
             }
         ]
     },
@@ -11540,7 +11786,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11580,7 +11826,7 @@
             {
                 "console_name": "s4_type99_irons",
                 "display_name": "Type 99",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11620,7 +11866,7 @@
             {
                 "console_name": "bowie_knife",
                 "display_name": "Bowie Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11630,7 +11876,7 @@
             {
                 "console_name": "s4_1911",
                 "display_name": "1911",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778938388,
                 "last_seen": 1778940579,
                 "seen_count": 1096,
@@ -11640,7 +11886,7 @@
             {
                 "console_name": "s2_win21",
                 "display_name": "Winchester Model 21",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11660,7 +11906,7 @@
             {
                 "console_name": "s4_itra_burst",
                 "display_name": "ITRA Burst",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11700,7 +11946,7 @@
             {
                 "console_name": "s4_m1bazooka",
                 "display_name": "M1 Bazooka",
-                "category": "other",
+                "category": "launcher",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11730,7 +11976,7 @@
             {
                 "console_name": "s2_enfieldno2",
                 "display_name": "Enfield No. 2",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11860,7 +12106,7 @@
             {
                 "console_name": "s2_fg42",
                 "display_name": "FG 42",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11900,7 +12146,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778938388,
                 "last_seen": 1778940491,
                 "seen_count": 811,
@@ -11930,7 +12176,7 @@
             {
                 "console_name": "s4_mp40",
                 "display_name": "MP-40",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -11990,7 +12236,7 @@
             {
                 "console_name": "s2_m1903",
                 "display_name": "M1903 Springfield",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -12100,7 +12346,7 @@
             {
                 "console_name": "s4_double_barrel",
                 "display_name": "Double Barrel",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -12130,7 +12376,7 @@
             {
                 "console_name": "s4_type99_scope",
                 "display_name": "Type 99",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -12150,7 +12396,7 @@
             {
                 "console_name": "s4_g43",
                 "display_name": "G-43",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778938388,
                 "last_seen": 1778938388,
                 "seen_count": 1,
@@ -12208,7 +12454,7 @@
             {
                 "console_name": "t4r_ppsh",
                 "display_name": "PPSh-41",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778940493,
                 "last_seen": 1778942308,
                 "seen_count": 907
@@ -12216,7 +12462,7 @@
             {
                 "console_name": "t4r_ppsh_upgraded",
                 "display_name": "The Reaper",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778940581,
                 "last_seen": 1778942308,
                 "seen_count": 863
@@ -12250,7 +12496,7 @@
             {
                 "console_name": "t9_lw3_tundra",
                 "display_name": "LW3 - Tundra",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12330,7 +12576,7 @@
             {
                 "console_name": "s4_itra_burst",
                 "display_name": "ITRA Burst",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12360,7 +12606,7 @@
             {
                 "console_name": "s4_mp40",
                 "display_name": "MP-40",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12410,7 +12656,7 @@
             {
                 "console_name": "s4_lee_enfield_scope",
                 "display_name": "Lee Enfield",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12430,7 +12676,7 @@
             {
                 "console_name": "s4_automaton",
                 "display_name": "Automaton",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12460,7 +12706,7 @@
             {
                 "console_name": "t9_m14classic",
                 "display_name": "M14 Classic",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12500,7 +12746,7 @@
             {
                 "console_name": "s4_sten",
                 "display_name": "Sten",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12510,7 +12756,7 @@
             {
                 "console_name": "s4_dp27",
                 "display_name": "DP27",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12570,7 +12816,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12600,7 +12846,7 @@
             {
                 "console_name": "t9_410ironhide",
                 "display_name": ".410 Ironhide",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12650,7 +12896,7 @@
             {
                 "console_name": "s4_double_barrel",
                 "display_name": "Double Barrel",
-                "category": "other",
+                "category": "shotgun",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12700,7 +12946,7 @@
             {
                 "console_name": "t9_aug",
                 "display_name": "AUG",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12720,7 +12966,7 @@
             {
                 "console_name": "s4_m1bazooka",
                 "display_name": "M1 Bazooka",
-                "category": "other",
+                "category": "launcher",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12770,7 +13016,7 @@
             {
                 "console_name": "s4_ratt",
                 "display_name": "RATT",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12800,7 +13046,7 @@
             {
                 "console_name": "octobomb",
                 "display_name": "Li'l Arnie",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12810,7 +13056,7 @@
             {
                 "console_name": "s4_1911",
                 "display_name": "1911",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12830,7 +13076,7 @@
             {
                 "console_name": "t9_xm4",
                 "display_name": "XM4",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12900,7 +13146,7 @@
             {
                 "console_name": "t9_m16",
                 "display_name": "M16",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778946617,
                 "last_seen": 1778946617,
                 "seen_count": 1,
@@ -12960,7 +13206,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778946617,
                 "last_seen": 1778951436,
                 "seen_count": 2366
@@ -13058,7 +13304,7 @@
             {
                 "console_name": "t8_outlaw",
                 "display_name": "Outlaw",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13088,7 +13334,7 @@
             {
                 "console_name": "t8_vkm750",
                 "display_name": "VKM 750",
-                "category": "other",
+                "category": "lmg",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13108,7 +13354,7 @@
             {
                 "console_name": "t8_escargot",
                 "display_name": "Escargot",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13118,7 +13364,7 @@
             {
                 "console_name": "t8_rk7",
                 "display_name": "RK 7 Garrison",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13128,7 +13374,7 @@
             {
                 "console_name": "t8_koshka",
                 "display_name": "Koshka",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13158,7 +13404,7 @@
             {
                 "console_name": "t8_saug9mm",
                 "display_name": "Saug 9mm",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13178,7 +13424,7 @@
             {
                 "console_name": "t8_essex_m07",
                 "display_name": "Essex Model 07",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13208,7 +13454,7 @@
             {
                 "console_name": "t8_kap45",
                 "display_name": "KAP 45",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13248,7 +13494,7 @@
             {
                 "console_name": "t8_cordite",
                 "display_name": "Cordite",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13258,7 +13504,7 @@
             {
                 "console_name": "t8_swordfish",
                 "display_name": "Swordfish",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13298,7 +13544,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13348,7 +13594,7 @@
             {
                 "console_name": "t8_sdm",
                 "display_name": "SDM",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778955232,
                 "last_seen": 1778957451,
                 "seen_count": 191,
@@ -13388,7 +13634,7 @@
             {
                 "console_name": "t8_strife",
                 "display_name": "Strife",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778955232,
                 "last_seen": 1778957280,
                 "seen_count": 1023,
@@ -13508,7 +13754,7 @@
             {
                 "console_name": "t8_welling",
                 "display_name": "Welling",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13568,7 +13814,7 @@
             {
                 "console_name": "t8_paladin_hb50",
                 "display_name": "Paladin HB50",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13628,7 +13874,7 @@
             {
                 "console_name": "t8_rampart17",
                 "display_name": "Rampart 17",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13668,7 +13914,7 @@
             {
                 "console_name": "t8_mx9",
                 "display_name": "MX9",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13678,7 +13924,7 @@
             {
                 "console_name": "t8_daemon3xb",
                 "display_name": "Daemon 9mm",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13698,7 +13944,7 @@
             {
                 "console_name": "t8_switchblade_x9",
                 "display_name": "Switchblade X9",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13708,7 +13954,7 @@
             {
                 "console_name": "t8_auger_dmr",
                 "display_name": "Auger DMR",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778955232,
                 "last_seen": 1778955232,
                 "seen_count": 1,
@@ -13736,7 +13982,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778956104,
                 "last_seen": 1778957021,
                 "seen_count": 458
@@ -13760,7 +14006,7 @@
             {
                 "console_name": "t8_sdm_up",
                 "display_name": "IT-5 LYT",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1778957362,
                 "last_seen": 1778957828,
                 "seen_count": 233
@@ -13768,7 +14014,7 @@
             {
                 "console_name": "iw7_stallion_44_up",
                 "display_name": "Bronco .88",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778957453,
                 "last_seen": 1778957828,
                 "seen_count": 188
@@ -13784,7 +14030,7 @@
             {
                 "console_name": "t9_me_knife_russian_up",
                 "display_name": "Closing Argument",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778987172,
                 "last_seen": 1779030705,
                 "seen_count": 2474
@@ -13828,7 +14074,7 @@
             {
                 "console_name": "iw6_honeybadger",
                 "display_name": "Honey Badger",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -13838,7 +14084,7 @@
             {
                 "console_name": "t5_makarov",
                 "display_name": "Makarov",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -13858,7 +14104,7 @@
             {
                 "console_name": "t7_quantum_bomb",
                 "display_name": "Quantum Entanglement Device",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -13878,7 +14124,7 @@
             {
                 "console_name": "t5_commando",
                 "display_name": "Commando",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -13888,7 +14134,7 @@
             {
                 "console_name": "bowie_knife",
                 "display_name": "Bowie Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -13978,7 +14224,7 @@
             {
                 "console_name": "t6_vector_k10",
                 "display_name": "Vector K10",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -14098,7 +14344,7 @@
             {
                 "console_name": "t5_m202",
                 "display_name": "M202 Grim Reaper",
-                "category": "other",
+                "category": "launcher",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -14388,7 +14634,7 @@
             {
                 "console_name": "t5_aug",
                 "display_name": "AUG",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -14478,7 +14724,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778962977,
                 "last_seen": 1778962977,
                 "seen_count": 1,
@@ -14548,7 +14794,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1778962977,
                 "last_seen": 1778964898,
                 "seen_count": 960
@@ -14572,7 +14818,7 @@
             {
                 "console_name": "bowie_knife",
                 "display_name": "Bowie Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779026209,
                 "last_seen": 1779026209,
                 "seen_count": 1,
@@ -14582,7 +14828,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779026209,
                 "last_seen": 1779026209,
                 "seen_count": 1,
@@ -14692,7 +14938,7 @@
             {
                 "console_name": "tesla_gun",
                 "display_name": "Wunderwaffe DG-2",
-                "category": "other",
+                "category": "special",
                 "first_seen": 1779026209,
                 "last_seen": 1779026209,
                 "seen_count": 1,
@@ -15000,6 +15246,14 @@
                 "first_seen": 1779036190,
                 "last_seen": 1779037927,
                 "seen_count": 868
+            },
+            {
+                "console_name": "smg_ppsh_upgraded",
+                "display_name": "The Adopted Grim Reaper",
+                "category": "smg",
+                "first_seen": 1779043544,
+                "last_seen": 1779058658,
+                "seen_count": 7547
             }
         ]
     },
@@ -15090,7 +15344,7 @@
             {
                 "console_name": "bowie_knife",
                 "display_name": "Bowie Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779032124,
                 "last_seen": 1779032124,
                 "seen_count": 1,
@@ -15100,7 +15354,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779032124,
                 "last_seen": 1779032124,
                 "seen_count": 1,
@@ -15160,7 +15414,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779032124,
                 "last_seen": 1779032124,
                 "seen_count": 1,
@@ -15536,7 +15790,7 @@
             {
                 "console_name": "t8_swordfish",
                 "display_name": "Swordfish",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15546,7 +15800,7 @@
             {
                 "console_name": "t8_welling",
                 "display_name": "Welling",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15578,8 +15832,8 @@
                 "display_name": "RAM-7",
                 "category": "assault_rifle",
                 "first_seen": 1779032918,
-                "last_seen": 1779037979,
-                "seen_count": 2,
+                "last_seen": 1779058540,
+                "seen_count": 2746,
                 "upgraded_console_name": "ar_accurate_upgraded",
                 "upgraded_display_name": "G.O.A.T. 14000"
             },
@@ -15596,7 +15850,7 @@
             {
                 "console_name": "t8_essex_m07",
                 "display_name": "Essex Model 07",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15696,7 +15950,7 @@
             {
                 "console_name": "t8_mx9",
                 "display_name": "MX9",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15706,7 +15960,7 @@
             {
                 "console_name": "knife",
                 "display_name": "knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15736,7 +15990,7 @@
             {
                 "console_name": "t8_rampart17",
                 "display_name": "Rampart 17",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15766,7 +16020,7 @@
             {
                 "console_name": "t8_daemon3xb",
                 "display_name": "Daemon 3XB",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15818,8 +16072,8 @@
                 "display_name": "Ray Gun",
                 "category": "special",
                 "first_seen": 1779032918,
-                "last_seen": 1779037979,
-                "seen_count": 319,
+                "last_seen": 1779049098,
+                "seen_count": 1667,
                 "upgraded_console_name": "otg_bo4_ray_gun_up",
                 "upgraded_display_name": "Porter's X2 Ray Gun"
             },
@@ -15866,7 +16120,7 @@
             {
                 "console_name": "t8_auger_dmr",
                 "display_name": "Auger DMR",
-                "category": "other",
+                "category": "assault_rifle",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15896,7 +16150,7 @@
             {
                 "console_name": "bowie_knife",
                 "display_name": "Bowie Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -15976,7 +16230,7 @@
             {
                 "console_name": "t8_saug9mm",
                 "display_name": "Saug 9mm",
-                "category": "other",
+                "category": "smg",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -16076,7 +16330,7 @@
             {
                 "console_name": "t8_paladin_hb50",
                 "display_name": "Paladin HB50",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -16126,7 +16380,7 @@
             {
                 "console_name": "t8_kap45",
                 "display_name": "KAP-45",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -16236,7 +16490,7 @@
             {
                 "console_name": "t8_rk7",
                 "display_name": "RK 7 Garrison",
-                "category": "other",
+                "category": "pistol",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -16256,7 +16510,7 @@
             {
                 "console_name": "t8_outlaw",
                 "display_name": "Outlaw",
-                "category": "other",
+                "category": "sniper",
                 "first_seen": 1779032918,
                 "last_seen": 1779032918,
                 "seen_count": 1,
@@ -16268,8 +16522,8 @@
                 "display_name": "M93 Raffica",
                 "category": "pistol",
                 "first_seen": 1779032918,
-                "last_seen": 1779037979,
-                "seen_count": 318
+                "last_seen": 1779054153,
+                "seen_count": 2894
             },
             {
                 "console_name": "pistol_m1911",
@@ -16282,7 +16536,7 @@
             {
                 "console_name": "t9_me_knife_russian",
                 "display_name": "Knife",
-                "category": "other",
+                "category": "melee",
                 "first_seen": 1779033345,
                 "last_seen": 1779036734,
                 "seen_count": 207
@@ -16292,16 +16546,1818 @@
                 "display_name": "Porter's X2 Ray Gun",
                 "category": "special",
                 "first_seen": 1779036601,
-                "last_seen": 1779037979,
-                "seen_count": 69
+                "last_seen": 1779058540,
+                "seen_count": 2813
             },
             {
                 "console_name": "sniper_xpr50",
                 "display_name": "XPR-50",
                 "category": "sniper",
                 "first_seen": 1779036736,
-                "last_seen": 1779037979,
-                "seen_count": 2
+                "last_seen": 1779040921,
+                "seen_count": 914
+            },
+            {
+                "console_name": "t8_vapr_xkg_up",
+                "display_name": "Creepng Haze",
+                "category": "assault_rifle",
+                "first_seen": 1779040923,
+                "last_seen": 1779058540,
+                "seen_count": 1832
+            },
+            {
+                "console_name": "smg_ppsh_upgraded",
+                "display_name": "The Adopted Grim Reaper",
+                "category": "smg",
+                "first_seen": 1779049100,
+                "last_seen": 1779058538,
+                "seen_count": 1395
+            },
+            {
+                "console_name": "sniper_xpr50_upgraded",
+                "display_name": "Judgement Day",
+                "category": "sniper",
+                "first_seen": 1779054155,
+                "last_seen": 1779058540,
+                "seen_count": 168
+            },
+            {
+                "console_name": "t8_sg12_up",
+                "display_name": "Breccius Rebornus",
+                "category": "shotgun",
+                "first_seen": 1779058540,
+                "last_seen": 1779058540,
+                "seen_count": 1
+            }
+        ]
+    },
+    "zm_zod": {
+        "steam_link": "zm_zod",
+        "map_name": "SHADOWS OF EVIL",
+        "weapons": [
+            {
+                "console_name": "ar_cqb",
+                "display_name": "M13",
+                "category": "assault_rifle",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_cqb_upgraded",
+                "upgraded_display_name": "Radiant Dominator"
+            },
+            {
+                "console_name": "lmg_slowfire",
+                "display_name": "M60",
+                "category": "lmg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_slowfire_upgraded",
+                "upgraded_display_name": "Gluttonous Titan"
+            },
+            {
+                "console_name": "ar_standard",
+                "display_name": "AK-47",
+                "category": "assault_rifle",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_standard_upgraded",
+                "upgraded_display_name": "Reznov's Revenge"
+            },
+            {
+                "console_name": "ar_stg44",
+                "display_name": "STG44",
+                "category": "assault_rifle",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_stg44_upgraded",
+                "upgraded_display_name": "Spatz-447 +"
+            },
+            {
+                "console_name": "lmg_cqb",
+                "display_name": "Browning M1919",
+                "category": "lmg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_cqb_upgraded",
+                "upgraded_display_name": "B115 Accelerator"
+            },
+            {
+                "console_name": "t9_crossbow_skull",
+                "display_name": "Skull Splitter Crossbow",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_crossbow_skull_up",
+                "upgraded_display_name": "Headhunter's Delight"
+            },
+            {
+                "console_name": "shotgun_pump",
+                "display_name": "SPAS-12",
+                "category": "shotgun",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_pump_upgraded",
+                "upgraded_display_name": "Ravaging Sandstorm"
+            },
+            {
+                "console_name": "idgun_2",
+                "display_name": "Nar-Ullaqua",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "sniper_fastsemi",
+                "display_name": "Intervention",
+                "category": "sniper",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastsemi_upgraded",
+                "upgraded_display_name": "Thunderstrike Marksmen"
+            },
+            {
+                "console_name": "smg_capacity",
+                "display_name": "UMP45",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_capacity_upgraded",
+                "upgraded_display_name": "Unchained Guardian's Legacy - 45"
+            },
+            {
+                "console_name": "smg_fastfire",
+                "display_name": "Vector",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779050260,
+                "seen_count": 3346,
+                "upgraded_console_name": "smg_fastfire_upgraded",
+                "upgraded_display_name": "Pez Dispenser"
+            },
+            {
+                "console_name": "smg_versatile",
+                "display_name": "Commando",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_versatile_upgraded",
+                "upgraded_display_name": "Predator"
+            },
+            {
+                "console_name": "launcher_standard",
+                "display_name": "RPG-7",
+                "category": "launcher",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "launcher_standard_upgraded",
+                "upgraded_display_name": "Rocket Propelled Grievance-7000"
+            },
+            {
+                "console_name": "bouncingbetty_holly",
+                "display_name": "Trip Mine",
+                "category": "other",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "octobomb",
+                "display_name": "Li'l Arnie",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "octobomb_upgraded",
+                "upgraded_display_name": "Li'l Arnie"
+            },
+            {
+                "console_name": "shotgun_semiauto",
+                "display_name": "Marshal",
+                "category": "shotgun",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_semiauto_upgraded",
+                "upgraded_display_name": "Kunjora's Double Trouble"
+            },
+            {
+                "console_name": "pistol_fullauto",
+                "display_name": "Desert Eagle",
+                "category": "pistol",
+                "first_seen": 1779042721,
+                "last_seen": 1779049009,
+                "seen_count": 3034,
+                "upgraded_console_name": "pistol_fullauto_upgraded",
+                "upgraded_display_name": "Squishy Squirtgun & Tickle Tornado"
+            },
+            {
+                "console_name": "smg_standard",
+                "display_name": "MP7",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_standard_upgraded",
+                "upgraded_display_name": "Master Peanut - 7"
+            },
+            {
+                "console_name": "idgun_1",
+                "display_name": "Mar-Astagua",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "smg_longrange",
+                "display_name": "A.C.R. Vengeance",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_longrange_upgraded",
+                "upgraded_display_name": "Watchful Wolf's A.C.R"
+            },
+            {
+                "console_name": "ar_longburst",
+                "display_name": "AUG HBAR",
+                "category": "assault_rifle",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_longburst_upgraded",
+                "upgraded_display_name": "Augmented H-Bar"
+            },
+            {
+                "console_name": "t9_gallo_raygun",
+                "display_name": "Blast-O-Matic",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_gallo_raygun_up",
+                "upgraded_display_name": "MrDaleksJD's Blast-O-Matic"
+            },
+            {
+                "console_name": "shotgun_energy",
+                "display_name": ".44 Magnum",
+                "category": "shotgun",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_energy_upgraded",
+                "upgraded_display_name": "Viper Hugs 44"
+            },
+            {
+                "console_name": "lmg_light",
+                "display_name": "MG 42",
+                "category": "lmg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_light_upgraded",
+                "upgraded_display_name": "The Spandau"
+            },
+            {
+                "console_name": "lmg_heavy",
+                "display_name": "RPD",
+                "category": "lmg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_heavy_upgraded",
+                "upgraded_display_name": "Ravenous Purging Dismantler"
+            },
+            {
+                "console_name": "pistol_revolver38",
+                "display_name": "Bloodhound",
+                "category": "pistol",
+                "first_seen": 1779042721,
+                "last_seen": 1779042930,
+                "seen_count": 106,
+                "upgraded_console_name": "pistol_revolver38_upgraded",
+                "upgraded_display_name": "Meat Wagon"
+            },
+            {
+                "console_name": "t9_me_knife_russian",
+                "display_name": "Knife",
+                "category": "melee",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_me_knife_russian_up",
+                "upgraded_display_name": "Closing Argument"
+            },
+            {
+                "console_name": "melee_jug",
+                "display_name": "Baby Jugg",
+                "category": "melee",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_jug_up",
+                "upgraded_display_name": "Running and Juggin"
+            },
+            {
+                "console_name": "ar_marksman",
+                "display_name": "FAL",
+                "category": "assault_rifle",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_marksman_upgraded",
+                "upgraded_display_name": "Shidouri's Arcane Liberator"
+            },
+            {
+                "console_name": "sw_lightsaber_obi_wan",
+                "display_name": "Obi Wan's Lightsaber",
+                "category": "melee",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
+                "upgraded_display_name": "Noahj456's Jedi's Wrath"
+            },
+            {
+                "console_name": "idgun_0",
+                "display_name": "Kor-Maroth",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "bouncingbetty_devil",
+                "display_name": "Trip Mine",
+                "category": "other",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "pistol_standard",
+                "display_name": "M19",
+                "category": "pistol",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_standard_upgraded",
+                "upgraded_display_name": "Clean House"
+            },
+            {
+                "console_name": "pistol_m1911",
+                "display_name": "1911",
+                "category": "pistol",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_m1911_upgraded",
+                "upgraded_display_name": "Manesco & Jabroni"
+            },
+            {
+                "console_name": "pistol_burst",
+                "display_name": "M93 Raffica",
+                "category": "pistol",
+                "first_seen": 1779042721,
+                "last_seen": 1779046708,
+                "seen_count": 1991,
+                "upgraded_console_name": "pistol_burst_upgraded",
+                "upgraded_display_name": "WH1RL-3R"
+            },
+            {
+                "console_name": "ar_damage",
+                "display_name": "SCAR-H",
+                "category": "assault_rifle",
+                "first_seen": 1779042721,
+                "last_seen": 1779050260,
+                "seen_count": 3023,
+                "upgraded_console_name": "ar_damage_upgraded",
+                "upgraded_display_name": "Noahj's Agarthan Reaper"
+            },
+            {
+                "console_name": "melee_seasonal_pipe",
+                "display_name": "Dawnbreaker",
+                "category": "melee",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_seasonal_pipe_upgraded",
+                "upgraded_display_name": "Copper Cleaver"
+            },
+            {
+                "console_name": "smg_thompson",
+                "display_name": "Thompson M1A1",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_thompson_upgraded",
+                "upgraded_display_name": "The Gibs-o-Matic"
+            },
+            {
+                "console_name": "ar_accurate",
+                "display_name": "RAM-7",
+                "category": "assault_rifle",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_accurate_upgraded",
+                "upgraded_display_name": "G.O.A.T. 14000"
+            },
+            {
+                "console_name": "shotgun_fullauto",
+                "display_name": "Trench Gun",
+                "category": "shotgun",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_fullauto_upgraded",
+                "upgraded_display_name": "Trebuchet"
+            },
+            {
+                "console_name": "idgun_3",
+                "display_name": "Lor-Zarozzor",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "bouncingbetty",
+                "display_name": "Trip Mine",
+                "category": "other",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "smg_ppsh",
+                "display_name": "PPSH-41",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_ppsh_upgraded",
+                "upgraded_display_name": "The Adopted Grim Reaper"
+            },
+            {
+                "console_name": "sniper_fastbolt",
+                "display_name": "Kar98k Scoped",
+                "category": "sniper",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastbolt_upgraded",
+                "upgraded_display_name": "Spasmodic Profligator"
+            },
+            {
+                "console_name": "smg_mp40_1940",
+                "display_name": "MP-40",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_mp40_1940_upgraded",
+                "upgraded_display_name": "The Afterburner"
+            },
+            {
+                "console_name": "smg_burst",
+                "display_name": "MP5 Suppressed",
+                "category": "smg",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_burst_upgraded",
+                "upgraded_display_name": "Nightshade Infiltrator"
+            },
+            {
+                "console_name": "ray_gun",
+                "display_name": "Ray Gun",
+                "category": "special",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "ray_gun_upgraded",
+                "upgraded_display_name": "Porter's X2 Ray Gun"
+            },
+            {
+                "console_name": "shotgun_precision",
+                "display_name": "M1014",
+                "category": "shotgun",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_precision_upgraded",
+                "upgraded_display_name": "Lance Slugger"
+            },
+            {
+                "console_name": "sniper_powerbolt",
+                "display_name": "Barrett .50cal",
+                "category": "sniper",
+                "first_seen": 1779042721,
+                "last_seen": 1779042721,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_powerbolt_upgraded",
+                "upgraded_display_name": "Ravager's Roar"
+            },
+            {
+                "console_name": "zombie_beast_grapple_dwr",
+                "display_name": "zombie_beast_grapple_dwr",
+                "category": "other",
+                "first_seen": 1779042721,
+                "last_seen": 1779044203,
+                "seen_count": 740
+            },
+            {
+                "console_name": "Bloodhound",
+                "display_name": "pistol_revolver38",
+                "category": "pistol",
+                "first_seen": 1779042932,
+                "last_seen": 1779043337,
+                "seen_count": 203
+            },
+            {
+                "console_name": "Vector",
+                "display_name": "smg_fastfire",
+                "category": "smg",
+                "first_seen": 1779043339,
+                "last_seen": 1779043555,
+                "seen_count": 109
+            },
+            {
+                "console_name": "smg_sten_upgraded",
+                "display_name": "Ein Sten",
+                "category": "smg",
+                "first_seen": 1779044419,
+                "last_seen": 1779045207,
+                "seen_count": 394
+            },
+            {
+                "console_name": "ar_damage_upgraded",
+                "display_name": "Noahj's Agarthan Reaper",
+                "category": "assault_rifle",
+                "first_seen": 1779045209,
+                "last_seen": 1779050260,
+                "seen_count": 2521
+            },
+            {
+                "console_name": "t9_crossbow_skull_up",
+                "display_name": "Headhunter's Delight",
+                "category": "special",
+                "first_seen": 1779046710,
+                "last_seen": 1779050260,
+                "seen_count": 1772
+            },
+            {
+                "console_name": "idgun_upgraded_0",
+                "display_name": "Kor-Maroth Arbgwaoth",
+                "category": "special",
+                "first_seen": 1779049011,
+                "last_seen": 1779050260,
+                "seen_count": 624
+            }
+        ]
+    },
+    "zm_prototype": {
+        "steam_link": "zm_prototype",
+        "map_name": "NACHT DER UNTOTEN",
+        "weapons": [
+            {
+                "console_name": "ar_longburst",
+                "display_name": "AUG HBAR",
+                "category": "assault_rifle",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_longburst_upgraded",
+                "upgraded_display_name": "Augmented H-Bar"
+            },
+            {
+                "console_name": "ar_standard",
+                "display_name": "AK-47",
+                "category": "assault_rifle",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_standard_upgraded",
+                "upgraded_display_name": "Reznov's Revenge"
+            },
+            {
+                "console_name": "smg_burst",
+                "display_name": "MP5 Suppressed",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_burst_upgraded",
+                "upgraded_display_name": "Nightshade Infiltrator"
+            },
+            {
+                "console_name": "sniper_powerbolt",
+                "display_name": "Barrett .50cal",
+                "category": "sniper",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_powerbolt_upgraded",
+                "upgraded_display_name": "Ravager's Roar"
+            },
+            {
+                "console_name": "smg_capacity",
+                "display_name": "UMP45",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_capacity_upgraded",
+                "upgraded_display_name": "Unchained Guardian's Legacy - 45"
+            },
+            {
+                "console_name": "thundergun",
+                "display_name": "Thundergun",
+                "category": "special",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "thundergun_upgraded",
+                "upgraded_display_name": "Zeus Cannon"
+            },
+            {
+                "console_name": "lmg_light",
+                "display_name": "MG 42",
+                "category": "lmg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_light_upgraded",
+                "upgraded_display_name": "The Spandau"
+            },
+            {
+                "console_name": "frag_grenade",
+                "display_name": "Frag Grenades",
+                "category": "other",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "lmg_cqb",
+                "display_name": "Browning M1919",
+                "category": "lmg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_cqb_upgraded",
+                "upgraded_display_name": "B115 Accelerator"
+            },
+            {
+                "console_name": "ar_marksman",
+                "display_name": "FAL",
+                "category": "assault_rifle",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_marksman_upgraded",
+                "upgraded_display_name": "Shidouri's Arcane Liberator"
+            },
+            {
+                "console_name": "smg_longrange",
+                "display_name": "A.C.R. Vengeance",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_longrange_upgraded",
+                "upgraded_display_name": "Watchful Wolf's A.C.R"
+            },
+            {
+                "console_name": "ar_damage",
+                "display_name": "SCAR-H",
+                "category": "assault_rifle",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_damage_upgraded",
+                "upgraded_display_name": "Noahj's Agarthan Reaper"
+            },
+            {
+                "console_name": "melee_jug",
+                "display_name": "Baby Jugg",
+                "category": "melee",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_jug_up",
+                "upgraded_display_name": "Running and Juggin"
+            },
+            {
+                "console_name": "shotgun_energy",
+                "display_name": ".44 Magnum",
+                "category": "shotgun",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_energy_upgraded",
+                "upgraded_display_name": "Viper Hugs 44"
+            },
+            {
+                "console_name": "hero_annihilator",
+                "display_name": "Annihilator",
+                "category": "special",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "hero_annihilator",
+                "upgraded_display_name": "Annihilator"
+            },
+            {
+                "console_name": "smg_standard",
+                "display_name": "MP7",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_standard_upgraded",
+                "upgraded_display_name": "Master Peanut - 7"
+            },
+            {
+                "console_name": "lmg_heavy",
+                "display_name": "RPD",
+                "category": "lmg",
+                "first_seen": 1779045906,
+                "last_seen": 1779046328,
+                "seen_count": 208,
+                "upgraded_console_name": "lmg_heavy_upgraded",
+                "upgraded_display_name": "Ravenous Purging Dismantler"
+            },
+            {
+                "console_name": "smg_fastfire",
+                "display_name": "Vector",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_fastfire_upgraded",
+                "upgraded_display_name": "Pez Dispenser"
+            },
+            {
+                "console_name": "smg_versatile",
+                "display_name": "Commando",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779046328,
+                "seen_count": 208,
+                "upgraded_console_name": "smg_versatile_upgraded",
+                "upgraded_display_name": "Predator"
+            },
+            {
+                "console_name": "t9_me_knife_russian",
+                "display_name": "Knife",
+                "category": "melee",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_me_knife_russian_up",
+                "upgraded_display_name": "Closing Argument"
+            },
+            {
+                "console_name": "shotgun_fullauto",
+                "display_name": "Trench Gun",
+                "category": "shotgun",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_fullauto_upgraded",
+                "upgraded_display_name": "Trebuchet"
+            },
+            {
+                "console_name": "sniper_fastsemi",
+                "display_name": "Intervention",
+                "category": "sniper",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastsemi_upgraded",
+                "upgraded_display_name": "Thunderstrike Marksmen"
+            },
+            {
+                "console_name": "lmg_slowfire",
+                "display_name": "M60",
+                "category": "lmg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_slowfire_upgraded",
+                "upgraded_display_name": "Gluttonous Titan"
+            },
+            {
+                "console_name": "ar_stg44",
+                "display_name": "STG44",
+                "category": "assault_rifle",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_stg44_upgraded",
+                "upgraded_display_name": "Spatz-447 +"
+            },
+            {
+                "console_name": "shotgun_semiauto",
+                "display_name": "Marshal",
+                "category": "shotgun",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_semiauto_upgraded",
+                "upgraded_display_name": "Kunjora's Double Trouble"
+            },
+            {
+                "console_name": "t9_crossbow_skull",
+                "display_name": "Skull Splitter Crossbow",
+                "category": "special",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_crossbow_skull_up",
+                "upgraded_display_name": "Headhunter's Delight"
+            },
+            {
+                "console_name": "smg_thompson",
+                "display_name": "Thompson M1A1",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_thompson_upgraded",
+                "upgraded_display_name": "The Gibs-o-Matic"
+            },
+            {
+                "console_name": "sw_lightsaber_obi_wan",
+                "display_name": "Obi Wan's Lightsaber",
+                "category": "melee",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
+                "upgraded_display_name": "Noahj456's Jedi's Wrath"
+            },
+            {
+                "console_name": "pistol_standard",
+                "display_name": "M19",
+                "category": "pistol",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_standard_upgraded",
+                "upgraded_display_name": "Clean House"
+            },
+            {
+                "console_name": "pistol_m1911",
+                "display_name": "1911",
+                "category": "pistol",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_m1911_upgraded",
+                "upgraded_display_name": "Manesco & Jabroni"
+            },
+            {
+                "console_name": "pistol_burst",
+                "display_name": "M93 Raffica",
+                "category": "pistol",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_burst_upgraded",
+                "upgraded_display_name": "WH1RL-3R"
+            },
+            {
+                "console_name": "pistol_fullauto",
+                "display_name": "Desert Eagle",
+                "category": "pistol",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_fullauto_upgraded",
+                "upgraded_display_name": "Squishy Squirtgun & Tickle Tornado"
+            },
+            {
+                "console_name": "ar_cqb",
+                "display_name": "M13",
+                "category": "assault_rifle",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_cqb_upgraded",
+                "upgraded_display_name": "Radiant Dominator"
+            },
+            {
+                "console_name": "shotgun_pump",
+                "display_name": "SPAS-12",
+                "category": "shotgun",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_pump_upgraded",
+                "upgraded_display_name": "Ravaging Sandstorm"
+            },
+            {
+                "console_name": "smg_mp40_1940",
+                "display_name": "MP-40",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_mp40_1940_upgraded",
+                "upgraded_display_name": "The Afterburner"
+            },
+            {
+                "console_name": "melee_seasonal_pipe",
+                "display_name": "Dawnbreaker",
+                "category": "melee",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_seasonal_pipe_upgraded",
+                "upgraded_display_name": "Copper Cleaver"
+            },
+            {
+                "console_name": "cymbal_monkey_upgraded",
+                "display_name": "DubPriMe8",
+                "category": "other",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "cymbal_monkey_upgraded",
+                "upgraded_display_name": "DubPriMe8"
+            },
+            {
+                "console_name": "cymbal_monkey",
+                "display_name": "Cymbal Monkey",
+                "category": "other",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "cymbal_monkey_upgraded",
+                "upgraded_display_name": "DubPriMe8"
+            },
+            {
+                "console_name": "knife",
+                "display_name": "knife",
+                "category": "melee",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "smg_ppsh",
+                "display_name": "PPSH-41",
+                "category": "smg",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_ppsh_upgraded",
+                "upgraded_display_name": "The Adopted Grim Reaper"
+            },
+            {
+                "console_name": "sniper_fastbolt",
+                "display_name": "Kar98k Scoped",
+                "category": "sniper",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastbolt_upgraded",
+                "upgraded_display_name": "Spasmodic Profligator"
+            },
+            {
+                "console_name": "ray_gun",
+                "display_name": "Ray Gun",
+                "category": "special",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ray_gun_upgraded",
+                "upgraded_display_name": "Porter's X2 Ray Gun"
+            },
+            {
+                "console_name": "bowie_knife",
+                "display_name": "Bowie Knife",
+                "category": "melee",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "t9_gallo_raygun",
+                "display_name": "Blast-O-Matic",
+                "category": "special",
+                "first_seen": 1779045906,
+                "last_seen": 1779046328,
+                "seen_count": 208,
+                "upgraded_console_name": "t9_gallo_raygun_up",
+                "upgraded_display_name": "MrDaleksJD's Blast-O-Matic"
+            },
+            {
+                "console_name": "launcher_standard",
+                "display_name": "RPG-7",
+                "category": "launcher",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "launcher_standard_upgraded",
+                "upgraded_display_name": "Rocket Propelled Grievance-7000"
+            },
+            {
+                "console_name": "ar_accurate",
+                "display_name": "RAM-7",
+                "category": "assault_rifle",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_accurate_upgraded",
+                "upgraded_display_name": "G.O.A.T. 14000"
+            },
+            {
+                "console_name": "shotgun_precision",
+                "display_name": "M1014",
+                "category": "shotgun",
+                "first_seen": 1779045906,
+                "last_seen": 1779045906,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_precision_upgraded",
+                "upgraded_display_name": "Lance Slugger"
+            },
+            {
+                "console_name": "t9_gallo_raygun_up",
+                "display_name": "MrDaleksJD's Blast-O-Matic",
+                "category": "special",
+                "first_seen": 1779045906,
+                "last_seen": 1779046328,
+                "seen_count": 207
+            },
+            {
+                "console_name": "lmg_heavy_upgraded",
+                "display_name": "Ravenous Purging Dismantler",
+                "category": "lmg",
+                "first_seen": 1779045906,
+                "last_seen": 1779046328,
+                "seen_count": 207
+            }
+        ]
+    },
+    "3046382616": {
+        "steam_link": "3046382616",
+        "map_name": "MOB OF THE DEAD: BRIDGE SURVIVAL",
+        "weapons": [
+            {
+                "console_name": "smg_fastfire",
+                "display_name": "Vector",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_fastfire_upgraded",
+                "upgraded_display_name": "Pez Dispenser"
+            },
+            {
+                "console_name": "smg_versatile",
+                "display_name": "Commando",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_versatile_upgraded",
+                "upgraded_display_name": "Predator"
+            },
+            {
+                "console_name": "smg_capacity",
+                "display_name": "UMP45",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_capacity_upgraded",
+                "upgraded_display_name": "Unchained Guardian's Legacy - 45"
+            },
+            {
+                "console_name": "t6_ksg",
+                "display_name": "KSG",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_ksg_up",
+                "upgraded_display_name": "Mist Maker"
+            },
+            {
+                "console_name": "t6_s12",
+                "display_name": "S12",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_s12_up",
+                "upgraded_display_name": "Synthetic Dozen"
+            },
+            {
+                "console_name": "launcher_standard",
+                "display_name": "RPG-7",
+                "category": "launcher",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "launcher_standard_upgraded",
+                "upgraded_display_name": "Rocket Propelled Grievance-7000"
+            },
+            {
+                "console_name": "t6_galil",
+                "display_name": "Galil",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_galil_up",
+                "upgraded_display_name": "Lamentation"
+            },
+            {
+                "console_name": "melee_seasonal_pipe",
+                "display_name": "Dawnbreaker",
+                "category": "melee",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_seasonal_pipe_upgraded",
+                "upgraded_display_name": "Copper Cleaver"
+            },
+            {
+                "console_name": "frag_grenade",
+                "display_name": "Frag Grenades",
+                "category": "other",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "t6_m14",
+                "display_name": "M14",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_m14_up",
+                "upgraded_display_name": "Mnesia"
+            },
+            {
+                "console_name": "bouncingbetty",
+                "display_name": "Trip Mine",
+                "category": "other",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "shotgun_semiauto",
+                "display_name": "Marshal",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_semiauto_upgraded",
+                "upgraded_display_name": "Kunjora's Double Trouble"
+            },
+            {
+                "console_name": "sniper_powerbolt",
+                "display_name": "Barrett .50cal",
+                "category": "sniper",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_powerbolt_upgraded",
+                "upgraded_display_name": "Ravager's Roar"
+            },
+            {
+                "console_name": "smg_standard",
+                "display_name": "MP7",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_standard_upgraded",
+                "upgraded_display_name": "Master Peanut - 7"
+            },
+            {
+                "console_name": "shotgun_olympia",
+                "display_name": "Olympia",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_olympia_upgraded",
+                "upgraded_display_name": "Hades"
+            },
+            {
+                "console_name": "t6_fal",
+                "display_name": "FAL",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_fal_up",
+                "upgraded_display_name": "EZ WN"
+            },
+            {
+                "console_name": "shotgun_pump",
+                "display_name": "SPAS-12",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_pump_upgraded",
+                "upgraded_display_name": "Ravaging Sandstorm"
+            },
+            {
+                "console_name": "sniper_fastbolt",
+                "display_name": "Kar98k Scoped",
+                "category": "sniper",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastbolt_upgraded",
+                "upgraded_display_name": "Spasmodic Profligator"
+            },
+            {
+                "console_name": "t6_skorpion_evo",
+                "display_name": "Skorpion EVO",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_skorpion_evo_up",
+                "upgraded_display_name": "Evolved Death Stalker"
+            },
+            {
+                "console_name": "t6_pdw57",
+                "display_name": "PDW-57",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_pdw57_up",
+                "upgraded_display_name": "Predictive Death Wish 57000"
+            },
+            {
+                "console_name": "shotgun_energy",
+                "display_name": ".44 Magnum",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_energy_upgraded",
+                "upgraded_display_name": "Viper Hugs 44"
+            },
+            {
+                "console_name": "t6_m1216",
+                "display_name": "M1216",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_m1216_up",
+                "upgraded_display_name": "Mesmerizer"
+            },
+            {
+                "console_name": "t6_death_machine",
+                "display_name": "Death Machine",
+                "category": "lmg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_death_machine_up",
+                "upgraded_display_name": "Meat Grinder"
+            },
+            {
+                "console_name": "bowie_knife",
+                "display_name": "Bowie Knife",
+                "category": "melee",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "t6_ak47",
+                "display_name": "AK47",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_ak47_up",
+                "upgraded_display_name": "Reznov's Revenge"
+            },
+            {
+                "console_name": "t6_fiveseven_rdw",
+                "display_name": "Five-Seven Dual Wield",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_fiveseven_rdw_up",
+                "upgraded_display_name": "Ultra & Violet"
+            },
+            {
+                "console_name": "t6_rpg",
+                "display_name": "RPG",
+                "category": "launcher",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_rpg_up",
+                "upgraded_display_name": "Rocket Propelled Grievance"
+            },
+            {
+                "console_name": "t6_lsat",
+                "display_name": "LSAT",
+                "category": "lmg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_lsat_up",
+                "upgraded_display_name": "FSIRT"
+            },
+            {
+                "console_name": "t6_m82a1",
+                "display_name": "Barrett M82A1",
+                "category": "sniper",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_m82a1_up",
+                "upgraded_display_name": "Macro Annihilator"
+            },
+            {
+                "console_name": "smg_longrange",
+                "display_name": "A.C.R. Vengeance",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_longrange_upgraded",
+                "upgraded_display_name": "Watchful Wolf's A.C.R"
+            },
+            {
+                "console_name": "ar_cqb",
+                "display_name": "M13",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053764,
+                "seen_count": 118,
+                "upgraded_console_name": "ar_cqb_upgraded",
+                "upgraded_display_name": "Radiant Dominator"
+            },
+            {
+                "console_name": "t6_m1911",
+                "display_name": "M1911",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053764,
+                "seen_count": 118,
+                "upgraded_console_name": "t6_m1911_rdw_up",
+                "upgraded_display_name": "Mustang & Sally"
+            },
+            {
+                "console_name": "melee_jug",
+                "display_name": "Baby Jugg",
+                "category": "melee",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "melee_jug_up",
+                "upgraded_display_name": "Running and Juggin"
+            },
+            {
+                "console_name": "t9_crossbow_skull",
+                "display_name": "Skull Splitter Crossbow",
+                "category": "special",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_crossbow_skull_up",
+                "upgraded_display_name": "Headhunter's Delight"
+            },
+            {
+                "console_name": "smg_mp40_1940",
+                "display_name": "MP-40",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_mp40_1940_upgraded",
+                "upgraded_display_name": "The Afterburner"
+            },
+            {
+                "console_name": "ar_marksman",
+                "display_name": "FAL",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_marksman_upgraded",
+                "upgraded_display_name": "Shidouri's Arcane Liberator"
+            },
+            {
+                "console_name": "ar_standard",
+                "display_name": "AK-47",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053764,
+                "seen_count": 118,
+                "upgraded_console_name": "ar_standard_upgraded",
+                "upgraded_display_name": "Reznov's Revenge"
+            },
+            {
+                "console_name": "t9_gallo_raygun",
+                "display_name": "Blast-O-Matic",
+                "category": "special",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_gallo_raygun_up",
+                "upgraded_display_name": "MrDaleksJD's Blast-O-Matic"
+            },
+            {
+                "console_name": "smg_msmc",
+                "display_name": "MSMC",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_msmc_upgraded",
+                "upgraded_display_name": "The Maharaja"
+            },
+            {
+                "console_name": "smg_burst",
+                "display_name": "MP5 Suppressed",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_burst_upgraded",
+                "upgraded_display_name": "Nightshade Infiltrator"
+            },
+            {
+                "console_name": "sniper_fastsemi",
+                "display_name": "Intervention",
+                "category": "sniper",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "sniper_fastsemi_upgraded",
+                "upgraded_display_name": "Thunderstrike Marksmen"
+            },
+            {
+                "console_name": "ar_longburst",
+                "display_name": "AUG HBAR",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_longburst_upgraded",
+                "upgraded_display_name": "Augmented H-Bar"
+            },
+            {
+                "console_name": "lmg_heavy",
+                "display_name": "RPD",
+                "category": "lmg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_heavy_upgraded",
+                "upgraded_display_name": "Ravenous Purging Dismantler"
+            },
+            {
+                "console_name": "hero_annihilator",
+                "display_name": "Annihilator",
+                "category": "special",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "hero_annihilator",
+                "upgraded_display_name": "Annihilator"
+            },
+            {
+                "console_name": "pistol_standard",
+                "display_name": "M19",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_standard_upgraded",
+                "upgraded_display_name": "Clean House"
+            },
+            {
+                "console_name": "smg_thompson",
+                "display_name": "Thompson M1A1",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_thompson_upgraded",
+                "upgraded_display_name": "The Gibs-o-Matic"
+            },
+            {
+                "console_name": "t6_dsr50",
+                "display_name": "DSR 50",
+                "category": "sniper",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_dsr50_up",
+                "upgraded_display_name": "Dead Specimen Reactor 5000"
+            },
+            {
+                "console_name": "sw_lightsaber_obi_wan",
+                "display_name": "Obi Wan's Lightsaber",
+                "category": "melee",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "sw_lightsaber_obi_wan_upgraded",
+                "upgraded_display_name": "Noahj456's Jedi's Wrath"
+            },
+            {
+                "console_name": "shotgun_fullauto",
+                "display_name": "Trench Gun",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_fullauto_upgraded",
+                "upgraded_display_name": "Trebuchet"
+            },
+            {
+                "console_name": "t9_me_knife_russian",
+                "display_name": "Knife",
+                "category": "melee",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t9_me_knife_russian_up",
+                "upgraded_display_name": "Closing Argument"
+            },
+            {
+                "console_name": "pistol_m1911",
+                "display_name": "1911",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_m1911_upgraded",
+                "upgraded_display_name": "Manesco & Jabroni"
+            },
+            {
+                "console_name": "pistol_burst",
+                "display_name": "M93 Raffica",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053764,
+                "seen_count": 118,
+                "upgraded_console_name": "pistol_burst_upgraded",
+                "upgraded_display_name": "WH1RL-3R"
+            },
+            {
+                "console_name": "cymbal_monkey",
+                "display_name": "Cymbal Monkey",
+                "category": "other",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "ar_damage",
+                "display_name": "SCAR-H",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_damage_upgraded",
+                "upgraded_display_name": "Noahj's Agarthan Reaper"
+            },
+            {
+                "console_name": "lmg_slowfire",
+                "display_name": "M60",
+                "category": "lmg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_slowfire_upgraded",
+                "upgraded_display_name": "Gluttonous Titan"
+            },
+            {
+                "console_name": "knife",
+                "display_name": "knife",
+                "category": "melee",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "",
+                "upgraded_display_name": ""
+            },
+            {
+                "console_name": "zod_riotshield",
+                "display_name": "Rocket Shield",
+                "category": "other",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "zod_riotshield_upgraded",
+                "upgraded_display_name": "Goddard Apparatus"
+            },
+            {
+                "console_name": "t6_mp5",
+                "display_name": "MP5",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_mp5_up",
+                "upgraded_display_name": "MP115 Kollider"
+            },
+            {
+                "console_name": "t6_python",
+                "display_name": "Python",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_python_up",
+                "upgraded_display_name": "Cobra"
+            },
+            {
+                "console_name": "ar_accurate",
+                "display_name": "RAM-7",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_accurate_upgraded",
+                "upgraded_display_name": "G.O.A.T. 14000"
+            },
+            {
+                "console_name": "pistol_fullauto",
+                "display_name": "Desert Eagle",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "pistol_fullauto_upgraded",
+                "upgraded_display_name": "Squishy Squirtgun & Tickle Tornado"
+            },
+            {
+                "console_name": "hero_gravityspikes_melee",
+                "display_name": "Ragnarok DG-4",
+                "category": "special",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "hero_gravityspikes_melee",
+                "upgraded_display_name": "Ragnarok DG-4"
+            },
+            {
+                "console_name": "ar_stg44",
+                "display_name": "STG44",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "ar_stg44_upgraded",
+                "upgraded_display_name": "Spatz-447 +"
+            },
+            {
+                "console_name": "lmg_cqb",
+                "display_name": "Browning M1919",
+                "category": "lmg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_cqb_upgraded",
+                "upgraded_display_name": "B115 Accelerator"
+            },
+            {
+                "console_name": "t6_mtar",
+                "display_name": "MTAR",
+                "category": "assault_rifle",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_mtar_up",
+                "upgraded_display_name": "Malevolent Taxonomic Anodized Redeemer"
+            },
+            {
+                "console_name": "shotgun_precision",
+                "display_name": "M1014",
+                "category": "shotgun",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "shotgun_precision_upgraded",
+                "upgraded_display_name": "Lance Slugger"
+            },
+            {
+                "console_name": "t6_executioner",
+                "display_name": "Executioner",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_executioner_rdw_up",
+                "upgraded_display_name": "Voice of Justice & Raging Judge"
+            },
+            {
+                "console_name": "lmg_light",
+                "display_name": "MG 42",
+                "category": "lmg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "lmg_light_upgraded",
+                "upgraded_display_name": "The Spandau"
+            },
+            {
+                "console_name": "t6_fiveseven",
+                "display_name": "Five-Seven",
+                "category": "pistol",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_fiveseven_up",
+                "upgraded_display_name": "Ultra"
+            },
+            {
+                "console_name": "ray_gun",
+                "display_name": "Ray Gun",
+                "category": "special",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "ray_gun_upgraded",
+                "upgraded_display_name": "Porter's X2 Ray Gun"
+            },
+            {
+                "console_name": "smg_ppsh",
+                "display_name": "PPSH-41",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "smg_ppsh_upgraded",
+                "upgraded_display_name": "The Adopted Grim Reaper"
+            },
+            {
+                "console_name": "t6_ak74u",
+                "display_name": "AK74u",
+                "category": "smg",
+                "first_seen": 1779053531,
+                "last_seen": 1779053531,
+                "seen_count": 1,
+                "upgraded_console_name": "t6_ak74u_up",
+                "upgraded_display_name": "AK74fu2"
             }
         ]
     }

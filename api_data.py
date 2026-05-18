@@ -13,7 +13,7 @@ from best_matches import (
     remove_best_match_by_id,
     sanitize_game_id,
 )
-from map_weapons import map_weapons_manager
+from map_weapons import map_weapons_manager, normalize_steam_link
 from match_xp import xp_tracker_instance
 from xpm_grapher import xpm_grapher_instance
 from weapon_categories import WEAPON_CATEGORY_LABELS, get_weapon_category, normalise_weapon_category
@@ -501,14 +501,14 @@ class DataAPI:
         )
 
     def _get_game_workshop_link(self, game):
-        return str(
+        return normalize_steam_link(
             game.get("steam_link")
             or game.get("workshop_link")
             or game.get("workshop_url")
             or game.get("workshop_id")
             or game.get("ugc")
             or ""
-        ).strip()
+        )
 
     def get_map_selection(self, player_id="0"):
         hist_path = _bt().app_config.get('history_path')

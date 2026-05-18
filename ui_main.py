@@ -119,6 +119,10 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             <div class="config-btn" id="help-btn" onclick="switchTab('help')" data-i18n="navigation.help_faq">HELP & FAQ</div>
             <div class="config-btn" id="customization-btn" onclick="switchTab('customization')" data-i18n="navigation.customization">CUSTOMIZATION</div>
             <div class="config-btn" id="settings-btn" onclick="switchTab('settings')" data-i18n="navigation.settings">SETTINGS</div>
+            <button type="button" class="donate-btn" onclick="openDonateLink()" title="Donate via PayPal">
+                <span class="donate-badge" aria-hidden="true">P</span>
+                <span data-i18n="buttons.donate_paypal">DONATE VIA PAYPAL</span>
+            </button>
             <div class="app-version-label"><span data-i18n="common.version">VERSION</span> """ + app_version + """</div>
         </div>
         
@@ -284,15 +288,12 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     </div>
                     <div class="header-actions">
                         <div class="header-subtitle" data-i18n="career.lifetime_stats">LIFETIME STATISTICS (PLAYER 1)</div>
-                        <button class="nav-btn-small button-tall" onclick="openMapSelectionPage()">MAP DETAILS</button>
+                        <button class="nav-btn-small button-tall" onclick="openMapSelectionPage()" data-i18n="map_details.heading_short">MAP DETAILS</button>
                         <button class="nav-btn-small button-tall" onclick="switchTab('weaponusage')" data-i18n="weapon_usage.heading_short">WEAPON USAGE</button>
                     </div>
                 </div>
 
                 <div class="card career-rank-card" id="career-rank-card">
-                    <div id="career-workshop-container" class="career-workshop-container initially-hidden">
-                        <img id="career-workshop-img" class="career-workshop-img initially-hidden" src="">
-                    </div>
                     <div class="career-rank-content">
                         <div class="card-title" data-i18n="career.current_rank">CURRENT RANK</div>
                         <div class="rank-summary-row">
@@ -385,8 +386,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             <div id="tab-mapselection" class="tab-content">
                 <div class="header-camo">
                     <div>
-                        <h1>Map Details</h1>
-                        <div class="header-subtitle">SELECT AN ARCHIVED MAP TO INSPECT PLAYER 1 PERFORMANCE</div>
+                        <h1 data-i18n="map_details.heading">Map Details</h1>
+                        <div class="header-subtitle" data-i18n="map_details.selection_subtitle">SELECT AN ARCHIVED MAP TO INSPECT PLAYER 1 PERFORMANCE</div>
                     </div>
                     <div class="header-actions">
                         <button class="nav-btn-small button-tall" onclick="switchTab('career')" data-i18n="buttons.back_to_career">BACK TO CAREER</button>
@@ -395,21 +396,21 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
                 <div class="card">
                     <div class="card-title card-title-row">
-                        <span>Archived Maps</span>
+                        <span data-i18n="map_details.archived_maps">Archived Maps</span>
                         <div class="map-selection-controls">
-                            <input id="map-selection-search" class="compact-search" type="text" placeholder="Find map..." oninput="renderMapSelectionPage()">
+                            <input id="map-selection-search" class="compact-search" type="text" placeholder="Find map..." data-i18n-placeholder="map_details.find_map" oninput="renderMapSelectionPage()">
                             <select id="map-selection-sort" class="compact-select" onchange="renderMapSelectionPage()">
-                                <option value="matches">Matches</option>
-                                <option value="round">Highest Round</option>
-                                <option value="time">Time Played</option>
-                                <option value="recent">Recently Played</option>
-                                <option value="name">Map Name</option>
+                                <option value="matches" data-i18n="common.matches">Matches</option>
+                                <option value="round" data-i18n="map_details.highest_round">Highest Round</option>
+                                <option value="time" data-i18n="career.time_played">Time Played</option>
+                                <option value="recent" data-i18n="map_details.recently_played">Recently Played</option>
+                                <option value="name" data-i18n="map_details.map_name">Map Name</option>
                             </select>
-                            <button class="nav-btn-small" onclick="refreshMapSelection()">REFRESH</button>
+                            <button class="nav-btn-small" onclick="refreshMapSelection()" data-i18n="buttons.refresh">REFRESH</button>
                         </div>
                     </div>
                     <div id="map-selection-grid" class="map-selection-grid">
-                        <div class="muted-loading">Loading map records...</div>
+                        <div class="muted-loading" data-i18n="career.loading_map_records">Loading map records...</div>
                     </div>
                     <div id="map-selection-pagination" class="map-selection-pagination"></div>
                 </div>
@@ -418,19 +419,19 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             <div id="tab-mapdetail" class="tab-content">
                 <div class="header-camo">
                     <div>
-                        <h1 id="map-detail-title">Map Detail</h1>
-                        <div class="header-subtitle">PER-MAP ARCHIVED PERFORMANCE (PLAYER 1)</div>
+                        <h1 id="map-detail-title" data-i18n="map_details.detail_heading">Map Detail</h1>
+                        <div class="header-subtitle" data-i18n="map_details.detail_subtitle">PER-MAP ARCHIVED PERFORMANCE (PLAYER 1)</div>
                     </div>
                     <div class="header-actions">
                         <button class="nav-btn-small button-tall" onclick="openMapSelectionPage()" data-i18n="buttons.back_to_map_selection">MAP SELECTION</button>
                         <button class="nav-btn-small button-tall" onclick="switchTab('career')" data-i18n="buttons.back_to_career">BACK TO CAREER</button>
-                        <button id="map-detail-workshop-btn" class="nav-btn-small button-tall initially-hidden" onclick="openMapDetailWorkshop()">OPEN WORKSHOP</button>
+                        <button id="map-detail-workshop-btn" class="nav-btn-small button-tall initially-hidden" onclick="openMapDetailWorkshop()" data-i18n="buttons.open_workshop">OPEN WORKSHOP</button>
                     </div>
                 </div>
 
                 <div id="map-detail-body">
                     <div class="card">
-                        <div class="muted-empty">Select a map from Career Profile to inspect its archived performance.</div>
+                        <div class="muted-empty" data-i18n="map_details.select_map_hint">Select a map from Career Profile to inspect its archived performance.</div>
                     </div>
                 </div>
             </div>
@@ -460,7 +461,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 </div>
 
                 <div class="card weapon-category-card">
-                    <div class="card-title">KILLS BY WEAPON CATEGORY</div>
+                    <div class="card-title" data-i18n="weapon_usage.kills_by_category">KILLS BY WEAPON CATEGORY</div>
                     <div class="weapon-category-chart-layout">
                         <div class="weapon-category-chart-wrap">
                             <canvas id="weaponCategoryKillsChart"></canvas>
@@ -472,7 +473,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 </div>
 
                 <div class="card weapon-category-card">
-                    <div class="card-title">DAMAGE BY WEAPON CATEGORY</div>
+                    <div class="card-title" data-i18n="weapon_usage.damage_by_category">DAMAGE BY WEAPON CATEGORY</div>
                     <div class="weapon-category-chart-layout">
                         <div class="weapon-category-chart-wrap">
                             <canvas id="weaponCategoryDamageChart"></canvas>
@@ -485,8 +486,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
                 <div id="weapon-detail-card" class="card weapon-detail-card initially-hidden">
                     <div class="card-title card-title-row">
-                        <span id="weapon-detail-title">WEAPON PROFILE</span>
-                        <button class="nav-btn-small weapon-detail-close" onclick="closeWeaponDetail()">CLOSE</button>
+                        <span id="weapon-detail-title" data-i18n="weapon_usage.weapon_profile">WEAPON PROFILE</span>
+                        <button class="nav-btn-small weapon-detail-close" onclick="closeWeaponDetail()" data-i18n="buttons.close">CLOSE</button>
                     </div>
                     <div id="weapon-detail-body">
                         <div class="muted-empty">Select a weapon to inspect its archived performance.</div>
@@ -512,7 +513,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                             <thead>
                                 <tr>
                                     <th data-i18n="common.weapon">Weapon</th>
-                                    <th>Category</th>
+                                    <th data-i18n="common.category">Category</th>
                                     <th data-i18n="common.kills">Kills</th>
                                     <th data-i18n="common.headshots">Headshots</th>
                                     <th data-i18n="common.hs_pct_short">HS%</th>
@@ -687,11 +688,11 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 </div>
 
                 <div class="card" style="margin-top:10px">
-                    <div class="card-title">GRAPH OVERLAY</div>
+                    <div class="card-title" data-i18n="customization.graph_overlay">GRAPH OVERLAY</div>
                     <div class="settings-row">
                         <div>
-                            <div class="setting-title">Enable Graph Overlay</div>
-                            <div class="setting-description">Separate window with mini live graphs (XPM, Round XP, ZPM).</div>
+                            <div class="setting-title" data-i18n="customization.enable_graph_overlay">Enable Graph Overlay</div>
+                            <div class="setting-description" data-i18n="customization.graph_overlay_description">Separate window with mini live graphs (XPM, Round XP, ZPM).</div>
                         </div>
                         <label class="switch">
                             <input type="checkbox" onchange="toggleGraphOverlays(this)" """ + graph_overlay_chk_str + """>
@@ -699,11 +700,11 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         </label>
                     </div>
                     <div class="overlay-component-settings">
-                        <div class="setting-help">Graph sections</div>
+                        <div class="setting-help" data-i18n="customization.graph_sections">Graph sections</div>
                         <div class="settings-row overlay-component-row">
                             <div>
-                                <div class="setting-title">XP per Minute</div>
-                                <div class="setting-description">Line chart of XP gained per minute of play.</div>
+                                <div class="setting-title" data-i18n="customization.xp_per_minute">XP per Minute</div>
+                                <div class="setting-description" data-i18n="customization.xp_per_minute_description">Line chart of XP gained per minute of play.</div>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" onchange="toggleGraphOverlayComponent('xpm_graph', this)" """ + graph_xpm_chk_str + """>
@@ -712,8 +713,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         </div>
                         <div class="settings-row overlay-component-row">
                             <div>
-                                <div class="setting-title">XP per Round</div>
-                                <div class="setting-description">Bar chart showing XP gained each round.</div>
+                                <div class="setting-title" data-i18n="customization.xp_per_round">XP per Round</div>
+                                <div class="setting-description" data-i18n="customization.xp_per_round_description">Bar chart showing XP gained each round.</div>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" onchange="toggleGraphOverlayComponent('roundxp_graph', this)" """ + graph_roundxp_chk_str + """>
@@ -722,8 +723,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         </div>
                         <div class="settings-row overlay-component-row">
                             <div>
-                                <div class="setting-title">Zombies per Minute</div>
-                                <div class="setting-description">Line chart of ZPM (kill efficiency) over time.</div>
+                                <div class="setting-title" data-i18n="customization.zombies_per_minute">Zombies per Minute</div>
+                                <div class="setting-description" data-i18n="customization.zombies_per_minute_description">Line chart of ZPM (kill efficiency) over time.</div>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" onchange="toggleGraphOverlayComponent('zpm_graph', this)" """ + graph_zpm_chk_str + """>
@@ -1019,6 +1020,10 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             if (window.pywebview && window.pywebview.api) {
                 window.pywebview.api.open_map_compat();
             }
+        }
+
+        function openDonateLink() {
+            window.open('https://www.paypal.com/paypalme/UEMMaptesting', '_blank', 'noopener');
         }
 
         const GRAPH_THEMES = {
@@ -2082,8 +2087,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
             function hideWorkshopImages() {
                 const targets = [
-                    ['live-workshop-container', 'live-workshop-img'],
-                    ['career-workshop-container', 'career-workshop-img']
+                    ['live-workshop-container', 'live-workshop-img']
                 ];
                 targets.forEach(([containerId, imgId]) => {
                     const container = document.getElementById(containerId);
@@ -2112,6 +2116,11 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     if (value && typeof value === 'object' && key in value) return value[key];
                     return undefined;
                 }, activeLocale);
+            }
+
+            function localeText(path, fallback) {
+                const translated = getLocaleValue(path);
+                return translated || fallback;
             }
 
             function captureDefaultTranslations() {
@@ -2927,7 +2936,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
             function normalizeWorkshopLink(value) {
                 const raw = String(value || '').trim();
-                if (!raw) return '';
+                if (!raw || raw === '0') return '';
                 if (new RegExp('^https?://', 'i').test(raw)) return raw;
                 return `https://steamcommunity.com/sharedfiles/filedetails/?id=${encodeURIComponent(raw)}`;
             }
@@ -3030,14 +3039,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                           }
                           const workshopContainer = document.getElementById('career-workshop-container');
                           const workshopImg = document.getElementById('career-workshop-img');
-                          if(workshopImagesEnabled && levelInfo.workshop_image) {
-                              workshopImg.src = levelInfo.workshop_image;
-                              workshopImg.style.display = 'block';
-                              workshopContainer.style.display = 'block';
-                          } else {
-                              workshopImg.style.display = 'none';
-                              workshopContainer.style.display = 'none';
-                          }
+                          workshopImg.style.display = 'none';
+                          workshopContainer.style.display = 'none';
                       }
                  } catch(e) { console.error("Career Level Load Error", e); }
 
@@ -3116,7 +3119,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     return;
                 }
                 const grid = document.getElementById('map-selection-grid');
-                if (grid) grid.innerHTML = '<div class="muted-loading">Loading every archived map...</div>';
+                if (grid) grid.innerHTML = `<div class="muted-loading">${escapeHtml(localeText('map_details.loading_every_map', 'Loading every archived map...'))}</div>`;
                 try {
                     const data = await window.pywebview.api.get_map_selection("0");
                     if (data && !data.error) {
@@ -3124,12 +3127,12 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                         mapSelectionPage = 1;
                     } else {
                         mapSelectionData = [];
-                        if (grid) grid.innerHTML = `<div class="muted-empty">${escapeHtml((data && data.error) || 'No map records found.')}</div>`;
+                        if (grid) grid.innerHTML = `<div class="muted-empty">${escapeHtml((data && data.error) || localeText('map_details.no_map_records', 'No map records found.'))}</div>`;
                     }
                 } catch(e) {
                     console.error("Map Selection Load Error", e);
                     mapSelectionData = [];
-                    if (grid) grid.innerHTML = '<div class="error-empty">Could not load map records.</div>';
+                    if (grid) grid.innerHTML = `<div class="error-empty">${escapeHtml(localeText('map_details.load_records_error', 'Could not load map records.'))}</div>`;
                 }
                 renderMapSelectionPage();
             }
@@ -3139,7 +3142,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 const pagination = document.getElementById('map-selection-pagination');
                 if (!grid) return;
                 if (!mapSelectionData) {
-                    grid.innerHTML = '<div class="muted-loading">Loading map records...</div>';
+                    grid.innerHTML = `<div class="muted-loading">${escapeHtml(localeText('career.loading_map_records', 'Loading map records...'))}</div>`;
                     return;
                 }
 
@@ -3156,7 +3159,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 });
 
                 if (rows.length === 0) {
-                    grid.innerHTML = '<div class="muted-empty">No map records found.</div>';
+                    grid.innerHTML = `<div class="muted-empty">${escapeHtml(localeText('map_details.no_map_records', 'No map records found.'))}</div>`;
                     if (pagination) pagination.innerHTML = '';
                     return;
                 }
@@ -3169,23 +3172,23 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 grid.innerHTML = pageRows.map(row => `
                     <div class="map-selection-card" data-map="${escapeHtml(row.name)}" onclick="openMapDetailFromElement(this)">
                         <div class="map-selection-thumb">
-                            ${row.workshop_image ? `<img src="${escapeHtml(row.workshop_image)}" alt="">` : `<div class="map-selection-thumb-fallback">MAP</div>`}
+                            ${row.workshop_image ? `<img src="${escapeHtml(row.workshop_image)}" alt="">` : `<div class="map-selection-thumb-fallback">${escapeHtml(localeText('common.map', 'MAP'))}</div>`}
                         </div>
                         <div class="map-selection-name" title="${escapeHtml(row.name)}">${escapeHtml(row.name)}</div>
                         <div class="map-selection-stats">
-                            <span>${parseInt(row.matches || 0).toLocaleString()} matches</span>
-                            <span>Round ${parseInt(row.best_round || 0).toLocaleString()}</span>
+                            <span>${parseInt(row.matches || 0).toLocaleString()} ${escapeHtml(localeText('common.matches', 'matches'))}</span>
+                            <span>${escapeHtml(localeText('common.round', 'Round'))} ${parseInt(row.best_round || 0).toLocaleString()}</span>
                             <span>${escapeHtml(row.time_str)}</span>
-                            ${row.last_played ? `<span>Last: ${escapeHtml(row.last_played)}</span>` : ''}
+                            ${row.last_played ? `<span>${escapeHtml(localeText('map_details.last_played_short', 'Last'))}: ${escapeHtml(row.last_played)}</span>` : ''}
                         </div>
                     </div>
                 `).join('');
 
                 if (pagination) {
                     pagination.innerHTML = `
-                        <button class="nav-btn-small" onclick="changeMapSelectionPage(-1)" ${mapSelectionPage <= 1 ? 'disabled' : ''}>PREV</button>
-                        <span>${rows.length.toLocaleString()} maps // Page ${mapSelectionPage} / ${totalPages}</span>
-                        <button class="nav-btn-small" onclick="changeMapSelectionPage(1)" ${mapSelectionPage >= totalPages ? 'disabled' : ''}>NEXT</button>
+                        <button class="nav-btn-small" onclick="changeMapSelectionPage(-1)" ${mapSelectionPage <= 1 ? 'disabled' : ''}>${escapeHtml(localeText('buttons.prev', 'PREV'))}</button>
+                        <span>${rows.length.toLocaleString()} ${escapeHtml(localeText('map_details.maps', 'maps'))} // ${escapeHtml(localeText('map_details.page', 'Page'))} ${mapSelectionPage} / ${totalPages}</span>
+                        <button class="nav-btn-small" onclick="changeMapSelectionPage(1)" ${mapSelectionPage >= totalPages ? 'disabled' : ''}>${escapeHtml(localeText('buttons.next', 'NEXT'))}</button>
                     `;
                 }
             }
@@ -3198,19 +3201,19 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
             async function refreshMapSelection() {
                 mapSelectionData = [];
                 const grid = document.getElementById('map-selection-grid');
-                if (grid) grid.innerHTML = '<div class="muted-loading">Refreshing map records...</div>';
+                if (grid) grid.innerHTML = `<div class="muted-loading">${escapeHtml(localeText('map_details.refreshing_records', 'Refreshing map records...'))}</div>`;
                 try {
                     const data = await window.pywebview.api.refresh_map_selection("0");
                     if (data && !data.error) {
                         mapSelectionData = data.maps || [];
                     } else {
                         mapSelectionData = [];
-                        if (grid) grid.innerHTML = `<div class="muted-empty">${escapeHtml((data && data.error) || 'No map records found.')}</div>`;
+                        if (grid) grid.innerHTML = `<div class="muted-empty">${escapeHtml((data && data.error) || localeText('map_details.no_map_records', 'No map records found.'))}</div>`;
                     }
                 } catch(e) {
                     console.error("Map Selection Refresh Error", e);
                     mapSelectionData = [];
-                    if (grid) grid.innerHTML = '<div class="error-empty">Could not refresh map records.</div>';
+                    if (grid) grid.innerHTML = `<div class="error-empty">${escapeHtml(localeText('map_details.refresh_records_error', 'Could not refresh map records.'))}</div>`;
                 }
                 renderMapSelectionPage();
             }
@@ -3222,7 +3225,8 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
 
             function openMapDetailWorkshop() {
                 if (currentMapDetail && currentMapDetail.steam_link) {
-                    window.open(currentMapDetail.steam_link, '_blank');
+                    const href = normalizeWorkshopLink(currentMapDetail.steam_link);
+                    if (href) window.open(href, '_blank');
                 }
             }
 
@@ -3241,7 +3245,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
 
                 title.innerText = cleanName;
                 workshopBtn.style.display = 'none';
-                body.innerHTML = `<div class="card"><div class="muted-loading">Loading ${escapeHtml(cleanName)} map detail...</div></div>`;
+                body.innerHTML = `<div class="card"><div class="muted-loading">${escapeHtml(localeText('map_details.loading_detail', 'Loading {map} map detail...')).replace('{map}', escapeHtml(cleanName))}</div></div>`;
                 switchTab('mapdetail');
 
                 mapDetailPage = 1;
@@ -3251,7 +3255,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 try {
                     const data = await window.pywebview.api.get_map_detail(cleanName, "0", 1, mapDetailPageSize);
                     if (!data || data.error) {
-                        body.innerHTML = `<div class="card"><div class="muted-empty">${escapeHtml((data && data.error) || 'Could not load map detail.')}</div></div>`;
+                        body.innerHTML = `<div class="card"><div class="muted-empty">${escapeHtml((data && data.error) || localeText('map_details.load_detail_error', 'Could not load map detail.'))}</div></div>`;
                         return;
                     }
                     currentMapDetail = data;
@@ -3259,7 +3263,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     renderMapDetail(data);
                 } catch(e) {
                     console.error("Map Detail Load Error", e);
-                    body.innerHTML = `<div class="card"><div class="error-empty">Could not load map detail.</div></div>`;
+                    body.innerHTML = `<div class="card"><div class="error-empty">${escapeHtml(localeText('map_details.load_detail_error', 'Could not load map detail.'))}</div></div>`;
                 }
             }
 
@@ -3275,93 +3279,84 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     ? ` style="--map-detail-image: url(&quot;${escapeHtml(data.workshop_image)}&quot;)"`
                     : "";
 
-                title.innerText = data.map || 'Map Detail';
-                workshopBtn.style.display = data.steam_link ? 'inline-block' : 'none';
+                title.innerText = data.map || localeText('map_details.detail_heading', 'Map Detail');
+                workshopBtn.style.display = normalizeWorkshopLink(data.steam_link) ? 'inline-block' : 'none';
 
                 const weaponRows = weapons.slice(0, 8).map(w => `
                     <div class="map-detail-weapon-row">
                         <div>
                             <div class="map-detail-weapon-name">${escapeHtml(w.name || 'Unknown')}</div>
-                            <div class="map-detail-weapon-meta">${parseInt(w.matches || 0).toLocaleString()} matches // best round ${parseInt(w.best_round || 0).toLocaleString()} // HS ${escapeHtml(w.headshot_pct || 0)}%</div>
+                            <div class="map-detail-weapon-meta">${parseInt(w.matches || 0).toLocaleString()} ${escapeHtml(localeText('common.matches', 'matches'))} // ${escapeHtml(localeText('map_details.best_round_lower', 'best round'))} ${parseInt(w.best_round || 0).toLocaleString()} // ${escapeHtml(localeText('common.hs', 'HS'))} ${escapeHtml(w.headshot_pct || 0)}%</div>
                         </div>
-                        <div class="map-detail-weapon-stat">${parseInt(w.kills || 0).toLocaleString()} kills</div>
-                        <div class="map-detail-weapon-stat">${parseInt(w.damage || 0).toLocaleString()} dmg</div>
+                        <div class="map-detail-weapon-stat">${parseInt(w.kills || 0).toLocaleString()} ${escapeHtml(localeText('common.kills', 'kills'))}</div>
+                        <div class="map-detail-weapon-stat">${parseInt(w.damage || 0).toLocaleString()} ${escapeHtml(localeText('map_details.damage_short', 'dmg'))}</div>
                     </div>
                 `).join('');
 
-                const recentRows = recent.slice().reverse().map(row => `
-                    <tr data-game-id="${escapeHtml(row.game_id)}" onclick="loadHistory(this.dataset.gameId, this)">
-                        <td>${escapeHtml(row.date)}</td>
-                        <td>Round ${parseInt(row.round || 0).toLocaleString()}</td>
-                        <td>${parseInt(row.match_xp || 0).toLocaleString()}</td>
-                        <td>${parseInt(row.kills || 0).toLocaleString()}</td>
-                        <td>${escapeHtml(row.kpm || 0)}</td>
-                        <td>${parseInt(row.xpm || 0).toLocaleString()}</td>
-                    </tr>
-                `).join('');
+                const recentRows = mapDetailRows(recent);
 
                 body.innerHTML = `
                     <div class="card map-detail-hero">
                         <div class="map-detail-media"${imageStyle}>
-                            <div class="map-detail-pill">${parseInt(summary.matches || 0).toLocaleString()} Archived Matches</div>
-                            <div class="map-detail-hero-title">Round ${parseInt(summary.highest_round || 0).toLocaleString()} PB</div>
-                            <div class="map-detail-hero-subline">${escapeHtml(data.time_str || '0h 0m')} total // ${parseInt(summary.best_xp || 0).toLocaleString()} best XP // ${parseInt(totals.kills || 0).toLocaleString()} kills</div>
+                            <div class="map-detail-pill">${parseInt(summary.matches || 0).toLocaleString()} ${escapeHtml(localeText('map_details.archived_matches', 'Archived Matches'))}</div>
+                            <div class="map-detail-hero-title">${escapeHtml(localeText('common.round', 'Round'))} ${parseInt(summary.highest_round || 0).toLocaleString()} ${escapeHtml(localeText('map_details.pb', 'PB'))}</div>
+                            <div class="map-detail-hero-subline">${escapeHtml(data.time_str || '0h 0m')} ${escapeHtml(localeText('map_details.total_lower', 'total'))} // ${parseInt(summary.best_xp || 0).toLocaleString()} ${escapeHtml(localeText('map_details.best_xp_lower', 'best XP'))} // ${parseInt(totals.kills || 0).toLocaleString()} ${escapeHtml(localeText('common.kills', 'kills'))}</div>
                         </div>
                         <div class="map-detail-summary-grid">
-                            <div class="map-detail-metric accent"><span>Matches</span><strong>${parseInt(summary.matches || 0).toLocaleString()}</strong></div>
-                            <div class="map-detail-metric gold"><span>Highest Round</span><strong>${parseInt(summary.highest_round || 0).toLocaleString()}</strong></div>
-                            <div class="map-detail-metric"><span>Average Round</span><strong>${escapeHtml(summary.average_round || 0)}</strong></div>
-                            <div class="map-detail-metric orange"><span>Best XP</span><strong>${parseInt(summary.best_xp || 0).toLocaleString()}</strong></div>
-                            <div class="map-detail-metric"><span>Average XP</span><strong>${parseInt(summary.average_xp || 0).toLocaleString()}</strong></div>
+                            <div class="map-detail-metric accent"><span>${escapeHtml(localeText('common.matches', 'Matches'))}</span><strong>${parseInt(summary.matches || 0).toLocaleString()}</strong></div>
+                            <div class="map-detail-metric gold"><span>${escapeHtml(localeText('map_details.highest_round', 'Highest Round'))}</span><strong>${parseInt(summary.highest_round || 0).toLocaleString()}</strong></div>
+                            <div class="map-detail-metric"><span>${escapeHtml(localeText('map_details.average_round', 'Average Round'))}</span><strong>${escapeHtml(summary.average_round || 0)}</strong></div>
+                            <div class="map-detail-metric orange"><span>${escapeHtml(localeText('map_details.best_xp', 'Best XP'))}</span><strong>${parseInt(summary.best_xp || 0).toLocaleString()}</strong></div>
+                            <div class="map-detail-metric"><span>${escapeHtml(localeText('map_details.average_xp', 'Average XP'))}</span><strong>${parseInt(summary.average_xp || 0).toLocaleString()}</strong></div>
                             <div class="map-detail-metric green"><span>KPM / XPM</span><strong>${escapeHtml(summary.kpm || 0)} / ${parseInt(summary.xpm || 0).toLocaleString()}</strong></div>
                         </div>
                     </div>
 
                     <div class="stat-grid-3">
                         <div class="card">
-                            <div class="card-title">Survival Pace</div>
-                            <div class="detail-row"><span>Total Rounds</span><span>${parseInt(totals.rounds || 0).toLocaleString()}</span></div>
-                            <div class="detail-row"><span>Total Time</span><span>${escapeHtml(data.time_str || '0h 0m')}</span></div>
-                            <div class="detail-row"><span>Best KPM</span><span>${escapeHtml(summary.best_kpm || 0)}</span></div>
-                            <div class="detail-row"><span>Best XPM</span><span>${parseInt(summary.best_xpm || 0).toLocaleString()}</span></div>
+                            <div class="card-title">${escapeHtml(localeText('map_details.survival_pace', 'Survival Pace'))}</div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.total_rounds', 'Total Rounds'))}</span><span>${parseInt(totals.rounds || 0).toLocaleString()}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.total_time', 'Total Time'))}</span><span>${escapeHtml(data.time_str || '0h 0m')}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.best_kpm', 'Best KPM'))}</span><span>${escapeHtml(summary.best_kpm || 0)}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.best_xpm', 'Best XPM'))}</span><span>${parseInt(summary.best_xpm || 0).toLocaleString()}</span></div>
                         </div>
                         <div class="card">
-                            <div class="card-title">Combat Output</div>
-                            <div class="detail-row"><span>Total Kills</span><span>${parseInt(totals.kills || 0).toLocaleString()}</span></div>
-                            <div class="detail-row"><span>Headshots</span><span>${parseInt(totals.headshots || 0).toLocaleString()}</span></div>
-                            <div class="detail-row"><span>Headshot %</span><span>${escapeHtml(summary.headshot_pct || 0)}%</span></div>
-                            <div class="detail-row"><span>Downs</span><span>${parseInt(totals.downs || 0).toLocaleString()}</span></div>
+                            <div class="card-title">${escapeHtml(localeText('map_details.combat_output', 'Combat Output'))}</div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('career.total_kills', 'Total Kills'))}</span><span>${parseInt(totals.kills || 0).toLocaleString()}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('common.headshots', 'Headshots'))}</span><span>${parseInt(totals.headshots || 0).toLocaleString()}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('common.headshot_pct', 'Headshot %'))}</span><span>${escapeHtml(summary.headshot_pct || 0)}%</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('live.downs', 'Downs'))}</span><span>${parseInt(totals.downs || 0).toLocaleString()}</span></div>
                         </div>
                         <div class="card">
-                            <div class="card-title">XP Economy</div>
-                            <div class="detail-row"><span>Total XP</span><span>${parseInt(totals.match_xp || 0).toLocaleString()}</span></div>
-                            <div class="detail-row"><span>Average XP</span><span>${parseInt(summary.average_xp || 0).toLocaleString()}</span></div>
-                            <div class="detail-row"><span>Average XPM</span><span>${parseInt(summary.xpm || 0).toLocaleString()}</span></div>
-                            <div class="detail-row"><span>Average KPM</span><span>${escapeHtml(summary.kpm || 0)}</span></div>
+                            <div class="card-title">${escapeHtml(localeText('map_details.xp_economy', 'XP Economy'))}</div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.total_xp', 'Total XP'))}</span><span>${parseInt(totals.match_xp || 0).toLocaleString()}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.average_xp', 'Average XP'))}</span><span>${parseInt(summary.average_xp || 0).toLocaleString()}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.average_xpm', 'Average XPM'))}</span><span>${parseInt(summary.xpm || 0).toLocaleString()}</span></div>
+                            <div class="detail-row"><span>${escapeHtml(localeText('map_details.average_kpm', 'Average KPM'))}</span><span>${escapeHtml(summary.kpm || 0)}</span></div>
                         </div>
                     </div>
 
                     <div class="map-detail-grid">
                         <div class="card">
-                            <div class="card-title">Best Weapons On This Map</div>
-                            <div class="map-detail-weapon-list">${weaponRows || '<div class="muted-empty">No weapon data recorded for this map.</div>'}</div>
+                            <div class="card-title">${escapeHtml(localeText('map_details.best_weapons_on_map', 'Best Weapons On This Map'))}</div>
+                            <div class="map-detail-weapon-list">${weaponRows || `<div class="muted-empty">${escapeHtml(localeText('map_details.no_weapon_data', 'No weapon data recorded for this map.'))}</div>`}</div>
                         </div>
                         <div class="card">
-                            <div class="card-title">Recent Match Rounds</div>
+                            <div class="card-title">${escapeHtml(localeText('map_details.recent_match_rounds', 'Recent Match Rounds'))}</div>
                             <div class="map-detail-chart-wrap"><canvas id="mapDetailRoundChart"></canvas></div>
                         </div>
                     </div>
 
                     <div class="card">
-                        <div class="card-title">Recent Matches</div>
+                        <div class="card-title">${escapeHtml(localeText('map_details.recent_matches', 'Recent Matches'))}</div>
                         <div class="map-detail-table-wrap">
                             <table>
-                                <thead><tr><th>Date</th><th>Round</th><th>XP</th><th>Kills</th><th>KPM</th><th>XPM</th></tr></thead>
-                                <tbody id="map-detail-match-rows">${recentRows || '<tr><td colspan="6" class="muted-empty">No recent matches found.</td></tr>'}</tbody>
+                                <thead><tr><th>${escapeHtml(localeText('common.date', 'Date'))}</th><th>${escapeHtml(localeText('common.round', 'Round'))}</th><th>XP</th><th>${escapeHtml(localeText('common.kills', 'Kills'))}</th><th>KPM</th><th>XPM</th></tr></thead>
+                                <tbody id="map-detail-match-rows">${recentRows || `<tr><td colspan="6" class="muted-empty">${escapeHtml(localeText('map_details.no_recent_matches', 'No recent matches found.'))}</td></tr>`}</tbody>
                             </table>
                         </div>
                         <div id="map-detail-load-more-wrap" style="text-align:center;margin-top:12px;${data.has_more ? '' : 'display:none;'}">
-                            <button class="nav-btn-small button-tall" onclick="loadMoreMapMatches()" id="map-detail-load-more-btn">LOAD MORE (${Math.max(0, mapDetailTotalMatches - mapDetailPage * mapDetailPageSize)} remaining)</button>
+                            <button class="nav-btn-small button-tall" onclick="loadMoreMapMatches()" id="map-detail-load-more-btn">${escapeHtml(localeText('buttons.load_more', 'LOAD MORE'))} (${Math.max(0, mapDetailTotalMatches - mapDetailPage * mapDetailPageSize)} ${escapeHtml(localeText('map_details.remaining', 'remaining'))})</button>
                         </div>
                     </div>
                 `;
@@ -3422,7 +3417,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                             tr.onclick = function() { loadHistory(this.dataset.gameId, this); };
                             tr.innerHTML = `
                                 <td>${escapeHtml(row.date)}</td>
-                                <td>Round ${parseInt(row.round || 0).toLocaleString()}</td>
+                                <td>${escapeHtml(localeText('common.round', 'Round'))} ${parseInt(row.round || 0).toLocaleString()}</td>
                                 <td>${parseInt(row.match_xp || 0).toLocaleString()}</td>
                                 <td>${parseInt(row.kills || 0).toLocaleString()}</td>
                                 <td>${escapeHtml(row.kpm || 0)}</td>
@@ -3438,7 +3433,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                         const btn2 = document.getElementById('map-detail-load-more-btn');
                         if (btn2) {
                             btn2.disabled = false;
-                            btn2.textContent = `LOAD MORE (${remaining} remaining)`;
+                            btn2.textContent = `${localeText('buttons.load_more', 'LOAD MORE')} (${remaining} ${localeText('map_details.remaining', 'remaining')})`;
                         }
                     } else if (wrap) {
                         wrap.style.display = 'none';
@@ -3469,6 +3464,24 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 melee: '#eab308',
                 other: '#94a3b8'
             };
+
+            function weaponCategoryLabel(category, fallback) {
+                const key = String(category || 'other');
+                return localeText(`weapon_categories.${key}`, fallback || key.replaceAll('_', ' ').toUpperCase());
+            }
+
+            function mapDetailRows(matches) {
+                return (matches || []).slice().reverse().map(row => `
+                    <tr data-game-id="${escapeHtml(row.game_id)}" onclick="loadHistory(this.dataset.gameId, this)">
+                        <td>${escapeHtml(row.date)}</td>
+                        <td>${escapeHtml(localeText('common.round', 'Round'))} ${parseInt(row.round || 0).toLocaleString()}</td>
+                        <td>${parseInt(row.match_xp || 0).toLocaleString()}</td>
+                        <td>${parseInt(row.kills || 0).toLocaleString()}</td>
+                        <td>${escapeHtml(row.kpm || 0)}</td>
+                        <td>${parseInt(row.xpm || 0).toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            }
 
             async function loadWeaponUsage() {
                 const tbody = document.getElementById('weapon-usage-list');
@@ -3511,7 +3524,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 }
 
                 const totalKills = rows.reduce((sum, row) => sum + parseInt(row.kills || 0), 0);
-                const labels = rows.map(row => row.label || String(row.category || 'Other').replaceAll('_', ' '));
+                const labels = rows.map(row => weaponCategoryLabel(row.category, row.label || String(row.category || 'Other').replaceAll('_', ' ')));
                 const values = rows.map(row => parseInt(row.kills || 0));
                 const colors = rows.map(row => weaponCategoryColors[row.category] || weaponCategoryColors.other);
 
@@ -3520,7 +3533,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     const pct = totalKills > 0 ? ((kills / totalKills) * 100).toFixed(1) : '0.0';
                     return `<div class="weapon-category-legend-item">
                         <span class="weapon-category-swatch" style="background:${colors[index]}"></span>
-                        <span class="weapon-category-label">${escapeHtml(row.label || row.category || 'Other')}</span>
+                        <span class="weapon-category-label">${escapeHtml(weaponCategoryLabel(row.category, row.label || row.category || 'Other'))}</span>
                         <span class="weapon-category-value">${kills.toLocaleString()} (${pct}%)</span>
                     </div>`;
                 }).join('');
@@ -3583,7 +3596,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 }
 
                 const totalDamage = rows.reduce((sum, row) => sum + parseInt(row.damage || 0), 0);
-                const labels = rows.map(row => row.label || String(row.category || 'Other').replaceAll('_', ' '));
+                const labels = rows.map(row => weaponCategoryLabel(row.category, row.label || String(row.category || 'Other').replaceAll('_', ' ')));
                 const values = rows.map(row => parseInt(row.damage || 0));
                 const colors = rows.map(row => weaponCategoryColors[row.category] || weaponCategoryColors.other);
 
@@ -3592,7 +3605,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     const pct = totalDamage > 0 ? ((damage / totalDamage) * 100).toFixed(1) : '0.0';
                     return `<div class="weapon-category-legend-item">
                         <span class="weapon-category-swatch" style="background:${colors[index]}"></span>
-                        <span class="weapon-category-label">${escapeHtml(row.label || row.category || 'Other')}</span>
+                        <span class="weapon-category-label">${escapeHtml(weaponCategoryLabel(row.category, row.label || row.category || 'Other'))}</span>
                         <span class="weapon-category-value">${damage.toLocaleString()} (${pct}%)</span>
                     </div>`;
                 }).join('');
@@ -3656,7 +3669,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     const selectedClass = selectedWeaponDetailName === String(w.name || '') ? ' selected' : '';
                     return `<tr class="weapon-usage-row${selectedClass}" onclick="loadWeaponDetail(decodeURIComponent('${weaponArg}'))" title="Open weapon profile">
                         <td class="weapon-name-cell">${escapeHtml(w.name || 'Unknown')}</td>
-                        <td>${escapeHtml(String(w.category || 'other').replaceAll('_', ' ').toUpperCase())}</td>
+                        <td>${escapeHtml(weaponCategoryLabel(w.category, String(w.category || 'other').replaceAll('_', ' ').toUpperCase()))}</td>
                         <td>${parseInt(w.kills || 0).toLocaleString()}</td>
                         <td>${parseInt(w.headshots || 0).toLocaleString()}</td>
                         <td>${parseFloat(w.headshot_pct || 0).toFixed(1)}%</td>
@@ -3693,19 +3706,19 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
 
                 card.classList.remove('initially-hidden');
                 title.innerText = selectedWeaponDetailName;
-                body.innerHTML = '<div class="muted-empty">Loading weapon profile...</div>';
+                body.innerHTML = `<div class="muted-empty">${escapeHtml(localeText('weapon_usage.loading_weapon_profile', 'Loading weapon profile...'))}</div>`;
                 card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
                 try {
                     const detail = await window.pywebview.api.get_weapon_detail(selectedWeaponDetailName, "0");
                     if (!detail || detail.error) {
-                        body.innerHTML = `<div class="error-empty">${escapeHtml(detail && detail.error ? detail.error : 'Weapon profile could not be loaded.')}</div>`;
+                        body.innerHTML = `<div class="error-empty">${escapeHtml(detail && detail.error ? detail.error : localeText('weapon_usage.profile_load_error', 'Weapon profile could not be loaded.'))}</div>`;
                         return;
                     }
                     renderWeaponDetail(detail);
                 } catch(e) {
                     console.error("Weapon Detail Load Error", e);
-                    body.innerHTML = '<div class="error-empty">Weapon profile could not be loaded.</div>';
+                    body.innerHTML = `<div class="error-empty">${escapeHtml(localeText('weapon_usage.profile_load_error', 'Weapon profile could not be loaded.'))}</div>`;
                 }
             }
 
@@ -3719,11 +3732,12 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 const matches = detail.matches || [];
                 const maps = detail.map_breakdown || [];
                 const aatBreakdown = detail.aat_breakdown || [];
-                const category = String(weapon.category || 'other').replaceAll('_', ' ').toUpperCase();
+                const categoryKey = String(weapon.category || 'other');
+                const category = localeText(`weapon_categories.${categoryKey}`, categoryKey.replaceAll('_', ' ').toUpperCase());
                 const bestText = best.map
-                    ? `${escapeHtml(best.map)} // Round ${parseInt(best.round || 0).toLocaleString()} // ${parseInt(best.kills || 0).toLocaleString()} kills`
-                    : 'No match record';
-                const topAat = totals.top_aat ? escapeHtml(totals.top_aat) : 'None recorded';
+                    ? `${best.map} // ${localeText('common.round', 'Round')} ${parseInt(best.round || 0).toLocaleString()} // ${parseInt(best.kills || 0).toLocaleString()} ${localeText('common.kills', 'kills')}`
+                    : localeText('weapon_usage.no_match_record', 'No match record');
+                const topAat = totals.top_aat ? escapeHtml(totals.top_aat) : escapeHtml(localeText('weapon_usage.none_recorded', 'None recorded'));
                 const aatMeta = aatBreakdown.length
                     ? `<span>AAT: ${escapeHtml(aatBreakdown.map(row => `${row.name} (${row.count})`).join(', '))}</span>`
                     : '';
@@ -3732,7 +3746,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     <tr>
                         <td>${escapeHtml(row.date || '')}</td>
                         <td>${escapeHtml(row.map || 'Unknown')}</td>
-                        <td>Round ${parseInt(row.round || 0).toLocaleString()}</td>
+                        <td>${escapeHtml(localeText('common.round', 'Round'))} ${parseInt(row.round || 0).toLocaleString()}</td>
                         <td>${parseInt(row.kills || 0).toLocaleString()}</td>
                         <td>${parseInt(row.headshots || 0).toLocaleString()}</td>
                         <td>${parseFloat(row.headshot_pct || 0).toFixed(1)}%</td>
@@ -3745,34 +3759,34 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     <div class="weapon-detail-meta">
                         <span>${escapeHtml(category)}</span>
                         ${weapon.console_name ? `<span>${escapeHtml(weapon.console_name)}</span>` : ''}
-                        <span>${parseInt(totals.matches || 0).toLocaleString()} matches</span>
+                        <span>${parseInt(totals.matches || 0).toLocaleString()} ${escapeHtml(localeText('common.matches', 'matches'))}</span>
                         ${aatMeta}
                     </div>
                     <div class="stat-grid-3 weapon-detail-summary-grid">
-                        <div class="weapon-detail-stat"><span>Kills</span><strong>${parseInt(totals.kills || 0).toLocaleString()}</strong></div>
-                        <div class="weapon-detail-stat"><span>Headshots</span><strong>${parseInt(totals.headshots || 0).toLocaleString()}</strong></div>
-                        <div class="weapon-detail-stat"><span>Headshot %</span><strong>${parseFloat(totals.headshot_pct || 0).toFixed(1)}%</strong></div>
-                        <div class="weapon-detail-stat"><span>Damage</span><strong>${parseInt(totals.damage || 0).toLocaleString()}</strong></div>
-                        <div class="weapon-detail-stat"><span>PaP Uses</span><strong>${parseInt(totals.pap_uses || 0).toLocaleString()}</strong></div>
-                        <div class="weapon-detail-stat"><span>AAT Uses</span><strong>${parseInt(totals.aat_uses || 0).toLocaleString()} // ${topAat}</strong></div>
-                        <div class="weapon-detail-stat"><span>Best Match</span><strong>${bestText}</strong></div>
+                        <div class="weapon-detail-stat"><span>${escapeHtml(localeText('common.kills', 'Kills'))}</span><strong>${parseInt(totals.kills || 0).toLocaleString()}</strong></div>
+                        <div class="weapon-detail-stat"><span>${escapeHtml(localeText('common.headshots', 'Headshots'))}</span><strong>${parseInt(totals.headshots || 0).toLocaleString()}</strong></div>
+                        <div class="weapon-detail-stat"><span>${escapeHtml(localeText('common.headshot_pct', 'Headshot %'))}</span><strong>${parseFloat(totals.headshot_pct || 0).toFixed(1)}%</strong></div>
+                        <div class="weapon-detail-stat"><span>${escapeHtml(localeText('common.damage', 'Damage'))}</span><strong>${parseInt(totals.damage || 0).toLocaleString()}</strong></div>
+                        <div class="weapon-detail-stat"><span>${escapeHtml(localeText('weapon_usage.pap_uses', 'PaP Uses'))}</span><strong>${parseInt(totals.pap_uses || 0).toLocaleString()}</strong></div>
+                        <div class="weapon-detail-stat"><span>${escapeHtml(localeText('weapon_usage.aat_uses', 'AAT Uses'))}</span><strong>${parseInt(totals.aat_uses || 0).toLocaleString()} // ${topAat}</strong></div>
+                        <div class="weapon-detail-stat"><span>${escapeHtml(localeText('weapon_usage.best_match', 'Best Match'))}</span><strong>${escapeHtml(bestText)}</strong></div>
                     </div>
                     <div class="weapon-detail-chart-grid">
                         <div class="weapon-detail-chart-wrap">
-                            <div class="weapon-detail-chart-title">Kills Over Time</div>
+                            <div class="weapon-detail-chart-title">${escapeHtml(localeText('weapon_usage.kills_over_time', 'Kills Over Time'))}</div>
                             <canvas id="weaponDetailKillsChart"></canvas>
                         </div>
                         <div class="weapon-detail-chart-wrap">
-                            <div class="weapon-detail-chart-title">Kills By Map</div>
+                            <div class="weapon-detail-chart-title">${escapeHtml(localeText('weapon_usage.kills_by_map', 'Kills By Map'))}</div>
                             <canvas id="weaponDetailMapChart"></canvas>
                         </div>
                     </div>
                     <div class="weapon-detail-table-wrap">
                         <table class="weapon-detail-table">
                             <thead>
-                                <tr><th>Date</th><th>Map</th><th>Round</th><th>Kills</th><th>Headshots</th><th>HS%</th><th>Damage</th><th>AAT</th></tr>
+                                <tr><th>${escapeHtml(localeText('common.date', 'Date'))}</th><th>${escapeHtml(localeText('common.map', 'Map'))}</th><th>${escapeHtml(localeText('common.round', 'Round'))}</th><th>${escapeHtml(localeText('common.kills', 'Kills'))}</th><th>${escapeHtml(localeText('common.headshots', 'Headshots'))}</th><th>${escapeHtml(localeText('common.hs_pct_short', 'HS%'))}</th><th>${escapeHtml(localeText('common.damage', 'Damage'))}</th><th>AAT</th></tr>
                             </thead>
-                            <tbody>${recentRows || '<tr><td colspan="8" class="muted-empty">No archived matches found for this weapon.</td></tr>'}</tbody>
+                            <tbody>${recentRows || `<tr><td colspan="8" class="muted-empty">${escapeHtml(localeText('weapon_usage.no_archived_matches', 'No archived matches found for this weapon.'))}</td></tr>`}</tbody>
                         </table>
                     </div>
                 `;
