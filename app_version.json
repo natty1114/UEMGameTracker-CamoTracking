@@ -1,7 +1,8 @@
 {
-    "version": "4.6.2",
-    "global_stats_prompt_version": "4.5.0",
+    "version": "4.7.8",
+    "global_stats_prompt_version": "4.7.0",
     "remote_management_url": "https://uemmaps.com/tracker/remote_management.json",
     "map_weapons_sync_url": "https://uemmaps.com/tracker/map_weapons_sync.php",
-    "map_challenges_sync_url": "https://uemmaps.com/tracker/map_challenges_sync.php"
+    "map_challenges_sync_url": "https://uemmaps.com/tracker/map_challenges_sync.php",
+    "currentgame_relay_url": "https://uemmaps.com/tracker/currentgame_relay.php"
 }

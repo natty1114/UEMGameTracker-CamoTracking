@@ -7,6 +7,7 @@ import webview # pip install pywebview
 import sys
 import subprocess
 import urllib.request
+import urllib.parse
 import zipfile
 
 # --- CUSTOM IMPORTS ---
@@ -21,8 +22,8 @@ from asset_helpers import (
     load_css,
     sanitize_filename,
 )
-from app_metadata import APP_VERSION, GLOBAL_STATS_PROMPT_VERSION, REMOTE_MANAGEMENT_URL, MAP_WEAPONS_SYNC_URL, MAP_CHALLENGES_SYNC_URL
-from app_paths import get_base_path, get_config_dir, get_runtime_path, migrate_all_runtime_paths
+from app_metadata import APP_VERSION, GLOBAL_STATS_PROMPT_VERSION, REMOTE_MANAGEMENT_URL, MAP_WEAPONS_SYNC_URL, MAP_CHALLENGES_SYNC_URL, CURRENTGAME_RELAY_URL
+from app_paths import RUNTIME_FILENAMES, get_base_path, get_config_dir, get_runtime_path, migrate_all_runtime_paths
 from best_matches import (
     add_best_match_from_data,
     find_archive_data,
@@ -32,6 +33,7 @@ from best_matches import (
 )
 from camo_processor import process_camo_data as build_camo_data
 from challenge_system import ChallengeManager
+from currentgame_sync import currentgame_sync_manager
 from custom_camos_sync import sync_custom_camos
 from discord_presence import discord_presence
 from map_weapons import map_weapons_manager
@@ -41,14 +43,22 @@ from workshop_images import get_workshop_image, get_workshop_image_url
 from weapon_categories import WEAPON_CATEGORY_LABELS, get_weapon_category, normalise_weapon_category
 import global_stats_client
 from remote_management_client import fetch_remote_management
+from reward_assets import ensure_reward_asset, get_hosted_reward_sync_status, sync_hosted_reward_assets
 from ui_main import build_main_app_html
-from ui_views import build_setup_html, build_unified_overlay_html, build_graph_overlay_html, build_xp_debugger_html
+from ui_views import (
+    build_setup_html,
+    build_unified_overlay_html,
+    build_graph_overlay_html,
+    build_challenge_overlay_html,
+    build_xp_debugger_html,
+)
 from game_data import (
     ALWAYS_AVAILABLE_THEMES,
     CONFIG_FILE,
     CSS_MAIN_FILE,
     CSS_SETUP_FILE,
     DEFAULT_DISCORD_APPLICATION_ID,
+    DISCORD_EMBLEM_BASE_URL,
     DISCORD_ACTIVITY_NAME,
     GITHUB_RELEASES_API,
     GLOBAL_STATS_STATE_FILE,
@@ -88,6 +98,8 @@ xp_debug_rows = []
 xp_debug_lock = threading.Lock()
 graph_overlay_window = None
 stop_graph_overlay = False
+challenge_overlay_window = None
+stop_challenge_overlay = False
 global_stats_sync_lock = threading.Lock()
 global_stats_sync_running = False
 custom_camos_sync_lock = threading.Lock()
@@ -98,12 +110,27 @@ map_weapons_push_lock = threading.Lock()
 map_weapons_push_running = False
 map_challenges_sync_lock = threading.Lock()
 map_challenges_sync_running = False
+hosted_reward_sync_lock = threading.Lock()
 remote_management = {}
 last_discord_presence_update = 0
 discord_presence_update_lock = threading.Lock()
 discord_presence_update_running = False
 discord_presence_workshop_image_cache = {}
+startup_progress_callback = None
+window_position_save_times = {}
 # ---------------------
+
+def set_startup_progress_callback(callback):
+    global startup_progress_callback
+    startup_progress_callback = callback
+
+def report_startup_progress(message):
+    callback = startup_progress_callback
+    if callback:
+        try:
+            callback(message)
+        except Exception:
+            pass
 
 def get_overlay_size_percent():
     try:
@@ -118,8 +145,59 @@ def get_overlay_scale():
 def get_scaled_overlay_dimension(value):
     return max(1, int(round(value * get_overlay_scale())))
 
+def get_saved_window_position(config_key, default_x, default_y):
+    position = app_config.get(config_key)
+    if not isinstance(position, dict):
+        return default_x, default_y
+    try:
+        x = int(float(position.get("x", default_x)))
+        y = int(float(position.get("y", default_y)))
+    except (TypeError, ValueError):
+        return default_x, default_y
+    return max(-10000, min(10000, x)), max(-10000, min(10000, y))
+
+def remember_window_position(target_window, config_key, force=False):
+    if not target_window:
+        return False
+    now = time.time()
+    if not force and now - float(window_position_save_times.get(config_key, 0) or 0) < 5:
+        return False
+    try:
+        raw = target_window.evaluate_js(
+            "JSON.stringify({"
+            "x: Math.round(window.screenX || window.screenLeft || 0),"
+            "y: Math.round(window.screenY || window.screenTop || 0)"
+            "})"
+        )
+        position = json.loads(raw) if isinstance(raw, str) else raw
+        if not isinstance(position, dict):
+            return False
+        x = int(float(position.get("x", 0)))
+        y = int(float(position.get("y", 0)))
+    except Exception:
+        return False
+    previous = app_config.get(config_key)
+    if (
+        isinstance(previous, dict)
+        and int(previous.get("x", x)) == x
+        and int(previous.get("y", y)) == y
+    ):
+        window_position_save_times[config_key] = now
+        return False
+    app_config[config_key] = {"x": x, "y": y}
+    window_position_save_times[config_key] = now
+    save_app_config()
+    return True
+
 def get_global_stats_state_path():
     return get_runtime_path(GLOBAL_STATS_STATE_FILE)
+
+def get_global_stats_client_reference():
+    try:
+        state = global_stats_client.get_or_create_state(get_global_stats_state_path())
+        return global_stats_client.client_reference(state)
+    except Exception:
+        return ""
 
 def get_remote_management_cache_path():
     return get_runtime_path(REMOTE_MANAGEMENT_CACHE_FILE)
@@ -178,6 +256,37 @@ def get_discord_presence_client_id():
 def configure_discord_presence():
     discord_presence.configure(get_discord_presence_client_id())
 
+def _get_presence_configured_image():
+    return str(app_config.get("discord_presence_large_image", "") or "").strip()
+
+def _get_emblem_file_extension(emblem_name, variant):
+    if variant == "animated":
+        extensions = [".gif", ".mp4", ".webm", ".webp", ".png", ".jpg", ".jpeg"]
+    else:
+        extensions = [".png", ".jpg", ".jpeg", ".webp", ".gif"]
+    emblem_path = os.path.join(get_base_path(), "emblems")
+    for ext in extensions:
+        if os.path.exists(os.path.join(emblem_path, f"{emblem_name}{ext}")):
+            return ext
+    downloaded = ensure_reward_asset("emblems", emblem_name, extensions)
+    if downloaded:
+        return os.path.splitext(downloaded)[1] or (".gif" if variant == "animated" else ".png")
+    return ".gif" if variant == "animated" else ".png"
+
+def _get_presence_emblem_image():
+    active_emblem = str(app_config.get("active_emblem", "") or "").strip()
+    if active_emblem and active_emblem != "default":
+        variant = str(app_config.get("active_emblem_variant", "static") or "static").strip().lower()
+        if variant not in ("static", "animated"):
+            variant = "static"
+        base_url = str(app_config.get("discord_presence_emblem_base_url", "") or DISCORD_EMBLEM_BASE_URL).strip()
+        if base_url:
+            ext = _get_emblem_file_extension(active_emblem, variant)
+            filename = urllib.parse.quote(f"{active_emblem}{ext}")
+            return f"{base_url.rstrip('/')}/{filename}"
+        return active_emblem.lower()
+    return _get_presence_configured_image()
+
 def _format_presence_map_name(value):
     text = str(value or "Unknown Map").replace("_", " ").strip()
     return text.title() if text else "Unknown Map"
@@ -198,7 +307,7 @@ def _extract_steam_workshop_id(value):
     return digits or text
 
 def _get_presence_workshop_image(game):
-    configured = str(app_config.get("discord_presence_large_image", "") or "").strip()
+    configured = _get_presence_configured_image()
     steam_link = (
         game.get("steam_link")
         or game.get("workshop_link")
@@ -214,6 +323,11 @@ def _get_presence_workshop_image(game):
     image_url = get_workshop_image_url(workshop_id)
     discord_presence_workshop_image_cache[workshop_id] = image_url or ""
     return image_url or configured
+
+def _get_presence_large_image(game):
+    if str(app_config.get("discord_presence_image_source", "workshop") or "workshop").strip().lower() == "emblem":
+        return _get_presence_emblem_image()
+    return _get_presence_workshop_image(game)
 
 def _format_presence_rank(player):
     ultimate = _safe_int(player.get("prestige_ultimate"))
@@ -326,7 +440,7 @@ def update_discord_presence_from_game(current_data, force=False):
     else:
         state = "Watching live BO3 Zombies stats"
 
-    large_image = _get_presence_workshop_image(game)
+    large_image = _get_presence_large_image(game)
     ok = discord_presence.update(
         details=details,
         state=state,
@@ -513,9 +627,9 @@ def schedule_map_weapons_startup_sync():
     def worker():
         global map_weapons_sync_running
         try:
-            pull = map_weapons_manager.sync_from_remote(MAP_WEAPONS_SYNC_URL, app_config, force=False)
+            pull = map_weapons_manager.sync_from_remote(MAP_WEAPONS_SYNC_URL, app_config, force=True)
             app_config["map_weapons_last_sync_msg"] = pull.get("msg", "")
-            push = map_weapons_manager.push_to_remote(MAP_WEAPONS_SYNC_URL, app_config)
+            push = map_weapons_manager.push_to_remote(MAP_WEAPONS_SYNC_URL, app_config, preflight_pull=False)
             if push.get("ok"):
                 app_config["map_weapons_last_push_time"] = int(time.time())
             app_config["map_weapons_last_push_msg"] = push.get("msg", "")
@@ -593,6 +707,25 @@ def schedule_map_challenges_sync(reason="background", force=False):
     t.start()
     return True
 
+def schedule_hosted_reward_asset_sync():
+    def worker():
+        if not hosted_reward_sync_lock.acquire(blocking=False):
+            return
+        try:
+            sync_hosted_reward_assets(force=False)
+            try:
+                challenge_manager._hosted_rewards_synced = True
+                challenge_manager._repair_missing_reward_assignments(sync_hosted=True)
+            except Exception:
+                pass
+        finally:
+            hosted_reward_sync_lock.release()
+
+    t = threading.Thread(target=worker, name="hosted-reward-assets")
+    t.daemon = True
+    t.start()
+    return True
+
 def get_overlay_theme(theme_name=None):
     theme_key = theme_name or app_config.get('active_theme', 'default')
     return OVERLAY_THEMES.get(theme_key, OVERLAY_THEMES["default"])
@@ -604,6 +737,21 @@ challenge_manager = ChallengeManager(get_base_path())
 def process_camo_data(user_json_path):
     return build_camo_data(user_json_path, app_config.get('starred', []))
 
+def get_live_game_data():
+    if currentgame_sync_manager.is_client_enabled(app_config):
+        return currentgame_sync_manager.get_client_current_game(app_config)
+
+    path = app_config.get('live_path')
+    if path and os.path.exists(path):
+        return load_json(path)
+    return None
+
+def has_live_game_source():
+    if currentgame_sync_manager.is_client_enabled(app_config):
+        return True
+    path = app_config.get('live_path')
+    return bool(path and os.path.exists(path))
+
 # --- UNIFIED OVERLAY SYSTEM ---
 def get_unified_overlay_html():
     return build_unified_overlay_html(json.dumps(get_overlay_theme()), json.dumps(get_overlay_scale()))
@@ -613,10 +761,9 @@ def overlay_loop():
     
     while not stop_overlays:
         if unified_window:
-            path = app_config.get('live_path')
-            if path and os.path.exists(path):
+            data = get_live_game_data()
+            if data:
                 try:
-                    data = load_json(path)
                     stats = process_stats(
                         data,
                         is_live=True,
@@ -699,6 +846,7 @@ def overlay_loop():
                             get_scaled_overlay_dimension(OVERLAY_BASE_WIDTH),
                             get_scaled_overlay_dimension(calc_height)
                         )
+                        remember_window_position(unified_window, "overlay_window_position")
                                 
                 except Exception as e:
                     print(f"Unified Overlay Error: {e}")
@@ -711,12 +859,13 @@ def toggle_overlays_logic(enable):
     if enable:
         stop_overlays = False
         if unified_window is None:
+            overlay_x, overlay_y = get_saved_window_position("overlay_window_position", 50, 100)
             unified_window = webview.create_window(
                 'BO3 Overlay', 
                 html=get_unified_overlay_html(), 
                 width=get_scaled_overlay_dimension(OVERLAY_BASE_WIDTH),
                 height=get_scaled_overlay_dimension(OVERLAY_BASE_HEIGHT),
-                x=50, y=100,
+                x=overlay_x, y=overlay_y,
                 frameless=True, 
                 on_top=True, 
                 transparent=False 
@@ -729,19 +878,23 @@ def toggle_overlays_logic(enable):
     else:
         stop_overlays = True
         if unified_window:
+            remember_window_position(unified_window, "overlay_window_position", force=True)
             unified_window.destroy()
             unified_window = None
 
 def push_overlay_theme():
     if not unified_window:
+        push_challenge_overlay_theme()
         return
     try:
         unified_window.evaluate_js(f'applyOverlayTheme({json.dumps(get_overlay_theme())});')
     except Exception:
         pass
+    push_challenge_overlay_theme()
 
 def push_overlay_scale():
     if not unified_window:
+        push_challenge_overlay_scale()
         return
     try:
         unified_window.evaluate_js(f'setOverlayScale({json.dumps(get_overlay_scale())});')
@@ -751,6 +904,7 @@ def push_overlay_scale():
         )
     except Exception:
         pass
+    push_challenge_overlay_scale()
 
 # --- GRAPH OVERLAY ---
 def get_graph_overlay_html():
@@ -774,10 +928,9 @@ def graph_overlay_loop():
 
     while not stop_graph_overlay:
         if graph_overlay_window:
-            path = app_config.get('live_path')
-            if path and os.path.exists(path):
+            data = get_live_game_data()
+            if data:
                 try:
-                    data = load_json(path)
                     stats = process_stats(
                         data,
                         is_live=True,
@@ -824,6 +977,7 @@ def graph_overlay_loop():
                             get_scaled_overlay_dimension(280),
                             get_scaled_overlay_dimension(calc_height)
                         )
+                        remember_window_position(graph_overlay_window, "graph_overlay_window_position")
 
                 except Exception as e:
                     print(f"Graph Overlay Error: {e}")
@@ -837,12 +991,13 @@ def toggle_graph_overlay_logic(enable):
     if enable:
         stop_graph_overlay = False
         if graph_overlay_window is None:
+            graph_x, graph_y = get_saved_window_position("graph_overlay_window_position", 350, 100)
             graph_overlay_window = webview.create_window(
                 'BO3 Graph Overlay',
                 html=get_graph_overlay_html(),
                 width=get_scaled_overlay_dimension(280),
                 height=get_scaled_overlay_dimension(100),
-                x=350, y=100,
+                x=graph_x, y=graph_y,
                 frameless=True,
                 on_top=True,
             )
@@ -854,6 +1009,7 @@ def toggle_graph_overlay_logic(enable):
     else:
         stop_graph_overlay = True
         if graph_overlay_window:
+            remember_window_position(graph_overlay_window, "graph_overlay_window_position", force=True)
             graph_overlay_window.destroy()
             graph_overlay_window = None
 
@@ -872,6 +1028,147 @@ def push_graph_overlay_scale():
         return
     try:
         graph_overlay_window.evaluate_js(f'setGraphOverlayScale({json.dumps(get_overlay_scale())});')
+    except Exception:
+        pass
+
+
+# --- CHALLENGE OVERLAY ---
+def normalise_challenge_overlay_ids(values):
+    if not isinstance(values, list):
+        return []
+    cleaned = []
+    for value in values:
+        text = str(value or "").strip()
+        if text and text not in cleaned:
+            cleaned.append(text)
+        if len(cleaned) >= 3:
+            break
+    return cleaned
+
+
+def set_challenge_overlay_selection(selected_ids):
+    app_config["challenge_overlay_selected_ids"] = normalise_challenge_overlay_ids(selected_ids)
+    save_app_config()
+    return list(app_config["challenge_overlay_selected_ids"])
+
+
+def get_challenge_overlay_items():
+    selected_ids = normalise_challenge_overlay_ids(app_config.get("challenge_overlay_selected_ids", []))
+    if not selected_ids:
+        return []
+    challenges = challenge_manager._frontend_challenges()
+    by_id = {
+        str(challenge.get("id", "")): challenge
+        for challenge in challenges
+        if isinstance(challenge, dict) and challenge.get("id")
+    }
+    items = []
+    for challenge_id in selected_ids:
+        challenge = by_id.get(challenge_id)
+        if not challenge:
+            continue
+        try:
+            progress = max(0, int(float(challenge.get("progress", 0) or 0)))
+        except (TypeError, ValueError):
+            progress = 0
+        try:
+            target = max(0, int(float(challenge.get("target", 0) or 0)))
+        except (TypeError, ValueError):
+            target = 0
+        pct = 100 if target <= 0 and challenge.get("completed") else 0
+        if target > 0:
+            pct = max(0, min(100, round((progress / target) * 100, 1)))
+        raw_title = str(challenge.get("title", "Challenge") or "Challenge")
+        map_name = str(challenge.get("map_name", "") or "").strip()
+        if map_name and challenge.get("map_challenge"):
+            raw_title = f"{map_name}: {raw_title}"
+        items.append({
+            "id": challenge_id,
+            "title": raw_title,
+            "desc": str(challenge.get("desc", "") or ""),
+            "cat": str(challenge.get("cat", "") or "").upper(),
+            "progress": progress,
+            "target": target,
+            "progress_pct": pct,
+            "completed": bool(challenge.get("completed", False)),
+        })
+    return items[:3]
+
+
+def get_challenge_overlay_html():
+    return build_challenge_overlay_html(json.dumps(get_overlay_theme()), json.dumps(get_overlay_scale()))
+
+
+def challenge_overlay_loop():
+    global challenge_overlay_window, stop_challenge_overlay
+
+    while not stop_challenge_overlay:
+        if challenge_overlay_window:
+            try:
+                items = get_challenge_overlay_items()
+                json_theme = json.dumps(get_overlay_theme())
+                json_scale = json.dumps(get_overlay_scale())
+                challenge_overlay_window.evaluate_js(
+                    f'applyChallengeOverlayTheme({json_theme});'
+                    f'setChallengeOverlayScale({json_scale});'
+                    f'updateChallengeOverlay({json.dumps(items)});'
+                )
+                row_height = 92
+                calc_height = 48 + (len(items) * row_height)
+                if not items:
+                    calc_height = 92
+                challenge_overlay_window.resize(
+                    get_scaled_overlay_dimension(320),
+                    get_scaled_overlay_dimension(calc_height)
+                )
+                remember_window_position(challenge_overlay_window, "challenge_overlay_window_position")
+            except Exception as e:
+                print(f"Challenge Overlay Error: {e}")
+        time.sleep(2)
+
+
+def toggle_challenge_overlay_logic(enable):
+    global challenge_overlay_window, stop_challenge_overlay
+
+    if enable:
+        stop_challenge_overlay = False
+        if challenge_overlay_window is None:
+            challenge_x, challenge_y = get_saved_window_position("challenge_overlay_window_position", 650, 100)
+            challenge_overlay_window = webview.create_window(
+                "BO3 Challenge Overlay",
+                html=get_challenge_overlay_html(),
+                width=get_scaled_overlay_dimension(320),
+                height=get_scaled_overlay_dimension(120),
+                x=challenge_x, y=challenge_y,
+                frameless=True,
+                on_top=True,
+            )
+
+        t = threading.Thread(target=challenge_overlay_loop)
+        t.daemon = True
+        t.start()
+    else:
+        stop_challenge_overlay = True
+        if challenge_overlay_window:
+            remember_window_position(challenge_overlay_window, "challenge_overlay_window_position", force=True)
+            challenge_overlay_window.destroy()
+            challenge_overlay_window = None
+
+
+def push_challenge_overlay_theme():
+    if not challenge_overlay_window:
+        return
+    try:
+        challenge_overlay_window.evaluate_js(f'applyChallengeOverlayTheme({json.dumps(get_overlay_theme())});')
+    except Exception:
+        pass
+
+
+def push_challenge_overlay_scale():
+    if not challenge_overlay_window:
+        return
+    try:
+        challenge_overlay_window.evaluate_js(f'setChallengeOverlayScale({json.dumps(get_overlay_scale())});')
     except Exception:
         pass
 
@@ -1045,6 +1342,7 @@ def get_main_app_html():
         APP_VERSION,
         GLOBAL_STATS_PROMPT_VERSION,
         chart_js_content,
+        get_global_stats_client_reference(),
     )
 
 # --- MAP COMPATIBILITY LAUNCHER ---
@@ -1067,8 +1365,24 @@ def launch_map_compat_window():
 
 def _write_tracker_config_backup(save_path):
     config_dir = get_config_dir()
+    base_path = get_base_path()
     save_path = normalize_backup_path(save_path)
     files_added = 0
+    written = set()
+
+    def add_backup_file(zipf, manifest, source_path, rel_path):
+        nonlocal files_added
+        if not source_path or not os.path.isfile(source_path):
+            return
+        if os.path.abspath(source_path) == os.path.abspath(save_path):
+            return
+        arcname = os.path.join("config", rel_path).replace("\\", "/")
+        if arcname in written:
+            return
+        zipf.write(source_path, arcname)
+        written.add(arcname)
+        manifest["files"].append(arcname)
+        files_added += 1
 
     with zipfile.ZipFile(save_path, "w", zipfile.ZIP_DEFLATED) as zipf:
         manifest = {
@@ -1078,17 +1392,25 @@ def _write_tracker_config_backup(save_path):
             "config_dir": config_dir,
             "files": [],
         }
+
+        for filename in sorted(RUNTIME_FILENAMES):
+            candidates = []
+            canonical_path = get_runtime_path(filename)
+            legacy_path = os.path.join(base_path, filename)
+            if os.path.isfile(canonical_path):
+                candidates.append(canonical_path)
+            if os.path.isfile(legacy_path):
+                candidates.append(legacy_path)
+            if candidates:
+                newest_path = max(candidates, key=lambda path: os.path.getmtime(path))
+                add_backup_file(zipf, manifest, newest_path, filename)
+
         for root, dirs, files in os.walk(config_dir):
             dirs[:] = [d for d in dirs if d != "workshop_image_cache"]
             for fname in files:
                 fpath = os.path.join(root, fname)
-                if os.path.abspath(fpath) == os.path.abspath(save_path):
-                    continue
                 rel = os.path.relpath(fpath, config_dir)
-                arcname = os.path.join("config", rel).replace("\\", "/")
-                zipf.write(fpath, arcname)
-                manifest["files"].append(arcname)
-                files_added += 1
+                add_backup_file(zipf, manifest, fpath, rel)
 
         readme = (
             "BO3 Tracker local config backup\n\n"
@@ -1168,6 +1490,16 @@ def _restore_tracker_config_backup(zip_path):
 
     restored_config = load_json(get_runtime_path(CONFIG_FILE)) or {}
     app_config = restored_config if isinstance(restored_config, dict) else {}
+    try:
+        challenge_manager.filepath = get_runtime_path("challenges.json")
+        challenge_manager.map_challenges_path = get_runtime_path("map_challenges.json")
+        challenge_manager.unlocks_path = get_runtime_path("unlocked_rewards.json")
+        challenge_manager.unlocked_rewards = challenge_manager._load_unlocks()
+        challenge_manager.challenges = challenge_manager._load_or_create()
+        challenge_manager.map_challenges = challenge_manager._load_map_challenges()
+        challenge_manager.check_theme_unlocks()
+    except Exception:
+        pass
     return {
         "config_dir": config_dir,
         "restored": restored,
@@ -1288,13 +1620,13 @@ def monitor_game():
         live_path = app_config.get('live_path')
         hist_path = app_config.get('history_path')
         
-        if not live_path or not hist_path: 
+        if not hist_path or (not live_path and not currentgame_sync_manager.is_client_enabled(app_config)): 
             time.sleep(5)
             continue
             
         try:
-            if os.path.exists(live_path):
-                current_data = load_json(live_path)
+            if has_live_game_source():
+                current_data = get_live_game_data()
                 
                 if current_data:
                     game = current_data.get('game') or current_data.get('data', {}).get('game', {})
@@ -1372,6 +1704,8 @@ def monitor_game():
                                 # Feed live data to challenge system (incremental updates during match)
                                 challenge_manager.apply_live_update(raw_id, p, game)
 
+                            challenge_manager.check_legend_emblem_unlocks_from_live_data(current_data)
+
                         # Discover map weapons from all players
                         map_weapons_manager.discover_from_game(current_data)
                         schedule_map_weapons_push("gameplay")
@@ -1422,45 +1756,89 @@ def monitor_game():
         time.sleep(2)
 
 def get_entry_point_html():
-    if not app_config or not app_config.get('live_path'):
+    if not app_config or (not app_config.get('live_path') and not currentgame_sync_manager.is_client_enabled(app_config)):
         return get_setup_html()
     return get_main_app_html()
 
 def on_closed():
     toggle_overlays_logic(False)
     toggle_graph_overlay_logic(False)
+    toggle_challenge_overlay_logic(False)
     toggle_xp_debugger_logic(False)
+    currentgame_sync_manager.stop_host()
+    currentgame_sync_manager.stop_relay_host(app_config)
     clear_discord_presence()
     os._exit(0)
 
 def startup_checks():
+    report_startup_progress("Checking remote settings...")
     refresh_remote_management()
     apply_remote_management()
+    report_startup_progress("Applying saved settings...")
+    currentgame_sync_manager.apply_config(app_config)
     configure_discord_presence()
     if app_config.get('overlays_enabled', False):
+        report_startup_progress("Starting overlays...")
         toggle_overlays_logic(True)
     if app_config.get('graph_overlay_enabled', False):
+        report_startup_progress("Starting graph overlays...")
         toggle_graph_overlay_logic(True)
+    if app_config.get('challenge_overlay_enabled', False):
+        report_startup_progress("Starting challenge overlay...")
+        toggle_challenge_overlay_logic(True)
     if app_config.get('xp_debugger_enabled', False):
+        report_startup_progress("Starting XP debugger...")
         toggle_xp_debugger_logic(True)
+    report_startup_progress("Starting background sync...")
     schedule_global_stats_sync("startup", force=False)
     schedule_custom_camos_sync("startup", force=False)
+    schedule_hosted_reward_asset_sync()
     schedule_map_weapons_startup_sync()
     schedule_map_challenges_sync("startup", force=False)
+    report_startup_progress("Opening BO3 Tracker...")
 
-if __name__ == "__main__":
-    sys.modules["bo3tracker"] = sys.modules["__main__"]
+def setup_window():
+    """Do all startup setup and create the webview window.
+    Returns the window without starting the GUI event loop.
+    The caller must call webview.start() separately.
+    """
+    global app_config, window
+    sys.modules["bo3tracker"] = sys.modules[__name__]
+    report_startup_progress("Migrating saved tracker files...")
     migrate_all_runtime_paths()
     config_path = get_runtime_path(CONFIG_FILE)
     if os.path.exists(config_path):
+        report_startup_progress("Loading tracker config...")
         app_config = load_json(config_path) or {}
     
+    report_startup_progress("Starting live game monitor...")
     t = threading.Thread(target=monitor_game)
     t.daemon = True
     t.start()
     
+    report_startup_progress("Building tracker window...")
     api = TrackerAPI()
     window = webview.create_window('BO3 Tracker & Camo Matrix', html=get_entry_point_html(), width=1300, height=900, background_color='#0b0c10', js_api=api)
     
     window.events.closed += on_closed
-    webview.start(func=startup_checks)
+    return window
+
+
+def main(on_app_ready=None):
+    setup_window()
+
+    def run_startup_checks():
+        try:
+            startup_checks()
+        finally:
+            if on_app_ready:
+                try:
+                    on_app_ready()
+                except Exception:
+                    pass
+
+    webview.start(func=run_startup_checks)
+
+if __name__ == "__main__":
+    sys.modules["bo3tracker"] = sys.modules["__main__"]
+    main()

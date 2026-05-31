@@ -264,7 +264,7 @@
         "feature_live_game": "Partie en direct : suit le rang, l’XP, les atouts, les armes, les dégâts et les temps de manche.",
         "feature_camo_matrix": "Matrice des camouflages : modifie localement ton profil chargé et prend en charge les étoiles de priorité.",
         "feature_career_profile": "Profil de carrière : résume les cartes archivées, les records, l’XP et les statistiques à long terme.",
-        "feature_challenges": "Défis : débloque des cartes, emblèmes, thèmes, objectifs hebdomadaires et opérations de cartes.",
+        "feature_challenges": "D?fis : d?verrouille des cartes d'appel, des embl?mes et des th?mes. Les objectifs hebdomadaires locaux tournent automatiquement, avec des op?rations de carte.",
         "feature_best_matches": "Meilleures parties : te permet d’épingler des parties remarquables depuis le tableau de bord en direct.",
         "faq_troubleshooting": "FAQ et dépannage",
         "uem_maps_upload": "Connexion à UEM Maps et téléversement des camouflages",
@@ -278,8 +278,8 @@
         "faq_missing_assets_body": "Utilise les Paramètres pour synchroniser la base de données des camouflages. S’il manque des icônes locales, conserve les dossiers camoimages, perk icons, rank icons, callingcards et emblems à côté de l’application.",
         "faq_challenges_reopen_title": "Les défis s’affichent mal après réouverture",
         "faq_challenges_reopen_body": "La progression de la partie en direct est enregistrée entre les lancements afin que la réouverture ne compte pas deux fois. Si tu dois repartir de zéro, utilise le bouton de réinitialisation des défis.",
-        "faq_weekly_map_title": "Les défis hebdomadaires ou de carte ne progressent pas",
-        "faq_weekly_map_body": "Les défis hebdomadaires ne comptent que l’activité valide pendant la rotation actuelle. Les opérations de carte nécessitent le bon lien Steam Workshop, et les opérations d’armes exigent que les données attendues de l’arme apparaissent dans le fichier en direct.",
+        "faq_weekly_map_title": "Les d?fis hebdomadaires ou de carte ne changent pas ou ne progressent pas",
+        "faq_weekly_map_body": "Les d?fis hebdomadaires sont g?n?r?s localement par l'application. 8 sont actifs ? la fois et ils se renouvellent au d?but de chaque semaine ISO. Ils ne comptent que l'activit? admissible apr?s le d?but de la rotation actuelle. Les op?rations de carte n?cessitent le bon lien Steam Workshop, et les op?rations d'arme n?cessitent que les donn?es d'arme attendues apparaissent dans le fichier en direct.",
         "faq_overlay_title": "La superposition est vide ou trop chargée",
         "faq_overlay_body": "Active la superposition en direct dans Personnalisation, puis active ou désactive des sections comme les atouts, les dégâts principaux, le rang, l’XP de partie et la progression du rang.",
         "faq_xp_title": "L’XP ou les rangs semblent étranges",
@@ -291,6 +291,8 @@
         "faq_updates_title": "Comment fonctionnent les mises à jour et l’annulation ?",
         "faq_updates_body": "Utilise les Paramètres pour vérifier les versions GitHub. Lorsqu’une version est disponible, le programme de mise à jour ferme puis redémarre le tracker. L’annulation restaure la version sauvegardée avant la dernière mise à jour si une copie est disponible.",
         "faq_backup_title": "Quand dois-je créer une sauvegarde ?",
-        "faq_backup_body": "Crée une sauvegarde avant de grosses modifications, des mises à jour ou un déplacement d’installation. La sauvegarde inclut les fichiers locaux de statistiques UEM comme stats_zm_0.cgp jusqu’à stats_zm_4.cgp."
+        "faq_backup_body": "Crée une sauvegarde avant de grosses modifications, des mises à jour ou un déplacement d’installation. La sauvegarde inclut les fichiers locaux de statistiques UEM comme stats_zm_0.cgp jusqu’à stats_zm_4.cgp.",
+        "faq_legend_emblems_title": "Les embl?mes de rang L?gende ne se d?bloquent pas",
+        "faq_legend_emblems_body": "Les embl?mes L?gende 1-10 se d?bloquent avec la valeur prestige_legend du Joueur 1. Ajoutez des fichiers d'embl?me personnalis?s nomm?s legend_1 ? legend_10 dans le dossier emblems, en PNG, JPG, WebP, GIF, MP4 ou WebM."
     }
 }

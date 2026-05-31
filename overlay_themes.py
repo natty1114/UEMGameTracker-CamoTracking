@@ -115,6 +115,12 @@ OVERLAY_THEMES = {
         "damage": "#ffb347", "divider": "#1b241f", "fallback": "#0a0f0c",
         "shadow": "0 0 14px rgba(104, 255, 90, 0.30)"
     },
+    "Extinction": {
+        "bg": "#030607", "panel": "#081012", "border": "#25f4ff",
+        "title": "#85fbff", "text": "#d6e6e7", "muted": "#84979b",
+        "damage": "#ffb14a", "divider": "#223036", "fallback": "#061012",
+        "shadow": "0 0 16px rgba(37, 244, 255, 0.30)"
+    },
     "cartoon_graffiti_theme": {
         "bg": "#14071f", "panel": "#1a0826", "border": "#ff3bd4",
         "title": "#ffe94f", "text": "#ffe9ff", "muted": "#c5a9d8",

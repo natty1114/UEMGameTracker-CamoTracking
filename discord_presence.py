@@ -22,6 +22,7 @@ class DiscordPresenceClient:
         self.last_error = ""
         self.last_response = {}
         self.last_activity_key = None
+        self.last_attempted_pipes = []
         self.start_time = int(time.time())
 
     def configure(self, client_id):
@@ -33,7 +34,11 @@ class DiscordPresenceClient:
 
     def _pipe_names(self):
         if os.name == "nt":
-            return [r"\\?\pipe\discord-ipc-{}".format(index) for index in range(10)]
+            names = []
+            for index in range(10):
+                names.append(r"\\.\pipe\discord-ipc-{}".format(index))
+                names.append(r"\\?\pipe\discord-ipc-{}".format(index))
+            return names
         runtime_dir = os.environ.get("XDG_RUNTIME_DIR") or os.environ.get("TMPDIR") or "/tmp"
         return [os.path.join(runtime_dir, "discord-ipc-{}".format(index)) for index in range(10)]
 
@@ -74,7 +79,9 @@ class DiscordPresenceClient:
             return False
 
         last_error = ""
+        self.last_attempted_pipes = []
         for pipe_name in self._pipe_names():
+            self.last_attempted_pipes.append(pipe_name)
             try:
                 if os.name == "nt":
                     self.conn = open(pipe_name, "r+b", buffering=0)
@@ -95,8 +102,16 @@ class DiscordPresenceClient:
                 last_error = str(exc)
                 self.close()
 
-        self.last_error = last_error or "Could not connect to Discord."
+        if os.name == "nt" and last_error and "No such file or directory" in last_error:
+            self.last_error = "Could not connect to Discord. Make sure Discord is running, then try again."
+        else:
+            self.last_error = last_error or "Could not connect to Discord."
         return False
+
+    def get_connection_diagnostics(self):
+        if not self.last_attempted_pipes:
+            return ""
+        return "Tried Discord IPC pipes: " + ", ".join(self.last_attempted_pipes)
 
     def update(self, details, state="", large_image="", large_text="", small_image="", small_text="", buttons=None, name="UEM Tracker"):
         activity = {

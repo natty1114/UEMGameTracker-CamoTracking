@@ -1,7 +1,12 @@
 import ast
 import csv
 import json
+import re
+import shutil
+import subprocess
+import sys
 import tempfile
+import types
 from pathlib import Path
 
 
@@ -17,9 +22,11 @@ PYTHON_FILES = [
     "app_paths.py",
     "asset_helpers.py",
     "best_matches.py",
+    "bo3tracker_launcher.py",
     "bo3tracker.py",
     "camo_processor.py",
     "challenge_system.py",
+    "currentgame_sync.py",
     "weapon_categories.py",
     "sync_map_challenges.py",
     "damage_memory.py",
@@ -50,11 +57,16 @@ DEV_TOOL_PYTHON_FILES = [
     "dev_tools/modules/challenge_manifest.py",
     "dev_tools/modules/ftp_uploader.py",
     "dev_tools/modules/global_stats_control.py",
+    "dev_tools/modules/local_weekly_templates.py",
     "dev_tools/modules/remote_management_manifest.py",
     "dev_tools/modules/validation.py",
 ]
 
 EXCLUDED_RELEASE_PY_FILES = {
+    "check_js.py",
+    "check_js2.py",
+    "check_js3.py",
+    "check_triple.py",
     "run_smoke_tests.py",
     "runner.py",
     "cloud_backup.py",
@@ -85,6 +97,52 @@ def test_python_syntax(failures):
             ok(f"Python syntax parses: {name}")
         except SyntaxError as exc:
             fail(failures, f"syntax error in {name}: {exc}")
+
+
+def test_generated_app_javascript_parses(failures):
+    node = shutil.which("node")
+    if not node:
+        fail(failures, "Node.js is required for generated app JavaScript syntax checking")
+        return
+
+    try:
+        from ui_main import build_main_app_html
+
+        try:
+            app_config = json.loads(read_text("config/config.json"))
+        except json.JSONDecodeError:
+            app_config = {}
+        css_content = read_text("style.css")
+        html = build_main_app_html(
+            css_content,
+            app_config,
+            "smoke-test",
+            "smoke-test",
+            "",
+            "smoke-test",
+        )
+        scripts = re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.S | re.I)
+        if len(scripts) < 2:
+            fail(failures, "generated app HTML does not contain the expected app script")
+            return
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            script_path = Path(temp_dir) / "generated_app_script.js"
+            script_path.write_text(scripts[-1], encoding="utf-8")
+            result = subprocess.run(
+                [node, "--check", str(script_path)],
+                cwd=str(ROOT),
+                text=True,
+                capture_output=True,
+                timeout=20,
+            )
+        if result.returncode == 0:
+            ok("generated app JavaScript parses with node --check")
+        else:
+            detail = (result.stderr or result.stdout or "").strip().splitlines()
+            fail(failures, "generated app JavaScript syntax check failed: " + (detail[0] if detail else "unknown error"))
+    except Exception as exc:
+        fail(failures, f"generated app JavaScript check crashed: {exc}")
 
 
 def test_version_metadata(failures):
@@ -346,6 +404,8 @@ def test_runner_contract(failures):
     for config_seed in [
         "config/map_challenges.json",
         "config/map_weapons.json",
+        "config/uem_base_weapons.json",
+        "config/uem_explosives.json",
     ]:
         if f'"{config_seed}"' in runner_text:
             ok(f"runner.py packages safe config seed: {config_seed}")
@@ -362,6 +422,28 @@ def test_runner_contract(failures):
             ok(f"runner.py blocks private marker during source copy: {label}")
         else:
             fail(failures, f"runner.py missing private marker block: {label}")
+
+    for required in ["assert_build_dependencies", '"webview", "pywebview"', "tk.Tk()", "BO3TRACKER_SLIM_REWARDS"]:
+        if required in runner_text:
+            ok(f"runner.py includes slim build guard: {required}")
+        else:
+            fail(failures, f"runner.py missing slim build guard: {required}")
+
+    if '"HELP_FAQ.md"' in runner_text:
+        ok("runner.py packages standalone Help & FAQ document")
+    else:
+        fail(failures, "runner.py missing packaged HELP_FAQ.md document")
+
+    slim_bat = ROOT / "run_slim_runner.bat"
+    if slim_bat.exists():
+        slim_text = slim_bat.read_text(encoding="utf-8", errors="replace")
+        for required in ["BO3TRACKER_SLIM_REWARDS=1", "BO3TRACKER_PYTHON", "LOCAL_PYTHON", "import PyInstaller, webview, tkinter as tk"]:
+            if required in slim_text:
+                ok(f"run_slim_runner.bat includes: {required}")
+            else:
+                fail(failures, f"run_slim_runner.bat missing: {required}")
+    else:
+        fail(failures, "missing run_slim_runner.bat")
 
 
 def test_updater_managed_paths_cover_runner_assets(failures):
@@ -404,19 +486,24 @@ def test_updater_managed_paths_cover_runner_assets(failures):
         else:
             fail(failures, f"updater.py MANAGED_PATHS missing runner asset: {asset}")
 
+    if "PRESERVED_CHILD_PATHS" in updater_text and '"themes": ["icon_cache"]' in updater_text:
+        ok("updater.py preserves cached hosted theme icons/fonts inside themes/icon_cache")
+    else:
+        fail(failures, "updater.py does not preserve themes/icon_cache during theme folder updates")
+
 
 def test_theme_contracts(failures):
     game_data_text = read_text("game_data.py")
     overlay_text = read_text("overlay_themes.py")
     ui_text = read_text("ui_main.py")
 
-    for theme in ["Clouds", "Dog Pack", "DeadOps Arcade", "Pacific Paradise", "Shi No Numa"]:
+    for theme in ["Clouds", "Dog Pack", "DeadOps Arcade", "Extinction", "Pacific Paradise", "Shi No Numa"]:
         if theme in game_data_text:
             ok(f"game_data.py marks always-available theme: {theme}")
         else:
             fail(failures, f"game_data.py missing always-available theme: {theme}")
 
-    for theme in ["Clouds", "Dog Pack", "Shi No Numa"]:
+    for theme in ["Clouds", "Dog Pack", "Extinction", "Shi No Numa"]:
         if f'"{theme}"' in overlay_text or f"'{theme}'" in overlay_text:
             ok(f"overlay_themes.py includes overlay palette: {theme}")
         else:
@@ -426,6 +513,26 @@ def test_theme_contracts(failures):
             ok(f"ui_main.py includes graph/settings theme support: {theme}")
         else:
             fail(failures, f"ui_main.py missing graph/settings theme support: {theme}")
+
+
+def test_compact_mode_contract(failures):
+    api_text = read_text("api_display.py")
+    ui_text = read_text("ui_main.py")
+    css_text = read_text("style.css")
+
+    checks = [
+        ("api_display.py exposes compact mode getter", api_text, "def get_compact_mode"),
+        ("api_display.py exposes compact mode setter", api_text, "def set_compact_mode"),
+        ("ui_main.py renders Compact Mode control", ui_text, "compact-mode-toggle"),
+        ("ui_main.py applies compact body class", ui_text, "document.body.classList.toggle('compact-mode'"),
+        ("style.css defines compact mode layout", css_text, "body.compact-mode .sidebar"),
+        ("style.css tightens compact cards", css_text, "body.compact-mode .card"),
+    ]
+    for label, text, needle in checks:
+        if needle in text:
+            ok(label)
+        else:
+            fail(failures, label)
 
 
 def test_management_tools_contract(failures):
@@ -449,6 +556,7 @@ def test_management_tools_contract(failures):
     for required in [
         "Global Stats",
         "Challenges",
+        "Weekly Templates",
         "Map Challenges",
         "Checks",
         "Run Smoke Tests",
@@ -463,6 +571,7 @@ def test_management_tools_contract(failures):
         "Preview Harder Targets",
         "Apply Preview",
         "Save Remote Config",
+        "Save Weekly Templates",
         "Fetch Name",
         "Use Stat Template",
         "Save Map Challenges",
@@ -492,6 +601,11 @@ def test_management_tools_contract(failures):
             ok(f"management validator includes: {required}")
         else:
             fail(failures, f"management validator missing: {required}")
+    for required in ["RESERVED_LEVEL_EMBLEMS", "discover_all_emblems", "is_reserved_level_emblem_reward", "reserved level-completion emblem"]:
+        if required in validation_text:
+            ok(f"management validator protects level-completion emblems: {required}")
+        else:
+            fail(failures, f"management validator missing level emblem protection: {required}")
 
     manifest_text = read_text("dev_tools/modules/challenge_manifest.py")
     if "blank_weekly_challenge" in manifest_text:
@@ -506,6 +620,33 @@ def test_management_tools_contract(failures):
         ok("challenge_manifest.py defines WEEKLY_TEMPLATES pool")
     else:
         fail(failures, "challenge_manifest.py missing WEEKLY_TEMPLATES pool")
+    if "RESERVED_LEVEL_EMBLEMS" in manifest_text and "set(emblems) - RESERVED_LEVEL_EMBLEMS" in manifest_text:
+        ok("challenge_manifest.py excludes level-completion emblems from random weekly rewards")
+    else:
+        fail(failures, "challenge_manifest.py can still choose reserved level-completion emblems")
+    if '"stat": "headshots", "target_range": (2000, 2000)' in manifest_text and "Gumball Addict" not in manifest_text:
+        ok("challenge_manifest.py random weekly pool replaces GobbleGums with 2,000 headshots")
+    else:
+        fail(failures, "challenge_manifest.py random weekly pool still has GobbleGums or lacks 2,000 headshots")
+
+    remote_manifest_text = read_text("dev_tools/modules/remote_management_manifest.py")
+    for required in [
+        'challenge.get("cat") == "weekly"',
+        'rotation.get("pool", [])',
+        '"enabled": bool(weekly_pool)',
+        '"pool": weekly_pool',
+        "_strip_reserved_level_emblem_reward",
+    ]:
+        if required in remote_manifest_text:
+            ok(f"remote management exports weekly pool: {required}")
+        else:
+            fail(failures, f"remote management missing weekly pool export: {required}")
+
+    admin_text = read_text("dev_tools/admin_gui.py")
+    if '"weekly_pool_count"' in admin_text:
+        ok("admin_gui.py reports weekly pool count when saving remote config")
+    else:
+        fail(failures, "admin_gui.py does not report weekly pool count")
 
     gui_text = read_text("dev_tools/admin_gui.py")
     if "Random Weekly" in gui_text:
@@ -524,6 +665,13 @@ def test_management_tools_contract(failures):
         ok("management GUI exposes map stat templates")
     else:
         fail(failures, "management GUI missing map stat templates")
+
+    weekly_text = read_text("dev_tools/modules/local_weekly_templates.py")
+    for required in ["load_local_weekly_templates", "save_local_weekly_templates", "LOCAL_WEEKLY_TEMPLATES"]:
+        if required in weekly_text:
+            ok(f"management local weekly helper includes: {required}")
+        else:
+            fail(failures, f"management local weekly helper missing: {required}")
 
     remote_manifest_text = read_text("dev_tools/modules/remote_management_manifest.py")
     for required in ["build_remote_management", "save_remote_management", "global_stats", "challenges"]:
@@ -559,11 +707,211 @@ def test_management_tools_contract(failures):
         else:
             fail(failures, f"remote management client missing: {required}")
 
+    discord_presence_text = read_text("discord_presence.py")
+    if r"\\.\pipe\discord-ipc-{}" in discord_presence_text and r"\\?\pipe\discord-ipc-{}" in discord_presence_text:
+        ok("discord_presence.py tries both known Windows Discord IPC pipe prefixes")
+    else:
+        fail(failures, "discord_presence.py is missing a Windows Discord IPC pipe prefix fallback")
+    if "Make sure Discord is running" in discord_presence_text:
+        ok("discord_presence.py shows a friendly Discord-not-running status")
+    else:
+        fail(failures, "discord_presence.py missing friendly Discord-not-running status")
+    if "get_connection_diagnostics" in discord_presence_text and "last_attempted_pipes" in discord_presence_text:
+        ok("discord_presence.py records Discord IPC connection diagnostics")
+    else:
+        fail(failures, "discord_presence.py missing Discord IPC connection diagnostics")
+
     challenge_manager_text = read_text("challenge_system.py")
     if "apply_remote_manifest" in challenge_manager_text:
         ok("challenge_system.py can apply remote manifests")
     else:
         fail(failures, "challenge_system.py missing remote manifest apply hook")
+    for required in ["LEGEND_EMBLEM_UNLOCKS", "check_legend_emblem_unlocks_from_live_data", "prestige_legend"]:
+        if required in challenge_manager_text:
+            ok(f"challenge_system.py supports legend emblem unlocks: {required}")
+        else:
+            fail(failures, f"challenge_system.py missing legend emblem unlock support: {required}")
+    if '"stat": "headshots", "target": 2000' in challenge_manager_text and "Weekly Precision" in challenge_manager_text:
+        ok("challenge_system.py uses 2,000 headshot weekly template")
+    else:
+        fail(failures, "challenge_system.py missing 2,000 headshot weekly template")
+    for title, target in [
+        ("Weekly Deep Run", 50),
+        ("Weekly Grinder", 30),
+        ("Weekly Soda Run", 50),
+        ("Weekly Addict", 100),
+        ("Weekly Marathon", 50),
+    ]:
+        if f'"target": {target}' in challenge_manager_text and title in challenge_manager_text:
+            ok(f"challenge_system.py keeps {title} at target {target}")
+        else:
+            fail(failures, f"challenge_system.py has an unexpected target for {title}")
+    if "Weekly Chewer" not in challenge_manager_text and '"stat": "gobblegums_used", "target": 250' not in challenge_manager_text:
+        ok("challenge_system.py no longer generates the GobbleGum weekly template")
+    else:
+        fail(failures, "challenge_system.py still includes the GobbleGum weekly template")
+    for required in ["RESERVED_LEVEL_EMBLEMS", "is_reserved_level_emblem", "strip_reserved_level_emblem_reward"]:
+        if required in challenge_manager_text:
+            ok(f"challenge_system.py reserves legend emblems for level completion: {required}")
+        else:
+            fail(failures, f"challenge_system.py missing level-only emblem guard: {required}")
+    for required in ["_repair_missing_reward_assignments", "_reward_asset_exists", "_replacement_reward_for", "_scan_available_reward_assets", "reward_pending"]:
+        if required in challenge_manager_text:
+            ok(f"challenge_system.py repairs deleted reward assignments: {required}")
+        else:
+            fail(failures, f"challenge_system.py missing deleted reward repair helper: {required}")
+    if "sync_hosted_reward_assets" in challenge_manager_text and "_sync_hosted_rewards_once" in challenge_manager_text:
+        ok("challenge_system.py syncs hosted reward assets before scanning reward pools")
+    else:
+        fail(failures, "challenge_system.py does not sync hosted reward assets before reward selection")
+    if "previous_pending and incoming_has_final_reward" in challenge_manager_text and "_pending_reward_pair" in challenge_manager_text and "_pending_reward_type" in challenge_manager_text:
+        ok("challenge_system.py lets remote map rewards replace pending placeholders")
+    else:
+        fail(failures, "challenge_system.py may preserve pending map rewards over final remote rewards")
+    if "replacement = self._replacement_reward_for(pending_type, used_pairs" in challenge_manager_text:
+        ok("challenge_system.py can dynamically assign unused rewards to pending map challenges")
+    else:
+        fail(failures, "challenge_system.py cannot dynamically assign unused rewards to pending map challenges")
+    if "get_synced_hosted_reward_assets" in challenge_manager_text and "hosted_only=True" in challenge_manager_text:
+        ok("challenge_system.py limits pending/repaired reward auto-pick to synced hosted assets")
+    else:
+        fail(failures, "challenge_system.py may auto-pick bundled local rewards for pending map rewards")
+
+    validation_text = read_text("dev_tools/modules/validation.py")
+    if "reward_pending" in validation_text and "not reward_pending" in validation_text:
+        ok("management validation allows pending reward placeholders")
+    else:
+        fail(failures, "management validation may reject pending reward placeholders")
+
+    try:
+        map_challenge_data = json.loads(read_text("config/map_challenges.json"))
+        map_challenges = map_challenge_data.get("challenges", [])
+    except json.JSONDecodeError as exc:
+        fail(failures, f"config/map_challenges.json is invalid JSON: {exc}")
+        map_challenges = []
+
+    giant_challenges = [
+        item for item in map_challenges
+        if isinstance(item, dict) and item.get("map_steam_link") == "zm_factory"
+    ]
+    if len(giant_challenges) == 12:
+        ok("config/map_challenges.json includes 12 The Giant base-map challenges")
+    else:
+        fail(failures, f"config/map_challenges.json expected 12 The Giant challenges, found {len(giant_challenges)}")
+    for required_id in ["map_zm_factory_01", "map_zm_factory_10", "map_zm_factory_11", "map_zm_factory_12"]:
+        if any(item.get("id") == required_id for item in giant_challenges):
+            ok(f"The Giant challenge exists: {required_id}")
+        else:
+            fail(failures, f"The Giant challenge missing: {required_id}")
+    if giant_challenges and all(item.get("reward_pending") is True for item in giant_challenges):
+        ok("The Giant rewards are marked as pending hosted assets")
+    else:
+        fail(failures, "The Giant rewards are not consistently marked reward_pending")
+    if giant_challenges and all(item.get("reward_type") == "none" and item.get("pending_reward_type") == "emblem" and item.get("pending_reward_val") == "" for item in giant_challenges):
+        ok("The Giant pending rewards dynamically choose unused emblem rewards")
+    else:
+        fail(failures, "The Giant pending rewards should use auto-pick pending emblem rewards and no active reward")
+    for console_name in ["tesla_gun", "hero_annihilator", "lmg_slowfire"]:
+        if any(item.get("weapon_console_name") == console_name for item in giant_challenges):
+            ok(f"The Giant weapon challenge targets {console_name}")
+        else:
+            fail(failures, f"The Giant weapon challenge missing {console_name}")
+
+    site_map_challenge_path = ROOT / "site" / "public_html" / "tracker" / "map_challenges.json"
+    if site_map_challenge_path.exists():
+        try:
+            site_map_challenge_data = json.loads(site_map_challenge_path.read_text(encoding="utf-8"))
+            site_map_challenges = site_map_challenge_data.get("challenges", [])
+        except json.JSONDecodeError as exc:
+            fail(failures, f"site map_challenges.json is invalid JSON: {exc}")
+            site_map_challenges = []
+
+        local_map_ids = {
+            item.get("id")
+            for item in map_challenges
+            if isinstance(item, dict) and item.get("id")
+        }
+        site_map_ids = {
+            item.get("id")
+            for item in site_map_challenges
+            if isinstance(item, dict) and item.get("id")
+        }
+        missing_site_ids = sorted(local_map_ids - site_map_ids)
+        if not missing_site_ids:
+            ok("site map_challenges.json includes every local map challenge")
+        else:
+            preview = ", ".join(missing_site_ids[:8])
+            if len(missing_site_ids) > 8:
+                preview += f", and {len(missing_site_ids) - 8} more"
+            fail(failures, f"site map_challenges.json is missing local challenge IDs: {preview}")
+
+        site_giant_challenges = [
+            item for item in site_map_challenges
+            if isinstance(item, dict) and item.get("map_steam_link") == "zm_factory"
+        ]
+        if site_giant_challenges and all(
+            item.get("reward_type") == "none"
+            and item.get("reward_pending") is True
+            and item.get("pending_reward_type") == "emblem"
+            and item.get("pending_reward_val") == ""
+            for item in site_giant_challenges
+        ):
+            ok("site map_challenges.json keeps The Giant pending rewards dynamic")
+        else:
+            fail(failures, "site map_challenges.json does not keep The Giant pending rewards dynamic")
+
+    reward_assets_text = read_text("reward_assets.py")
+    for required in ["REWARD_MANIFEST_FILES", "get_hosted_reward_assets", "get_cached_hosted_reward_assets", "get_synced_hosted_reward_assets", "get_hosted_reward_sync_status", "sync_hosted_reward_assets", "_scrape_directory_assets", "sync_theme_referenced_assets", "prepare_theme_css_for_display", "icon_cache"]:
+        if required in reward_assets_text:
+            ok(f"reward_assets.py supports hosted reward sync: {required}")
+        else:
+            fail(failures, f"reward_assets.py missing hosted reward sync helper: {required}")
+    for required in ['"running": False', '"downloaded": 0', '"pruned": 0', "Checking hosted reward assets", "Reward assets ready"]:
+        if required in reward_assets_text:
+            ok(f"reward_assets.py exposes hosted reward startup progress: {required}")
+        else:
+            fail(failures, f"reward_assets.py missing hosted reward startup progress: {required}")
+    for required in [
+        "SYNC_INDEX_FILE = \"hosted_reward_assets.json\"",
+        "protected_app_version",
+        "_ensure_protected_reward_baseline",
+        "_record_synced_reward_assets",
+        "_prune_stale_synced_reward_assets",
+        "_safe_local_reward_path",
+        "stale removed",
+    ]:
+        if required in reward_assets_text:
+            ok(f"reward_assets.py prunes stale hosted rewards safely: {required}")
+        else:
+            fail(failures, f"reward_assets.py missing stale hosted reward cleanup: {required}")
+
+    display_text = read_text("api_display.py")
+    if "check_legend_emblem_unlocks_from_live_data" in display_text:
+        ok("api_display.py refreshes legend emblem unlocks when loading emblems")
+    else:
+        fail(failures, "api_display.py does not refresh legend emblem unlocks when loading emblems")
+    if "is_reserved_level_emblem" in display_text:
+        ok("api_display.py ignores reserved legend emblems from completed challenge rewards")
+    else:
+        fail(failures, "api_display.py may expose reserved legend emblems from challenge rewards")
+    unlocked_rewards_loop = display_text.split("for c in _reward_challenges():", 1)[0]
+    if "not is_reserved_level_emblem(\"emblem\", emblem_name)" not in unlocked_rewards_loop:
+        ok("api_display.py allows level-unlocked legend emblems in the emblem selector")
+    else:
+        fail(failures, "api_display.py hides level-unlocked legend emblems from the emblem selector")
+    for required in ["def _asset_exists", "def _calling_card_exists", "def _emblem_exists", "get_unlocked_calling_cards", "get_unlocked_emblems"]:
+        if required in display_text:
+            ok(f"api_display.py filters reward selectors to existing asset files: {required}")
+        else:
+            fail(failures, f"api_display.py missing reward selector asset filter: {required}")
+    if "allow_download=False" in display_text and "get_cached_hosted_reward_assets" in display_text and "_reward_challenges()" in display_text:
+        ok("api_display.py keeps slim reward selectors fast while recognizing cached hosted emblems and calling cards")
+    else:
+        fail(failures, "api_display.py may block customization while checking hosted emblems/calling cards")
+    if "sync_theme_referenced_assets(raw_css)" in display_text and "prepare_theme_css_for_display(raw_css)" in display_text:
+        ok("api_display.py downloads and rewrites hosted theme references before inlining CSS")
+    else:
+        fail(failures, "api_display.py does not download and rewrite hosted theme references before inlining CSS")
 
     challenge_text = read_text("challenge_system.py")
     if "not c.get('cat') in ['daily', 'weekly']" not in challenge_text:
@@ -577,6 +925,55 @@ def test_management_tools_contract(failures):
             ok(f"ui_main.py exposes weekly challenges: {required}")
         else:
             fail(failures, f"ui_main.py missing weekly challenge support: {required}")
+    if "Array.from(select.options).some(opt => opt.value === current)" in ui_text:
+        ok("ui_main.py avoids blank reward selector values when an active reward was removed")
+    else:
+        fail(failures, "ui_main.py may still show blank reward selector values for removed active rewards")
+    for required in ["scheduleCustomizationRefresh", "customizationRefreshToken", "[1500, 4000, 8000]"]:
+        if required in ui_text:
+            ok(f"ui_main.py refreshes customization after hosted reward downloads: {required}")
+        else:
+            fail(failures, f"ui_main.py missing customization refresh support: {required}")
+    for required in ["startup-asset-sync", "startStartupAssetStatusPolling", "get_startup_asset_status", "Preparing Reward Assets"]:
+        if required in ui_text:
+            ok(f"ui_main.py shows hosted reward startup progress: {required}")
+        else:
+            fail(failures, f"ui_main.py missing hosted reward startup progress UI: {required}")
+    for required in ["history-copy-btn", "copyHistoryGameId", "copyTextToClipboard", "Copy game ID"]:
+        if required in ui_text:
+            ok(f"ui_main.py can copy archived match game IDs: {required}")
+        else:
+            fail(failures, f"ui_main.py missing archived match game ID copy support: {required}")
+
+    style_text = read_text("style.css")
+    for required in ["history-row-actions", "history-copy-btn", "--success"]:
+        if required in style_text:
+            ok(f"style.css styles archived match game ID copy controls: {required}")
+        else:
+            fail(failures, f"style.css missing archived match game ID copy styling: {required}")
+
+    system_text = read_text("api_system.py")
+    if "get_startup_asset_status" in system_text and "get_hosted_reward_sync_status" in system_text:
+        ok("api_system.py exposes hosted reward startup status to the UI")
+    else:
+        fail(failures, "api_system.py missing hosted reward startup status API")
+
+    bo3_text = read_text("bo3tracker.py")
+    if "schedule_hosted_reward_asset_sync" in bo3_text and "sync_hosted_reward_assets(force=False)" in bo3_text:
+        ok("bo3tracker.py starts hosted reward sync in the background")
+    else:
+        fail(failures, "bo3tracker.py does not start hosted reward sync in the background")
+    if "def main(on_app_ready=None)" in bo3_text and "set_startup_progress_callback" in bo3_text:
+        ok("bo3tracker.py exposes startup hooks for the pre-window splash")
+    else:
+        fail(failures, "bo3tracker.py missing startup hooks for the pre-window splash")
+
+    launcher_text = read_text("bo3tracker_launcher.py")
+    for required in ["StartupSplash", "ttk.Progressbar", "mode=\"indeterminate\"", "def pump", "setup_window"]:
+        if required in launcher_text:
+            ok(f"bo3tracker_launcher.py shows pre-window startup progress: {required}")
+        else:
+            fail(failures, f"bo3tracker_launcher.py missing pre-window startup progress support: {required}")
 
 
 def test_app_metadata_consistency(failures):
@@ -631,7 +1028,7 @@ def test_app_paths_contract(failures):
         else:
             fail(failures, f"app_paths.py missing: {required}")
 
-    for filename in ["config.json", "best_matches.json", "challenges.json", "map_challenges.json", "map_index_cache.json", "map_detail_summary.json"]:
+    for filename in ["config.json", "best_matches.json", "challenges.json", "hosted_reward_assets.json", "map_challenges.json", "map_index_cache.json", "map_detail_summary.json"]:
         if filename in paths_text:
             ok(f"app_paths.py tracks runtime file: {filename}")
         else:
@@ -692,6 +1089,102 @@ def test_api_data_pagination_contract(failures):
         fail(failures, "api_data.py get_map_detail missing page/per_page clamping")
 
 
+def test_api_data_map_detail_weapon_merge_contract(failures):
+    api_text = read_text("api_data.py")
+    for required in [
+        "MAP_DETAIL_SUMMARY_VERSION = 2",
+        "def _get_combined_weapon_data",
+        'for source_key in ("weapon_data", "top5")',
+        'for field in ("kills", "headshots", "damage")',
+        "existing[field] = max(safe_int(existing.get(field)), safe_int(weapon.get(field)))",
+        "weapons_data = self._get_combined_weapon_data(player)",
+        "w_data = self._get_combined_weapon_data(p)",
+        "weapons = self._get_combined_weapon_data(p)",
+        "map_weapons_manager.load()",
+        'cached.get("_version") == self.MAP_DETAIL_SUMMARY_VERSION',
+        '"_version": self.MAP_DETAIL_SUMMARY_VERSION',
+    ]:
+        if required in api_text:
+            ok(f"api_data.py map detail merges weapon sources: {required[:70]}")
+        else:
+            fail(failures, f"api_data.py map detail weapon merge missing: {required}")
+
+
+def test_map_weapons_category_override_contract(failures):
+    map_weapons_text = read_text("map_weapons.py")
+    admin_text = read_text("dev_tools/admin_gui.py")
+    weapon_categories_text = read_text("weapon_categories.py")
+    for required in [
+        "def set_weapon_category(self, steam_link, console_name, category, display_name=\"\")",
+        "display_name = str(display_name or console_name).strip()",
+        'entry["weapons"].append({',
+        "# Exact per-map entries are manual overrides for a specific console stat row.",
+        "# Finally, fall back to global/base weapons.",
+        "def get_console_category_override(self, console_name)",
+        "best_timestamp = -1",
+    ]:
+        if required in map_weapons_text:
+            ok(f"map_weapons.py supports exact category overrides: {required[:70]}")
+        else:
+            fail(failures, f"map_weapons.py missing exact category override behavior: {required}")
+
+    api_text = read_text("api_data.py")
+    for required in [
+        "console_category = map_weapons_manager.get_console_category_override(console_name)",
+        "console_category = map_weapons_manager.get_console_category_override(matched_console_name)",
+        "if console_category and console_category != \"other\":",
+    ]:
+        if required in api_text:
+            ok(f"api_data.py applies console category overrides: {required}")
+        else:
+            fail(failures, f"api_data.py missing console category override usage: {required}")
+
+    if "map_weapons_manager.set_weapon_category(link, cn, category, dn)" in admin_text:
+        ok("admin_gui.py passes display name when saving map weapon category overrides")
+    else:
+        fail(failures, "admin_gui.py does not pass display name to map weapon category overrides")
+
+    for required in [
+        '"bouncingbetty": "explosive"',
+        '"iw8_cr56": "assault_rifle"',
+        '"h2_rpg7": "launcher"',
+        '"t8_strife": "pistol"',
+        '"wpn_custom_spoon_01": "melee"',
+        '"iw7_xeon": "assault_rifle"',
+    ]:
+        if required in weapon_categories_text:
+            ok(f"weapon_categories.py classifies known map weapon: {required}")
+        else:
+            fail(failures, f"weapon_categories.py missing known map weapon category: {required}")
+
+    try:
+        map_weapon_data = json.loads(read_text("config/map_weapons.json"))
+    except json.JSONDecodeError as exc:
+        fail(failures, f"config/map_weapons.json is invalid JSON: {exc}")
+        map_weapon_data = {}
+
+    known_map_weapon_categories = {
+        "bouncingbetty": "explosive",
+        "iw8_cr56": "assault_rifle",
+        "h2_rpg7": "launcher",
+        "t8_strife": "pistol",
+        "wpn_custom_spoon_01": "melee",
+        "iw7_xeon_up": "assault_rifle",
+        "waw_ppsh": "smg",
+    }
+    all_map_weapons = [
+        weapon
+        for entry in map_weapon_data.values()
+        for weapon in entry.get("weapons", [])
+    ]
+    for console_name, expected_category in known_map_weapon_categories.items():
+        matching = [weapon for weapon in all_map_weapons if weapon.get("console_name") == console_name]
+        if any(weapon.get("category") == expected_category for weapon in matching):
+            ok(f"config/map_weapons.json backfills {console_name} as {expected_category}")
+        else:
+            fail(failures, f"config/map_weapons.json missing {console_name} category {expected_category}")
+
+
 def test_ui_main_map_detail_frontend(failures):
     ui_text = read_text("ui_main.py")
     for required in [
@@ -700,6 +1193,8 @@ def test_ui_main_map_detail_frontend(failures):
         "async function refreshMapSelection",
         "async function openMapSelectionPage",
         "async function openMapDetail",
+        "await loadWeaponDetail(selectedWeaponDetailName, true)",
+        "async function loadWeaponDetail(weaponName, preserveScroll=false)",
         "currentMapDetail && currentMapDetail.map",
         "mapSelectionData && mapSelectionData.length > 0",
     ]:
@@ -721,6 +1216,7 @@ def test_stats_processor_weapons_priority(failures):
 def test_map_challenge_ui_contract(failures):
     ui_text = read_text("ui_main.py")
     css_text = read_text("style.css")
+    system_text = read_text("api_system.py")
     for required in [
         "renderOperationsChallenges",
         "isMapChallenge",
@@ -728,11 +1224,41 @@ def test_map_challenge_ui_contract(failures):
         "map-challenge-section",
         "map-challenge-heading",
         "map-challenge-heading-link",
+        "mapChallengeOpenGroups",
+        "<details class=\"map-challenge-section\"",
+        "setMapChallengeOpenState",
+        "map-challenge-heading-progress",
     ]:
         if required in ui_text or required in css_text:
             ok(f"map challenge UI includes: {required}")
         else:
             fail(failures, f"map challenge UI missing: {required}")
+
+    for required in [
+        'id="mapcompat-btn" aria-disabled="true"',
+        "DISABLED: WORKSHOP IMAGE SCRIPTS",
+        "Map Compat is temporarily disabled until Steam Workshop image download scripts are fixed.",
+        ".nav-btn.disabled",
+    ]:
+        if required in ui_text or required in css_text or required in system_text:
+            ok(f"map compat disabled state includes: {required}")
+        else:
+            fail(failures, f"map compat disabled state missing: {required}")
+
+
+def test_tracker_config_backup_contract(failures):
+    bo3_text = read_text("bo3tracker.py")
+    for required in [
+        "RUNTIME_FILENAMES",
+        "add_backup_file",
+        "unlocked_rewards.json",
+        "newest_path = max(candidates, key=lambda path: os.path.getmtime(path))",
+        "challenge_manager.unlocked_rewards = challenge_manager._load_unlocks()",
+    ]:
+        if required in bo3_text:
+            ok(f"tracker config backup includes: {required}")
+        else:
+            fail(failures, f"tracker config backup missing: {required}")
 
 
 def test_workshop_images_contract(failures):
@@ -763,6 +1289,7 @@ def test_global_stats_weapon_summary_contract(failures):
     namespace = {}
     exec(compile(read_text("global_stats_client.py"), "global_stats_client.py", "exec"), namespace)
     summarize_weapons = namespace["summarize_weapons"]
+    summarize_match_file = namespace["summarize_match_file"]
     sync_history = namespace["sync_history"]
 
     players = {
@@ -794,6 +1321,72 @@ def test_global_stats_weapon_summary_contract(failures):
     else:
         fail(failures, "global stats still prefers stale top5 over weapon_data")
 
+    with tempfile.TemporaryDirectory() as temp_dir:
+        match_path = Path(temp_dir) / "Game_version_check.json"
+        match_path.write_text(json.dumps({
+            "game": {
+                "game_id": "version_check",
+                "map_played": "Version Check",
+                "rounds_total": 12,
+                "time_total": 600,
+            },
+            "players": {
+                "0": {"kills": 10, "headshots": 5}
+            },
+        }), encoding="utf-8")
+        summary = summarize_match_file(match_path, {"install_id": "test-install"})
+    if summary and summary.get("client_version") == namespace["APP_VERSION"]:
+        ok("global stats match summary includes client_version for recent matches")
+    else:
+        fail(failures, "global stats match summary missing client_version")
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        low_round_path = Path(temp_dir) / "Game_low_round.json"
+        low_round_path.write_text(json.dumps({
+            "game": {
+                "game_id": "low_round",
+                "map_played": "Low Round",
+                "rounds_total": 3,
+                "time_total": 240,
+            },
+            "players": {
+                "0": {"kills": 3, "headshots": 1}
+            },
+        }), encoding="utf-8")
+        low_round_summary = summarize_match_file(low_round_path, {"install_id": "test-install"})
+    if low_round_summary is None and "MIN_GLOBAL_STATS_ROUND = 4" in read_text("global_stats_client.py"):
+        ok("global stats client skips matches before round 4")
+    else:
+        fail(failures, "global stats client may upload matches before round 4")
+
+    global_stats_text = read_text("global_stats_client.py")
+    if '"client_version": APP_VERSION' in global_stats_text and '"app_version": APP_VERSION' in global_stats_text:
+        ok("global stats upload payload includes client_version alongside app_version")
+    else:
+        fail(failures, "global stats upload payload missing client_version")
+
+    submit_stats_text = read_text("site/public_html/tracker/submit_stats.php")
+    if (
+        "MIN_GLOBAL_STATS_ROUND = 4" in submit_stats_text
+        and "$roundReached < MIN_GLOBAL_STATS_ROUND" in submit_stats_text
+        and "($accepted + $updated + $duplicates) > 0" in submit_stats_text
+    ):
+        ok("global stats ingest rejects matches before round 4")
+    else:
+        fail(failures, "global stats ingest may still accept matches before round 4")
+
+    recent_matches_text = read_text("site/public_html/tracker/recent_matches.php")
+    if "MIN_GLOBAL_STATS_ROUND = 4" in recent_matches_text and "m.round_reached >= :min_round" in recent_matches_text:
+        ok("recent matches API filters out matches before round 4")
+    else:
+        fail(failures, "recent matches API may still show matches before round 4")
+
+    global_stats_php_text = read_text("site/public_html/tracker/global_stats.php")
+    if "MIN_GLOBAL_STATS_ROUND = 4" in global_stats_php_text and "WHERE round_reached >=" in global_stats_php_text and "m.round_reached >=" in global_stats_php_text:
+        ok("global stats API filters aggregate and weapon results to round 4+")
+    else:
+        fail(failures, "global stats API may still include matches before round 4")
+
     uploaded = {"match_hash": "already_uploaded", "game_id_hash": "game_a"}
     fresh = {"match_hash": "fresh_match", "game_id_hash": "game_b"}
     captured = {}
@@ -824,6 +1417,11 @@ def test_global_stats_weapon_summary_contract(failures):
 
 def test_runner_source_completeness(failures):
     runner_text = read_text("runner.py")
+
+    if 'MAIN_SCRIPT = "bo3tracker_launcher.py"' in runner_text:
+        ok("runner.py builds the startup splash launcher as the app entry point")
+    else:
+        fail(failures, "runner.py does not build the startup splash launcher as the app entry point")
 
     root_py_files = {p.name for p in ROOT.glob("*.py") if p.is_file()}
     expected = root_py_files - EXCLUDED_RELEASE_PY_FILES
@@ -897,6 +1495,19 @@ def test_graph_overlay_contract(failures):
     else:
         fail(failures, "bo3tracker.py startup_checks missing graph_overlay_enabled")
 
+    for required in [
+        "def get_saved_window_position",
+        "def remember_window_position",
+        "overlay_window_position",
+        "graph_overlay_window_position",
+        "window.screenX",
+        "remember_window_position(unified_window, \"overlay_window_position\", force=True)",
+    ]:
+        if required in bo3_text:
+            ok(f"bo3tracker.py persists overlay window positions: {required}")
+        else:
+            fail(failures, f"bo3tracker.py missing overlay position persistence: {required}")
+
     # api_system.py has graph overlay API methods
     system_text = read_text("api_system.py")
     for required in [
@@ -923,6 +1534,66 @@ def test_graph_overlay_contract(failures):
             ok(f"ui_main.py has graph overlay UI: {required[:60]}")
         else:
             fail(failures, f"ui_main.py missing graph overlay UI: {required}")
+
+    # challenge overlay has its own window, API, and card selection controls
+    for required in [
+        "def build_challenge_overlay_html",
+        "updateChallengeOverlay",
+        "applyChallengeOverlayTheme",
+        "setChallengeOverlayScale",
+    ]:
+        if required in graph_text:
+            ok(f"ui_views.py includes challenge overlay HTML: {required}")
+        else:
+            fail(failures, f"ui_views.py missing challenge overlay HTML: {required}")
+
+    for required in [
+        "challenge_overlay_window = None",
+        "def normalise_challenge_overlay_ids",
+        "def get_challenge_overlay_items",
+        "def challenge_overlay_loop",
+        "def toggle_challenge_overlay_logic",
+        "challenge_overlay_window_position",
+        "app_config.get('challenge_overlay_enabled', False)",
+    ]:
+        if required in bo3_text:
+            ok(f"bo3tracker.py includes challenge overlay lifecycle: {required}")
+        else:
+            fail(failures, f"bo3tracker.py missing challenge overlay lifecycle: {required}")
+
+    for required in [
+        "def get_challenge_overlay_settings",
+        "def toggle_challenge_overlay_system",
+        "def set_challenge_overlay_selection",
+    ]:
+        if required in system_text:
+            ok(f"api_system.py exposes challenge overlay API: {required}")
+        else:
+            fail(failures, f"api_system.py missing challenge overlay API: {required}")
+
+    for required in [
+        "challenge-overlay-toggle",
+        "challengeOverlaySelectedIds",
+        "refreshChallengeOverlaySettings",
+        "toggleChallengeOverlaySelection",
+        "challenge-track-btn",
+        "You can track a maximum of 3 challenges at a time.",
+    ]:
+        if required in ui_text:
+            ok(f"ui_main.py includes challenge overlay controls: {required}")
+        else:
+            fail(failures, f"ui_main.py missing challenge overlay controls: {required}")
+
+    css_text = read_text("style.css")
+    for required in [
+        ".challenge-overlay-picker",
+        ".challenge-overlay-pill",
+        ".challenge-track-btn",
+    ]:
+        if required in css_text:
+            ok(f"style.css styles challenge overlay controls: {required}")
+        else:
+            fail(failures, f"style.css missing challenge overlay style: {required}")
 
     # chart.js asset is bundled
     if Path(ROOT / "chart.js").is_file():
@@ -952,9 +1623,127 @@ def test_graph_overlay_contract(failures):
         fail(failures, "api_data.py category_breakdown missing damage field")
 
 
+def test_career_profile_recent_additions(failures):
+    ui_text = read_text("ui_main.py")
+    api_data_text = read_text("api_data.py")
+    api_system_text = read_text("api_system.py")
+    css_text = read_text("style.css")
+    faq_text = read_text("HELP_FAQ.md")
+
+    for required in [
+        "life_shot_acc",
+        "life_shot_acc_row",
+        "shots_hit",
+        "shots_missed",
+        "shots_fired",
+    ]:
+        if required in ui_text or required in api_data_text:
+            ok(f"career shot accuracy wiring includes: {required}")
+        else:
+            fail(failures, f"career shot accuracy wiring missing: {required}")
+
+    for required in [
+        "let xpTrendTooltipRows = []",
+        "function formatXpTrendAxisLabel",
+        "maxRotation: 0",
+        "autoSkipPadding: 22",
+        "return row.date ? [row.map, row.date] : row.map",
+    ]:
+        if required in ui_text:
+            ok(f"career XP trend labels include: {required}")
+        else:
+            fail(failures, f"career XP trend labels missing: {required}")
+
+    if "return label.replace(/\\\\n.*/, '')" not in ui_text:
+        ok("career XP trend no longer uses fragile generated regex tooltip stripping")
+    else:
+        fail(failures, "career XP trend still uses fragile generated regex tooltip stripping")
+
+    for required in [
+        "def get_diagnostics_status",
+        "glob.glob(os.path.join(hist_path, \"Game_*.json\"))",
+        "get_hosted_reward_sync_status",
+        "global_stats_last_message",
+    ]:
+        if required in api_system_text:
+            ok(f"diagnostics backend includes: {required}")
+        else:
+            fail(failures, f"diagnostics backend missing: {required}")
+
+    for required in [
+        "diagnostics-panel",
+        "loadDiagnosticsPanel",
+        "diagnostic-chip",
+        "diagnostics-card",
+    ]:
+        if required in ui_text or required in css_text:
+            ok(f"diagnostics frontend includes: {required}")
+        else:
+            fail(failures, f"diagnostics frontend missing: {required}")
+
+    for required in [
+        "https://discord.com/users/140242942773297153",
+        "discord-contact-panel",
+        "discord-contact-button",
+        "discord-contact-icon",
+        "discord-contact-action",
+        "discord-contact-copy-btn",
+        "copySupportDiscord",
+        "GurtLushSalmon",
+    ]:
+        if required in ui_text or required in css_text:
+            ok(f"help Discord contact UI includes: {required}")
+        else:
+            fail(failures, f"help Discord contact UI missing: {required}")
+
+    for required in [
+        "## Support Contact",
+        "GurtLushSalmon",
+        "Discord profile button",
+        "https://discord.com/users/140242942773297153",
+        "CurrentGame.json",
+    ]:
+        if required in faq_text:
+            ok(f"HELP_FAQ.md includes: {required}")
+        else:
+            fail(failures, f"HELP_FAQ.md missing: {required}")
+
+    namespace_backup = sys.modules.get("bo3tracker")
+    try:
+        from api_data import DataAPI
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            dummy = types.SimpleNamespace(
+                app_config={"history_path": temp_dir},
+                get_live_game_data=lambda: {
+                    "players": {
+                        "0": {
+                            "shots_hit": 75,
+                            "shots_missed": 25,
+                            "shots_fired": 100,
+                        }
+                    }
+                },
+            )
+            sys.modules["bo3tracker"] = dummy
+            stats = DataAPI().get_lifetime_stats()
+        if stats["ratios"]["shot_accuracy"] == 75.0:
+            ok("career shot accuracy computes shots_hit / shots_fired")
+        else:
+            fail(failures, f"career shot accuracy returned unexpected value: {stats['ratios'].get('shot_accuracy')}")
+    except Exception as exc:
+        fail(failures, f"career shot accuracy behavior check crashed: {exc}")
+    finally:
+        if namespace_backup is not None:
+            sys.modules["bo3tracker"] = namespace_backup
+        else:
+            sys.modules.pop("bo3tracker", None)
+
+
 def main():
     failures = []
     test_python_syntax(failures)
+    test_generated_app_javascript_parses(failures)
     test_api_circular_import_safety(failures)
     test_version_metadata(failures)
     test_core_assets(failures)
@@ -965,6 +1754,7 @@ def main():
     test_best_match_sanitizer_behavior(failures)
     test_runner_contract(failures)
     test_theme_contracts(failures)
+    test_compact_mode_contract(failures)
     test_management_tools_contract(failures)
     test_app_metadata_consistency(failures)
     test_ftp_uploader_contract(failures)
@@ -972,13 +1762,17 @@ def main():
     test_updater_managed_paths_cover_runner_assets(failures)
     test_api_data_map_index_contract(failures)
     test_api_data_pagination_contract(failures)
+    test_api_data_map_detail_weapon_merge_contract(failures)
+    test_map_weapons_category_override_contract(failures)
     test_ui_main_map_detail_frontend(failures)
     test_stats_processor_weapons_priority(failures)
     test_map_challenge_ui_contract(failures)
+    test_tracker_config_backup_contract(failures)
     test_workshop_images_contract(failures)
     test_global_stats_weapon_summary_contract(failures)
     test_runner_source_completeness(failures)
     test_graph_overlay_contract(failures)
+    test_career_profile_recent_additions(failures)
 
     if failures:
         print(f"\n{len(failures)} smoke test failure(s).")

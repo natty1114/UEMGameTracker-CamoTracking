@@ -5,7 +5,7 @@ import shutil
 import zipfile
 
 # Name of your main script
-MAIN_SCRIPT = "bo3tracker.py"
+MAIN_SCRIPT = "bo3tracker_launcher.py"
 # Name of the resulting executable
 EXE_NAME = "BO3Tracker"
 UPDATER_SCRIPT = "updater.py"
@@ -62,6 +62,33 @@ def get_app_version():
     return version
 
 
+def assert_build_dependencies():
+    required = [
+        ("PyInstaller", "pyinstaller"),
+        ("webview", "pywebview"),
+    ]
+    missing = [package for module, package in required if importlib.util.find_spec(module) is None]
+    if missing:
+        fail(
+            "Missing build dependencies: "
+            + ", ".join(missing)
+            + ". Use the same Python environment as the working full build, or install them with: python -m pip install "
+            + " ".join(missing)
+        )
+    try:
+        import tkinter as tk
+
+        root = tk.Tk()
+        root.withdraw()
+        root.destroy()
+    except Exception as exc:
+        fail(
+            "Missing usable Tcl/Tk for the startup splash and updater UI. "
+            "Use a Python install with tkinter/Tcl-Tk enabled for release builds. "
+            f"Original error: {exc}"
+        )
+
+
 def create_release_zip(release_dir, version):
     zip_name = f"{EXE_NAME}-{version}.zip"
     if os.path.exists(zip_name):
@@ -93,9 +120,9 @@ def build_map_compat_release(release_dir):
 
 
 def build():
-    import PyInstaller.__main__
-
     print("--- STARTING COMPILATION ---")
+    assert_build_dependencies()
+    import PyInstaller.__main__
 
     if not os.path.exists(MAIN_SCRIPT):
         fail(f"Main script not found: {MAIN_SCRIPT}")
@@ -113,6 +140,9 @@ def build():
         '--clean',          # Clean cache before building
         '--noupx',          # Disable UPX to reduce AV false positives
         '--version-file=version_info_bo3tracker.txt',
+        '--hidden-import=bo3tracker',
+        '--hidden-import=reward_assets',
+        '--hidden-import=app_paths',
     ]
     
     # Run PyInstaller
@@ -187,6 +217,11 @@ def build():
         "themes/grafftiimage.png",
     ]
 
+    if os.environ.get("BO3TRACKER_SLIM_REWARDS", "").strip() == "1":
+        slim_assets = {"callingcards", "emblems", "themes", "themes/grafftiimage.png"}
+        assets_to_copy = [asset for asset in assets_to_copy if asset not in slim_assets]
+        print("Slim reward build enabled: hosted fallback will fetch calling cards, emblems, and themes on demand.")
+
     for asset in assets_to_copy:
         if os.path.exists(asset):
             target = os.path.join(release_dir, asset)
@@ -194,6 +229,9 @@ def build():
                 shutil.copytree(asset, target)
                 print(f"Copied folder: {asset}")
             else:
+                target_dir = os.path.dirname(target)
+                if target_dir:
+                    os.makedirs(target_dir, exist_ok=True)
                 shutil.copy(asset, target)
                 print(f"Copied file: {asset}")
         else:
@@ -205,6 +243,8 @@ def build():
     config_seeds_to_copy = [
         "config/map_challenges.json",
         "config/map_weapons.json",
+        "config/uem_base_weapons.json",
+        "config/uem_explosives.json",
     ]
     for config_seed in config_seeds_to_copy:
         if os.path.exists(config_seed):
@@ -225,12 +265,14 @@ def build():
         "api_data.py",
         "api_network.py",
         "api_system.py",
+        "bo3tracker_launcher.py",
         "bo3tracker.py",
         "asset_helpers.py",
         "app_metadata.py",
         "app_paths.py",
         "best_matches.py",
         "camo_processor.py",
+        "currentgame_sync.py",
         "custom_camos_sync.py",
         "discord_presence.py",
         "ui_main.py",
@@ -240,6 +282,7 @@ def build():
         "file_utils.py",
         "player_stats_backup.py",
         "remote_management_client.py",
+        "reward_assets.py",
         "version_utils.py",
         "damage_memory.py",
         "stats_processor.py",
@@ -254,13 +297,30 @@ def build():
         "workshop_images.py",
         "global_stats_client.py",
         "updater.py",
+        "HELP_FAQ.md",
         "DEV_LOG.md",
         "CHANGELOG_4.0.0.md",
         "CHANGELOG_4.0.1.md",
         "CHANGELOG_4.2.md",
         "CHANGELOG_4.4.0.md",
         "CHANGELOG_4.5.0.md",
-        "CHANGELOG_4.6.0.md"
+        "CHANGELOG_4.6.0.md",
+        "CHANGELOG_4.6.1.md",
+        "CHANGELOG_4.6.2.md",
+        "CHANGELOG_4.6.3.md",
+        "CHANGELOG_4.6.4.md",
+        "CHANGELOG_4.6.5.md",
+        "CHANGELOG_4.6.6.md",
+        "CHANGELOG_4.6.8.md",
+        "CHANGELOG_4.6.9.md",
+        "CHANGELOG_4.7.0.md",
+        "CHANGELOG_4.7.1.md",
+        "CHANGELOG_4.7.2.md",
+        "CHANGELOG_4.7.3.md",
+        "CHANGELOG_4.7.4.md",
+        "CHANGELOG_4.7.5.md",
+        "CHANGELOG_4.7.6.md",
+        "CHANGELOG_4.7.7.md"
     ]
 
     for source_file in source_scripts:

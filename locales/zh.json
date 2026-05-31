@@ -325,7 +325,7 @@
         "feature_live_game": "实时游戏：追踪等级、XP、特长、武器、伤害和回合时间。",
         "feature_camo_matrix": "迷彩矩阵：在本地编辑已加载的配置文件，并支持优先星标。",
         "feature_career_profile": "生涯档案：汇总已存档地图、纪录、XP 和长期统计。",
-        "feature_challenges": "挑战：解锁卡片、徽章、主题、每周目标和地图行动。",
+        "feature_challenges": "??????????????????????????????????",
         "feature_best_matches": "最佳比赛：允许你从实时面板固定精选比赛。",
         "faq_troubleshooting": "常见问题与故障排除",
         "uem_maps_upload": "UEM Maps 登录和迷彩上传",
@@ -339,8 +339,8 @@
         "faq_missing_assets_body": "使用设置来同步迷彩数据库。如果本地图标缺失，请将 camoimages、perk icons、rank icons、callingcards 和 emblems 文件夹保留在应用旁边。",
         "faq_challenges_reopen_title": "重新打开后挑战显示异常",
         "faq_challenges_reopen_body": "实时比赛进度会在启动之间保存，避免重新打开时重复计数。如果需要从零开始，请使用挑战重置按钮。",
-        "faq_weekly_map_title": "每周或地图挑战没有进度",
-        "faq_weekly_map_body": "每周挑战只统计当前轮换期间的有效活动。地图行动需要正确的 Steam Workshop 链接，武器行动需要实时文件中出现预期的武器数据。",
+        "faq_weekly_map_title": "????????????????",
+        "faq_weekly_map_body": "????????????????? 8 ??????? ISO ?????????????????????????????????? Steam Workshop ?????????????????????????",
         "faq_overlay_title": "叠加层为空或过于拥挤",
         "faq_overlay_body": "在自定义中启用实时叠加层，然后切换特长、最高伤害、等级、比赛 XP 和等级进度等分区。",
         "faq_xp_title": "XP 或等级看起来异常",
@@ -352,6 +352,8 @@
         "faq_updates_title": "更新和回滚如何工作？",
         "faq_updates_body": "使用设置检查 GitHub 版本。当有可用版本时，更新器会关闭并重启追踪器。如果存在可用副本，回滚会恢复上次更新前保存的版本。",
         "faq_backup_title": "我什么时候应该创建备份？",
-        "faq_backup_body": "在大规模编辑、更新或移动安装之前创建备份。备份包括 stats_zm_0.cgp 到 stats_zm_4.cgp 等本地 UEM 统计文件。"
+        "faq_backup_body": "在大规模编辑、更新或移动安装之前创建备份。备份包括 stats_zm_0.cgp 到 stats_zm_4.cgp 等本地 UEM 统计文件。",
+        "faq_legend_emblems_title": "??????????",
+        "faq_legend_emblems_body": "?? 1-10 ??????? 1 ? prestige_legend ?????? emblems ???????? legend_1 ? legend_10 ??????????? PNG?JPG?WebP?GIF?MP4 ? WebM?"
     }
 }

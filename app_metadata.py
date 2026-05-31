@@ -6,7 +6,7 @@ import sys
 
 
 VERSION_FILE = "app_version.json"
-DEFAULT_VERSION = "4.6.2"
+DEFAULT_VERSION = "4.7.7"
 
 
 def get_base_path():
@@ -28,12 +28,14 @@ def load_metadata():
     remote_management_url = str(data.get("remote_management_url") or "").strip()
     map_weapons_sync_url = str(data.get("map_weapons_sync_url") or "").strip()
     map_challenges_sync_url = str(data.get("map_challenges_sync_url") or "").strip()
+    currentgame_relay_url = str(data.get("currentgame_relay_url") or "").strip()
     return {
         "version": version,
         "global_stats_prompt_version": prompt_version,
         "remote_management_url": remote_management_url,
         "map_weapons_sync_url": map_weapons_sync_url,
         "map_challenges_sync_url": map_challenges_sync_url,
+        "currentgame_relay_url": currentgame_relay_url,
     }
 
 
@@ -43,3 +45,4 @@ GLOBAL_STATS_PROMPT_VERSION = APP_METADATA["global_stats_prompt_version"]
 REMOTE_MANAGEMENT_URL = APP_METADATA["remote_management_url"]
 MAP_WEAPONS_SYNC_URL = APP_METADATA["map_weapons_sync_url"]
 MAP_CHALLENGES_SYNC_URL = APP_METADATA["map_challenges_sync_url"]
+CURRENTGAME_RELAY_URL = APP_METADATA["currentgame_relay_url"]

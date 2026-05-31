@@ -66,6 +66,10 @@ PRESERVED_PATHS = {
     "workshop_image_cache",
 }
 
+PRESERVED_CHILD_PATHS = {
+    "themes": ["icon_cache"],
+}
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="BO3 Tracker optional updater")
@@ -141,11 +145,38 @@ def first_payload_root(extract_dir):
     return extract_dir
 
 
-def copy_path(source, target):
+def copy_path(source, target, preserved_children=None):
     if source.is_dir():
+        temp_root = None
+        preserved = []
+        if target.exists() and preserved_children:
+            temp_root = Path(tempfile.mkdtemp(prefix="bo3tracker_preserve_"))
+            for child in preserved_children:
+                source_child = target / child
+                if not source_child.exists():
+                    continue
+                temp_child = temp_root / child
+                temp_child.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(source_child), str(temp_child))
+                preserved.append((child, temp_child))
+
         if target.exists():
             shutil.rmtree(target)
         shutil.copytree(source, target)
+
+        try:
+            for child, temp_child in preserved:
+                target_child = target / child
+                if target_child.exists():
+                    if target_child.is_dir():
+                        shutil.rmtree(target_child)
+                    else:
+                        target_child.unlink()
+                target_child.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(temp_child), str(target_child))
+        finally:
+            if temp_root:
+                shutil.rmtree(temp_root, ignore_errors=True)
     else:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
@@ -219,7 +250,7 @@ def install_update(payload_dir, install_dir, status, progress_bar):
     progress_bar["value"] = 0
     for idx, name in enumerate(to_install, start=1):
         status.set(f"Installing: {name}")
-        copy_path(payload_dir / name, install_dir / name)
+        copy_path(payload_dir / name, install_dir / name, PRESERVED_CHILD_PATHS.get(name))
         progress_bar["value"] = idx
         progress_bar.winfo_toplevel().update_idletasks()
 

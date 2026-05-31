@@ -18,13 +18,14 @@ from game_data import (
     UPDATER_EXE_NAME,
 )
 from remote_management_client import fetch_remote_management
-from version_utils import parse_version_parts, is_version_newer, get_updater_launch_path
+from version_utils import parse_version_parts, is_version_newer, get_updater_launch_path, count_newer_release_versions
 from file_utils import load_json
 
 
 class NetworkAPI:
     # --- Updates ---
     def check_for_updates(self):
+        stale_update_threshold = 4
         try:
             request = urllib.request.Request(
                 GITHUB_RELEASES_API,
@@ -61,8 +62,30 @@ class NetworkAPI:
                 "success": True,
                 "update_available": False,
                 "version": version,
+                "newer_release_count": 0,
+                "stale_update_threshold": stale_update_threshold,
+                "stale_update_notice": False,
                 "msg": f"You are on the latest version ({APP_VERSION}).",
             }
+
+        newer_release_count = 1
+        try:
+            releases_url = GITHUB_RELEASES_API.rsplit("/", 1)[0] + "?per_page=30"
+            request = urllib.request.Request(
+                releases_url,
+                headers={
+                    "Accept": "application/vnd.github+json",
+                    "User-Agent": f"BO3Tracker/{APP_VERSION}",
+                },
+            )
+            with urllib.request.urlopen(request, timeout=8) as response:
+                releases = json.loads(response.read().decode("utf-8"))
+            newer_release_count = max(
+                1,
+                count_newer_release_versions(releases, APP_VERSION),
+            )
+        except Exception:
+            newer_release_count = 1
 
         return {
             "success": True,
@@ -74,6 +97,9 @@ class NetworkAPI:
             "download_url": zip_asset.get("browser_download_url"),
             "asset_name": zip_asset.get("name"),
             "html_url": release.get("html_url"),
+            "newer_release_count": newer_release_count,
+            "stale_update_threshold": stale_update_threshold,
+            "stale_update_notice": newer_release_count >= stale_update_threshold,
         }
 
     def get_latest_changelog(self):
@@ -176,14 +202,24 @@ class NetworkAPI:
 
     # --- Discord Presence ---
     def get_discord_presence_settings(self):
+        image_source = str(_bt().app_config.get("discord_presence_image_source", "workshop") or "workshop").strip().lower()
+        if image_source not in ("workshop", "emblem"):
+            image_source = "workshop"
         return {
             "enabled": bool(_bt().app_config.get("discord_presence_enabled", False)),
             "client_id": _bt().get_discord_presence_client_id(),
             "large_image": str(_bt().app_config.get("discord_presence_large_image", "") or ""),
+            "image_source": image_source,
             "status": str(_bt().app_config.get("discord_presence_last_status", "") or ""),
+            "diagnostics": discord_presence.get_connection_diagnostics(),
         }
 
-    def save_discord_presence_settings(self, enabled, client_id, large_image=""):
+    def save_discord_presence_settings(self, enabled, client_id, large_image="", image_source=None):
+        if image_source is not None:
+            image_source = str(image_source or "workshop").strip().lower()
+            if image_source not in ("workshop", "emblem"):
+                image_source = "workshop"
+            _bt().app_config["discord_presence_image_source"] = image_source
         _bt().app_config["discord_presence_enabled"] = bool(enabled)
         _bt().app_config["discord_presence_client_id"] = str(client_id or "").strip()
         _bt().app_config["discord_presence_large_image"] = str(large_image or "").strip()
@@ -201,10 +237,9 @@ class NetworkAPI:
             _bt().save_app_config()
             return {"success": False, "msg": _bt().app_config["discord_presence_last_status"]}
 
-        live_path = _bt().app_config.get("live_path")
-        if live_path and os.path.exists(live_path):
+        current_data = _bt().get_live_game_data()
+        if current_data:
             try:
-                current_data = load_json(live_path) or {}
                 ok = _bt().update_discord_presence_from_game(current_data, force=True)
                 msg = _bt().app_config.get("discord_presence_last_status") or ("Connected to Discord." if ok else discord_presence.last_error)
                 return {"success": bool(ok), "msg": msg}

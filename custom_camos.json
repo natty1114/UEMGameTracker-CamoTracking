@@ -4431,5 +4431,16 @@
         "packedName": "Spatz-447 +",
         "camo": "",
         "image": ""
+    },
+    {
+        "id": 404,
+        "map": "Cyber Space",
+        "mapUrl": "",
+        "GameType": "Call of Duty: Black Ops 4",
+        "type": "Assault Rifles",
+        "name": "Hitchcock M9",
+        "packedName": "Walking Nightmare",
+        "camo": "",
+        "image": ""
     }
 ]

@@ -2,11 +2,11 @@
 
 
 a = Analysis(
-    ['bo3tracker.py'],
+    ['bo3tracker_launcher.py'],
     pathex=[],
     binaries=[],
     datas=[],
-    hiddenimports=[],
+    hiddenimports=['bo3tracker', 'reward_assets', 'app_paths'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

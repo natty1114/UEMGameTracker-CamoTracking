@@ -264,7 +264,7 @@
         "feature_live_game": "Live-Spiel: verfolgt Rang, XP, Vorteile, Waffen, Schaden und Rundenzeiten.",
         "feature_camo_matrix": "Tarnungsmatrix: bearbeitet dein geladenes Profil lokal und unterstützt Prioritätssterne.",
         "feature_career_profile": "Karriereprofil: fasst archivierte Karten, Rekorde, XP und Langzeitstatistiken zusammen.",
-        "feature_challenges": "Challenges: schaltet Karten, Embleme, Designs, Wochenziele und Kartenoperationen frei.",
+        "feature_challenges": "Herausforderungen: Schaltet Visitenkarten, Embleme und Designs frei. Lokale Wochenziele rotieren automatisch, dazu kommen Kartenoperationen.",
         "feature_best_matches": "Beste Spiele: ermöglicht es dir, besondere Spiele aus dem Live-Dashboard anzuheften.",
         "faq_troubleshooting": "FAQ und Fehlerbehebung",
         "uem_maps_upload": "UEM-Maps-Anmeldung und Tarnungsupload",
@@ -278,8 +278,8 @@
         "faq_missing_assets_body": "Nutze die Einstellungen, um die Tarnungsdatenbank zu synchronisieren. Wenn lokale Symbole fehlen, behalte die Ordner camoimages, perk icons, rank icons, callingcards und emblems neben der App.",
         "faq_challenges_reopen_title": "Challenges sehen nach dem erneuten Öffnen falsch aus",
         "faq_challenges_reopen_body": "Der Fortschritt des Live-Spiels wird zwischen Starts gespeichert, damit ein erneutes Öffnen nicht doppelt zählt. Wenn du neu beginnen musst, verwende die Schaltfläche zum Zurücksetzen der Challenges.",
-        "faq_weekly_map_title": "Wöchentliche oder kartenbezogene Challenges schreiten nicht voran",
-        "faq_weekly_map_body": "Wöchentliche Challenges zählen nur gültige Aktivität während der aktuellen Rotation. Kartenoperationen benötigen den korrekten Steam-Workshop-Link, und Waffenoperationen erfordern, dass die erwarteten Waffendaten in der Live-Datei erscheinen.",
+        "faq_weekly_map_title": "W?chentliche oder Karten-Herausforderungen ?ndern sich nicht oder machen keinen Fortschritt",
+        "faq_weekly_map_body": "W?chentliche Herausforderungen werden lokal von der App generiert. Es sind jeweils 8 aktiv, und sie werden zu Beginn jeder ISO-Woche aktualisiert. Sie z?hlen nur passende Aktivit?t nach dem Start der aktuellen Rotation. Kartenoperationen ben?tigen den passenden Steam-Workshop-Link, und Waffenoperationen ben?tigen die erwarteten Waffendaten in der Live-Datei.",
         "faq_overlay_title": "Das Overlay ist leer oder zu überladen",
         "faq_overlay_body": "Aktiviere das Live-Overlay unter Anpassung und schalte dann Bereiche wie Vorteile, höchsten Schaden, Rang, Spiel-XP und Rangfortschritt um.",
         "faq_xp_title": "XP oder Ränge wirken ungewöhnlich",
@@ -291,6 +291,8 @@
         "faq_updates_title": "Wie funktionieren Updates und Zurücksetzen?",
         "faq_updates_body": "Nutze die Einstellungen, um GitHub-Versionen zu prüfen. Wenn eine verfügbar ist, schließt und startet der Updater den Tracker neu. Das Zurücksetzen stellt die vor dem letzten Update gespeicherte Version wieder her, sofern eine Kopie verfügbar ist.",
         "faq_backup_title": "Wann sollte ich eine Sicherung erstellen?",
-        "faq_backup_body": "Erstelle eine Sicherung vor größeren Änderungen, Updates oder dem Verschieben von Installationen. Die Sicherung enthält lokale UEM-Statistikdateien wie stats_zm_0.cgp bis stats_zm_4.cgp."
+        "faq_backup_body": "Erstelle eine Sicherung vor größeren Änderungen, Updates oder dem Verschieben von Installationen. Die Sicherung enthält lokale UEM-Statistikdateien wie stats_zm_0.cgp bis stats_zm_4.cgp.",
+        "faq_legend_emblems_title": "Legend-Rang-Embleme werden nicht freigeschaltet",
+        "faq_legend_emblems_body": "Embleme f?r Legend 1-10 werden ?ber den prestige_legend-Wert von Spieler 1 freigeschaltet. Lege eigene Emblemdateien mit den Namen legend_1 bis legend_10 im Ordner emblems ab, als PNG, JPG, WebP, GIF, MP4 oder WebM."
     }
 }

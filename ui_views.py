@@ -36,6 +36,15 @@ def build_setup_html(css_content):
                     <button class="restore" onclick="restoreStats()">RESTORE UEM STATS</button>
                 </div>
             </div>
+
+            <div class="setup-restore">
+                <div class="label">REMOTE CURRENTGAME SYNC</div>
+                <div class="hint-text">Connect through the website relay when this PC does not have the active CurrentGame.json. Use the same shared password as the host.</div>
+                <div class="setup-path-row">
+                    <input type="password" id="remotePassword" placeholder="Shared password">
+                </div>
+                <button class="save" onclick="saveRemoteRelay()">CONNECT VIA WEBSITE RELAY</button>
+            </div>
         </div>
         <script>
             function browseLive() {
@@ -53,6 +62,12 @@ def build_setup_html(css_content):
                 const hist = document.getElementById('histPath').value;
                 if (!live || !hist) { alert("Please select both the file and the folder."); return; }
                 window.pywebview.api.save_config(live, hist);
+            }
+            function saveRemoteRelay() {
+                const password = document.getElementById('remotePassword').value;
+                const hist = document.getElementById('histPath').value;
+                if (!password || !hist) { alert("Please enter password and history folder."); return; }
+                window.pywebview.api.save_remote_relay_sync_config(password, hist, '', '');
             }
             function restoreTrackerConfig() {
                 const confirmed = confirm(
@@ -528,6 +543,194 @@ def build_graph_overlay_html(initial_theme_json, initial_scale_json, chart_js_co
 
             applyGraphOverlayTheme(INITIAL_GRAPH_THEME);
             setGraphOverlayScale(INITIAL_GRAPH_SCALE);
+        </script>
+    </body>
+    </html>
+    """
+
+
+def build_challenge_overlay_html(initial_theme_json, initial_scale_json="1.0"):
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            :root {
+                --overlay-bg: #0b0c10;
+                --overlay-panel: #0b0c10;
+                --overlay-border: #66fcf1;
+                --overlay-title: #66fcf1;
+                --overlay-text: #ffffff;
+                --overlay-muted: #777777;
+                --overlay-damage: #ff9d00;
+                --overlay-divider: #333333;
+                --overlay-shadow: 0 0 10px rgba(102, 252, 241, 0.25);
+                --overlay-scale: 1;
+            }
+            html, body {
+                margin: 0; padding: 0; overflow: hidden;
+                width: 100%; height: 100%;
+                background-color: var(--overlay-bg) !important;
+            }
+            #challenge-box {
+                display: inline-flex; flex-direction: column;
+                background: var(--overlay-panel); border: 2px solid var(--overlay-border);
+                padding: calc(10px * var(--overlay-scale)); box-sizing: border-box;
+                font-family: 'Segoe UI', sans-serif; color: var(--overlay-text);
+                width: 100%; min-height: 100vh; height: auto;
+                box-shadow: var(--overlay-shadow);
+            }
+            .challenge-overlay-title {
+                color: var(--overlay-title);
+                font-size: calc(10px * var(--overlay-scale));
+                font-weight: 800;
+                text-transform: uppercase;
+                margin-bottom: calc(8px * var(--overlay-scale));
+                letter-spacing: 1px;
+            }
+            .challenge-item {
+                border-top: 1px solid var(--overlay-divider);
+                padding-top: calc(7px * var(--overlay-scale));
+                margin-top: calc(7px * var(--overlay-scale));
+            }
+            .challenge-item:first-child {
+                border-top: 0;
+                padding-top: 0;
+                margin-top: 0;
+            }
+            .challenge-head {
+                display: flex;
+                justify-content: space-between;
+                gap: calc(8px * var(--overlay-scale));
+                align-items: flex-start;
+                margin-bottom: calc(4px * var(--overlay-scale));
+            }
+            .challenge-name {
+                color: var(--overlay-text);
+                font-size: calc(12px * var(--overlay-scale));
+                font-weight: 800;
+                line-height: 1.2;
+            }
+            .challenge-cat {
+                color: var(--overlay-title);
+                font-size: calc(9px * var(--overlay-scale));
+                font-weight: 800;
+                text-transform: uppercase;
+                white-space: nowrap;
+            }
+            .challenge-desc {
+                color: var(--overlay-muted);
+                font-size: calc(10px * var(--overlay-scale));
+                line-height: 1.25;
+                margin-bottom: calc(6px * var(--overlay-scale));
+            }
+            .challenge-progress-label {
+                display: flex;
+                justify-content: space-between;
+                gap: calc(8px * var(--overlay-scale));
+                color: var(--overlay-text);
+                font-size: calc(10px * var(--overlay-scale));
+                margin-bottom: calc(4px * var(--overlay-scale));
+            }
+            .challenge-track {
+                width: 100%;
+                height: calc(7px * var(--overlay-scale));
+                overflow: hidden;
+                background: rgba(255,255,255,0.14);
+                border: 1px solid var(--overlay-divider);
+                box-sizing: border-box;
+            }
+            .challenge-fill {
+                height: 100%;
+                width: 0%;
+                background: var(--overlay-title);
+                box-shadow: 0 0 8px rgba(102, 252, 241, 0.35);
+            }
+            .challenge-complete .challenge-fill {
+                background: var(--overlay-damage);
+            }
+            .challenge-empty {
+                color: var(--overlay-muted);
+                font-size: calc(11px * var(--overlay-scale));
+                font-style: italic;
+                line-height: 1.35;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="challenge-box">
+            <div class="challenge-overlay-title">Tracked Challenges</div>
+            <div id="challenge-list"><div class="challenge-empty">Select up to 3 challenges in the tracker.</div></div>
+        </div>
+        <script>
+            const INITIAL_CHALLENGE_THEME = """ + initial_theme_json + """;
+            const INITIAL_CHALLENGE_SCALE = """ + initial_scale_json + """;
+
+            function applyChallengeOverlayTheme(theme) {
+                if (!theme) return;
+                const root = document.documentElement;
+                const keys = {
+                    bg: '--overlay-bg',
+                    panel: '--overlay-panel',
+                    border: '--overlay-border',
+                    title: '--overlay-title',
+                    text: '--overlay-text',
+                    muted: '--overlay-muted',
+                    damage: '--overlay-damage',
+                    divider: '--overlay-divider',
+                    shadow: '--overlay-shadow'
+                };
+                Object.keys(keys).forEach(key => {
+                    if (theme[key]) root.style.setProperty(keys[key], theme[key]);
+                });
+            }
+
+            function setChallengeOverlayScale(scale) {
+                const parsed = Number(scale);
+                const safeScale = Number.isFinite(parsed) ? Math.max(0.7, Math.min(1.5, parsed)) : 1;
+                document.documentElement.style.setProperty('--overlay-scale', safeScale);
+            }
+
+            function escapeHtml(value) {
+                return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[ch]));
+            }
+
+            function updateChallengeOverlay(items) {
+                const list = document.getElementById('challenge-list');
+                const rows = Array.isArray(items) ? items.slice(0, 3) : [];
+                if (!rows.length) {
+                    list.innerHTML = "<div class='challenge-empty'>Select up to 3 challenges in the tracker.</div>";
+                    return;
+                }
+                list.innerHTML = rows.map(item => {
+                    const pct = Math.max(0, Math.min(100, Number(item.progress_pct || 0)));
+                    const progress = Number(item.progress || 0).toLocaleString();
+                    const target = Number(item.target || 0).toLocaleString();
+                    const doneClass = item.completed ? ' challenge-complete' : '';
+                    return `
+                        <div class="challenge-item${doneClass}">
+                            <div class="challenge-head">
+                                <div class="challenge-name">${escapeHtml(item.title || 'Challenge')}</div>
+                                <div class="challenge-cat">${escapeHtml(item.cat || '')}</div>
+                            </div>
+                            <div class="challenge-desc">${escapeHtml(item.desc || '')}</div>
+                            <div class="challenge-progress-label">
+                                <span>${item.completed ? 'Complete' : 'Progress'}</span>
+                                <span>${progress} / ${target}</span>
+                            </div>
+                            <div class="challenge-track"><div class="challenge-fill" style="width:${pct}%"></div></div>
+                        </div>`;
+                }).join('');
+            }
+
+            applyChallengeOverlayTheme(INITIAL_CHALLENGE_THEME);
+            setChallengeOverlayScale(INITIAL_CHALLENGE_SCALE);
         </script>
     </body>
     </html>

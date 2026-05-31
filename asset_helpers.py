@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 
 from app_paths import get_base_path
+from reward_assets import ensure_reward_asset
 
 
 ICONS_DIR_NAME = "perk icons"
@@ -148,6 +149,10 @@ def get_calling_card_src(card_name):
     for ext in [".mp4", ".webm", ".jpg", ".png", ".webp"]:
         img_name = f"{card_name}{ext}"
         target = os.path.join(get_base_path(), CALLING_CARD_DIR, img_name)
+        if not os.path.exists(target):
+            target = ensure_reward_asset(CALLING_CARD_DIR, card_name, [ext])
+        if not target:
+            continue
         if os.path.exists(target):
             try:
                 with open(target, "rb") as f:
@@ -168,12 +173,14 @@ def get_calling_card_src(card_name):
     return None
 
 
-def get_emblem_src(emblem_name):
-    if not emblem_name or emblem_name == "default":
-        return None
-    for ext in [".mp4", ".webm", ".jpg", ".jpeg", ".png", ".webp"]:
-        img_name = f"{emblem_name}{ext}"
-        target = os.path.join(get_base_path(), EMBLEM_DIR, img_name)
+def _get_asset_data_url(folder, asset_name, extensions):
+    for ext in extensions:
+        img_name = f"{asset_name}{ext}"
+        target = os.path.join(get_base_path(), folder, img_name)
+        if not os.path.exists(target):
+            target = ensure_reward_asset(folder, asset_name, [ext])
+        if not target:
+            continue
         if os.path.exists(target):
             try:
                 with open(target, "rb") as f:
@@ -183,3 +190,30 @@ def get_emblem_src(emblem_name):
             except Exception:
                 pass
     return None
+
+
+def get_emblem_variants(emblem_name):
+    if not emblem_name or emblem_name == "default":
+        return {"static": False, "animated": False}
+    emblem_path = os.path.join(get_base_path(), EMBLEM_DIR)
+    static_exts = [".jpg", ".jpeg", ".png", ".webp"]
+    animated_exts = [".gif", ".mp4", ".webm"]
+    return {
+        "static": any(os.path.exists(os.path.join(emblem_path, f"{emblem_name}{ext}")) for ext in static_exts)
+        or bool(ensure_reward_asset(EMBLEM_DIR, emblem_name, static_exts)),
+        "animated": any(os.path.exists(os.path.join(emblem_path, f"{emblem_name}{ext}")) for ext in animated_exts)
+        or bool(ensure_reward_asset(EMBLEM_DIR, emblem_name, animated_exts)),
+    }
+
+
+def get_emblem_src(emblem_name, variant="auto"):
+    if not emblem_name or emblem_name == "default":
+        return None
+    variant = str(variant or "auto").strip().lower()
+    static_exts = [".jpg", ".jpeg", ".png", ".webp"]
+    animated_exts = [".gif", ".mp4", ".webm"]
+    if variant == "static":
+        return _get_asset_data_url(EMBLEM_DIR, emblem_name, static_exts)
+    if variant == "animated":
+        return _get_asset_data_url(EMBLEM_DIR, emblem_name, animated_exts) or _get_asset_data_url(EMBLEM_DIR, emblem_name, static_exts)
+    return _get_asset_data_url(EMBLEM_DIR, emblem_name, [".mp4", ".webm", ".jpg", ".jpeg", ".png", ".webp", ".gif"])

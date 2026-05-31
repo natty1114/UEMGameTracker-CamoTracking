@@ -123,7 +123,7 @@
         "feature_live_game": "Gra na żywo: śledzi rangę, XP, atuty, bronie, obrażenia i czasy rund.",
         "feature_camo_matrix": "Macierz kamuflaży: lokalnie edytuje wczytany profil i obsługuje gwiazdki priorytetu.",
         "feature_career_profile": "Profil kariery: podsumowuje zarchiwizowane mapy, rekordy, XP i statystyki długoterminowe.",
-        "feature_challenges": "Wyzwania: odblokowuje karty, emblematy, motywy, cele tygodniowe i operacje map.",
+        "feature_challenges": "Wyzwania: odblokowuj? karty, emblematy i motywy. Lokalne cele tygodniowe rotuj? automatycznie, a do tego dochodz? operacje map.",
         "feature_best_matches": "Najlepsze mecze: pozwala przypinać wyróżnione mecze z panelu na żywo.",
         "faq_troubleshooting": "FAQ i rozwiązywanie problemów",
         "uem_maps_upload": "Logowanie do UEM Maps i przesyłanie kamuflaży",
@@ -137,8 +137,8 @@
         "faq_missing_assets_body": "Użyj Ustawień, aby zsynchronizować bazę kamuflaży. Jeśli brakuje lokalnych ikon, trzymaj foldery camoimages, perk icons, rank icons, callingcards i emblems obok aplikacji.",
         "faq_challenges_reopen_title": "Wyzwania wyglądają źle po ponownym otwarciu",
         "faq_challenges_reopen_body": "Postęp gry na żywo jest zapisywany między uruchomieniami, aby ponowne otwarcie nie naliczało go podwójnie. Jeśli musisz zacząć od zera, użyj przycisku resetowania wyzwań.",
-        "faq_weekly_map_title": "Wyzwania tygodniowe lub mapy nie robią postępu",
-        "faq_weekly_map_body": "Wyzwania tygodniowe liczą tylko prawidłową aktywność podczas bieżącej rotacji. Operacje map wymagają właściwego linku Steam Workshop, a operacje broni wymagają, aby oczekiwane dane broni pojawiły się w pliku na żywo.",
+        "faq_weekly_map_title": "Wyzwania tygodniowe lub mapy nie zmieniaj? si? albo nie robi? post?pu",
+        "faq_weekly_map_body": "Wyzwania tygodniowe s? generowane lokalnie przez aplikacj?. Jednocze?nie aktywnych jest 8 i od?wie?aj? si? na pocz?tku ka?dego tygodnia ISO. Licz? tylko kwalifikuj?c? si? aktywno?? po rozpocz?ciu bie??cej rotacji. Operacje map wymagaj? w?a?ciwego linku Steam Workshop, a operacje broni wymagaj?, aby oczekiwane dane broni pojawi?y si? w pliku na ?ywo.",
         "faq_overlay_title": "Nakładka jest pusta albo zbyt przeładowana",
         "faq_overlay_body": "Włącz nakładkę na żywo w Personalizacji, a następnie przełączaj sekcje takie jak atuty, najwyższe obrażenia, ranga, XP meczu i postęp rangi.",
         "faq_xp_title": "XP lub rangi wyglądają dziwnie",
@@ -150,6 +150,8 @@
         "faq_updates_title": "Jak działają aktualizacje i cofanie?",
         "faq_updates_body": "Użyj Ustawień, aby sprawdzić wersje z GitHub. Gdy dostępna jest aktualizacja, aktualizator zamyka i ponownie uruchamia tracker. Cofnięcie przywraca wersję zapisaną przed ostatnią aktualizacją, jeśli kopia jest dostępna.",
         "faq_backup_title": "Kiedy należy utworzyć kopię?",
-        "faq_backup_body": "Utwórz kopię przed dużymi edycjami, aktualizacjami lub przenoszeniem instalacji. Kopia obejmuje lokalne pliki statystyk UEM, takie jak stats_zm_0.cgp do stats_zm_4.cgp."
+        "faq_backup_body": "Utwórz kopię przed dużymi edycjami, aktualizacjami lub przenoszeniem instalacji. Kopia obejmuje lokalne pliki statystyk UEM, takie jak stats_zm_0.cgp do stats_zm_4.cgp.",
+        "faq_legend_emblems_title": "Emblematy rangi Legend si? nie odblokowuj?",
+        "faq_legend_emblems_body": "Emblematy Legend 1-10 odblokowuj? si? na podstawie warto?ci prestige_legend Gracza 1. Dodaj w?asne pliki emblemat?w o nazwach od legend_1 do legend_10 w folderze emblems, w formacie PNG, JPG, WebP, GIF, MP4 lub WebM."
     }
 }

@@ -1,19 +1,37 @@
-# Local/runtime config and upload state
-config.json
-global_stats_state.json
+# Secrets and credentials
+local map compatiblityu/config/google_credentials.json
+local map compatiblityu/config/uem-map-app-user-submissions-*.json
+local map compatiblityu/config/favorites.json
+local map compatiblityu/*.json
+config/config.json
+global_stats_client.py
+*.secret
+.env
 
-# Server-side secrets and local Namecheap test config
-namecheap/backend/config.php
-namecheap/python/global_stats_config.json
-namecheap/python/global_stats_state.json
-
-# Build/runtime output
+# Build output
 build/
 dist/
 Release_Build/
+BO3Tracker-4.7.7/
+*.exe
 __pycache__/
 *.pyc
 
-# Local management tool state
-dev_tools/admin_state.json
-dev_tools/ftp_config.json
+# Archives and old versions
+*.zip
+archived_versions/
+
+# Runtime user data
+config/hosted_reward_assets.json
+config/unlocked_rewards.json
+custom_camos.json
+remote_map_weapons_response.json
+temp_check.js
+
+# OS junk
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Conflict files
+*[conflicted]*

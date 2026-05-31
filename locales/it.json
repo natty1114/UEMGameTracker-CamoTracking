@@ -264,7 +264,7 @@
         "feature_live_game": "Partita live: traccia rango, XP, vantaggi, armi, danni e tempi dei round.",
         "feature_camo_matrix": "Matrice mimetiche: modifica localmente il profilo caricato e supporta le stelle di priorità.",
         "feature_career_profile": "Profilo carriera: riepiloga mappe archiviate, record, XP e statistiche a lungo termine.",
-        "feature_challenges": "Sfide: sblocca schede, emblemi, temi, obiettivi settimanali e operazioni mappa.",
+        "feature_challenges": "Sfide: sblocca biglietti da visita, emblemi e temi. Gli obiettivi settimanali locali ruotano automaticamente, insieme alle operazioni mappa.",
         "feature_best_matches": "Partite migliori: ti permette di fissare partite in evidenza dal pannello live.",
         "faq_troubleshooting": "FAQ e risoluzione dei problemi",
         "uem_maps_upload": "Accesso a UEM Maps e caricamento mimetiche",
@@ -278,8 +278,8 @@
         "faq_missing_assets_body": "Usa Impostazioni per sincronizzare il database mimetiche. Se mancano icone locali, mantieni le cartelle camoimages, perk icons, rank icons, callingcards ed emblems accanto all'app.",
         "faq_challenges_reopen_title": "Le sfide sembrano errate dopo la riapertura",
         "faq_challenges_reopen_body": "Il progresso della partita live viene salvato tra gli avvii così la riapertura non conta due volte. Se devi ricominciare da zero, usa il pulsante di reimpostazione delle sfide.",
-        "faq_weekly_map_title": "Le sfide settimanali o di mappa non progrediscono",
-        "faq_weekly_map_body": "Le sfide settimanali contano solo attività valida durante la rotazione attuale. Le operazioni mappa richiedono il link corretto di Steam Workshop, e le operazioni arma richiedono che i dati previsti dell'arma appaiano nel file live.",
+        "faq_weekly_map_title": "Le sfide settimanali o mappa non cambiano o non avanzano",
+        "faq_weekly_map_body": "Le sfide settimanali sono generate localmente dall'app. Ce ne sono 8 attive alla volta e si aggiornano all'inizio di ogni settimana ISO. Contano solo le attivit? valide dopo l'inizio della rotazione corrente. Le operazioni mappa richiedono il link Steam Workshop corretto, e le operazioni arma richiedono che i dati dell'arma previsti compaiano nel file live.",
         "faq_overlay_title": "L'overlay è vuoto o troppo affollato",
         "faq_overlay_body": "Attiva l'overlay live in Personalizzazione e poi alterna sezioni come vantaggi, danno principale, rango, XP partita e progresso rango.",
         "faq_xp_title": "XP o ranghi sembrano strani",
@@ -291,6 +291,8 @@
         "faq_updates_title": "Come funzionano gli aggiornamenti e il ripristino?",
         "faq_updates_body": "Usa Impostazioni per controllare le versioni su GitHub. Quando ce n'è una disponibile, l'updater chiude e riavvia il tracker. Il ripristino recupera la versione salvata prima dell'ultimo aggiornamento se è disponibile una copia.",
         "faq_backup_title": "Quando dovrei creare un backup?",
-        "faq_backup_body": "Crea un backup prima di grandi modifiche, aggiornamenti o spostamenti di installazioni. Il backup include file locali delle statistiche UEM come stats_zm_0.cgp fino a stats_zm_4.cgp."
+        "faq_backup_body": "Crea un backup prima di grandi modifiche, aggiornamenti o spostamenti di installazioni. Il backup include file locali delle statistiche UEM come stats_zm_0.cgp fino a stats_zm_4.cgp.",
+        "faq_legend_emblems_title": "Gli emblemi del grado Leggenda non si sbloccano",
+        "faq_legend_emblems_body": "Gli emblemi Leggenda 1-10 si sbloccano dal valore prestige_legend del Giocatore 1. Aggiungi file emblema personalizzati chiamati da legend_1 a legend_10 nella cartella emblems, usando PNG, JPG, WebP, GIF, MP4 o WebM."
     }
 }

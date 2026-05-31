@@ -16,6 +16,7 @@ RUNTIME_FILENAMES = {
     "damage_log.json",
     "favorites.json",
     "global_stats_state.json",
+    "hosted_reward_assets.json",
     "match_xp_cache.json",
     "map_challenges.json",
     "points_history.json",

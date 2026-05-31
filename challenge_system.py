@@ -3,10 +3,12 @@ import json
 import glob
 import time
 import random
+import hashlib
 from datetime import datetime, timezone
 
 from app_paths import get_runtime_path
 from map_weapons import map_weapons_manager
+from reward_assets import get_synced_hosted_reward_assets, sync_hosted_reward_assets
 from sync_map_challenges import fetch as fetch_map_challenges
 from weapon_categories import get_weapon_category, normalise_weapon_category
 
@@ -16,20 +18,49 @@ UNLOCKS_FILE = "unlocked_rewards.json"
 CALLING_CARD_DIR = "callingcards"
 LOCAL_WEEKLY_PREFIX = "weekly_local_"
 REMOTE_WEEKLY_PREFIX = "weekly_remote_"
-LOCAL_WEEKLY_COUNT = 4
+LOCAL_WEEKLY_COUNT = 10
+LEGEND_EMBLEM_MAX_RANK = 10
+LEGEND_EMBLEM_UNLOCKS = {
+    rank: f"legend_{rank}"
+    for rank in range(1, LEGEND_EMBLEM_MAX_RANK + 1)
+}
+RESERVED_LEVEL_EMBLEMS = frozenset(LEGEND_EMBLEM_UNLOCKS.values())
+
+
+def is_reserved_level_emblem(reward_type, reward_val):
+    return (
+        str(reward_type or "").strip() == "emblem"
+        and str(reward_val or "").strip() in RESERVED_LEVEL_EMBLEMS
+    )
+
+
+def strip_reserved_level_emblem_reward(challenge):
+    if not isinstance(challenge, dict):
+        return challenge
+    if is_reserved_level_emblem(challenge.get("reward_type"), challenge.get("reward_val")):
+        challenge = dict(challenge)
+        challenge["reward_type"] = "none"
+        challenge["reward_val"] = ""
+    return challenge
 
 LOCAL_WEEKLY_TEMPLATES = [
-    {"stat": "kills", "target": 2000, "type": "cumulative", "title": "Weekly Slayer", "desc": "Get 2,000 Kills this week"},
-    {"stat": "headshots", "target": 500, "type": "cumulative", "title": "Weekly Deadeye", "desc": "Get 500 Headshots this week"},
-    {"stat": "points", "target": 250000, "type": "cumulative", "title": "Weekly Bankroll", "desc": "Earn 250,000 Points this week"},
-    {"stat": "round", "target": 35, "type": "single_game", "title": "Weekly Deep Run", "desc": "Reach Round 35 in one game this week"},
-    {"stat": "matches", "target": 10, "type": "cumulative", "title": "Weekly Grinder", "desc": "Complete 10 Matches this week"},
-    {"stat": "doors", "target": 100, "type": "cumulative", "title": "Weekly Keymaster", "desc": "Open 100 Doors this week"},
-    {"stat": "perks_drank", "target": 40, "type": "cumulative", "title": "Weekly Soda Run", "desc": "Finish games with 40 total active perks this week"},
-    {"stat": "melee", "target": 125, "type": "cumulative", "title": "Weekly Brawler", "desc": "Get 125 Melee Kills this week"},
-    {"stat": "gobblegums_used", "target": 25, "type": "cumulative", "title": "Weekly Chewer", "desc": "Use 25 GobbleGums this week"},
-    {"stat": "box", "target": 25, "type": "cumulative", "title": "Weekly Gambler", "desc": "Hit the box 25 times this week"},
-    {"stat": "xp", "target": 1000000, "type": "cumulative", "title": "Weekly XP Hunt", "desc": "Earn 1,000,000 Match XP this week"},
+    {"stat": "kills", "target": 20000, "type": "cumulative", "title": "Weekly Slayer", "desc": "Get 20,000 Kills this week"},
+    {"stat": "headshots", "target": 5000, "type": "cumulative", "title": "Weekly Deadeye", "desc": "Get 5,000 Headshots this week"},
+    {"stat": "points", "target": 2500000, "type": "cumulative", "title": "Weekly Bankroll", "desc": "Earn 2,500,000 Points this week"},
+    {"stat": "round", "target": 50, "type": "single_game", "title": "Weekly Deep Run", "desc": "Reach Round 50 in one game this week"},
+    {"stat": "matches", "target": 30, "type": "cumulative", "title": "Weekly Grinder", "desc": "Complete 30 Matches this week"},
+    {"stat": "perks_drank", "target": 50, "type": "cumulative", "title": "Weekly Soda Run", "desc": "Finish games with 50 total active perks this week"},
+    {"stat": "melee", "target": 1250, "type": "cumulative", "title": "Weekly Brawler", "desc": "Get 1,250 Melee Kills this week"},
+    {"stat": "headshots", "target": 2000, "type": "cumulative", "title": "Weekly Precision", "desc": "Get 2,000 Headshot Kills this week"},
+    {"stat": "box", "target": 250, "type": "cumulative", "title": "Weekly Gambler", "desc": "Hit the box 250 times this week"},
+    {"stat": "xp", "target": 10000000, "type": "cumulative", "title": "Weekly XP Hunt", "desc": "Earn 10,000,000 Match XP this week"},
+    {"stat": "kills", "target": 50000, "type": "cumulative", "title": "Weekly Annihilator", "desc": "Get 50,000 Kills this week"},
+    {"stat": "headshots", "target": 10000, "type": "cumulative", "title": "Weekly Bullseye", "desc": "Get 10,000 Headshots this week"},
+    {"stat": "points", "target": 5000000, "type": "cumulative", "title": "Weekly Tycoon", "desc": "Earn 5,000,000 Points this week"},
+    {"stat": "perks_drank", "target": 100, "type": "cumulative", "title": "Weekly Addict", "desc": "Finish games with 100 total active perks this week"},
+    {"stat": "matches", "target": 50, "type": "cumulative", "title": "Weekly Marathon", "desc": "Complete 50 Matches this week"},
+    {"stat": "box", "target": 500, "type": "cumulative", "title": "Weekly High Roller", "desc": "Hit the box 500 times this week"},
+    {"stat": "xp", "target": 2500000, "type": "single_game", "title": "Weekly XP Burst", "desc": "Earn 2,500,000 Match XP in one game this week"},
 ]
 
 def load_json(path):
@@ -103,6 +134,9 @@ def normalize_map_challenge(raw):
         "completed": False,
         "reward_type": "none",
         "reward_val": "",
+        "reward_pending": False,
+        "pending_reward_type": "",
+        "pending_reward_val": "",
         "map_name": "",
         "map_steam_link": "",
         "weapon_console_name": "",
@@ -111,7 +145,7 @@ def normalize_map_challenge(raw):
     }
     if isinstance(raw, dict):
         item.update(raw)
-    for key in ("id", "cat", "title", "desc", "stat", "type", "reward_type", "reward_val", "map_name", "weapon_console_name", "weapon_display_name", "weapon_category"):
+    for key in ("id", "cat", "title", "desc", "stat", "type", "reward_type", "reward_val", "pending_reward_type", "pending_reward_val", "map_name", "weapon_console_name", "weapon_display_name", "weapon_category"):
         item[key] = str(item.get(key, "")).strip()
     item["map_steam_link"] = normalize_steam_link(item.get("map_steam_link") or item.get("steam_link"))
     item["cat"] = "operations"
@@ -125,12 +159,28 @@ def normalize_map_challenge(raw):
     except:
         item["progress"] = 0
     item["completed"] = bool(item.get("completed", False))
+    item["reward_pending"] = bool(item.get("reward_pending", False))
     if not item["title"]:
         name = item["map_name"] or f"Workshop {item['map_steam_link']}"
         item["title"] = f"{name}: Map Operation"
     if not item["desc"]:
         item["desc"] = f"Complete this objective on {item['map_name'] or item['map_steam_link']}."
-    return item
+    return strip_reserved_level_emblem_reward(item)
+
+
+def _has_reward(challenge):
+    if not isinstance(challenge, dict):
+        return False
+    reward_type = str(challenge.get("reward_type", "") or "").strip()
+    reward_val = str(challenge.get("reward_val", "") or "").strip()
+    return bool(reward_type and reward_type != "none" and reward_val)
+
+def _has_pending_reward(challenge):
+    if not isinstance(challenge, dict) or not challenge.get("reward_pending"):
+        return False
+    reward_type = str(challenge.get("pending_reward_type", "") or "").strip()
+    reward_val = str(challenge.get("pending_reward_val", "") or "").strip()
+    return bool(reward_type and reward_type != "none" and reward_val)
 
 class ChallengeManager:
     def __init__(self, base_path):
@@ -139,6 +189,7 @@ class ChallengeManager:
         self.map_challenges_path = get_runtime_path(MAP_CHALLENGES_FILE)
         self.unlocks_path = get_runtime_path(UNLOCKS_FILE)
         self.cards_path = os.path.join(base_path, CALLING_CARD_DIR)
+        self.emblems_path = os.path.join(base_path, "emblems")
         self.themes_path = os.path.join(base_path, "themes")
         self.reset_timestamp = 0
         self.reset_offset = {}
@@ -150,12 +201,14 @@ class ChallengeManager:
         self.weekly_rotation = {}
         self.remote_weekly_pool = []
         self.remote_weekly_active_count = LOCAL_WEEKLY_COUNT
+        self._hosted_rewards_synced = False
         
         self.theme_requirements = {}
         
         self.unlocked_rewards = self._load_unlocks()
         self.challenges = self._load_or_create()
         self.map_challenges = self._load_map_challenges()
+        self._repair_missing_reward_assignments(sync_hosted=False)
         self.check_theme_unlocks()
 
     def _load_map_challenges(self):
@@ -191,6 +244,7 @@ class ChallengeManager:
         stored = load_json(self.map_challenges_path)
         if not isinstance(stored, dict):
             stored = {}
+        local_preserve_enabled = bool(stored.get("local_preserve_enabled", True))
 
         archived_progress = stored.get("removed_challenge_progress", {})
         if not isinstance(archived_progress, dict):
@@ -233,6 +287,15 @@ class ChallengeManager:
             previous = progress_by_id.get(cid, {})
             challenge["progress"] = previous.get("progress", challenge.get("progress", 0))
             challenge["completed"] = previous.get("completed", challenge.get("completed", False))
+            if local_preserve_enabled and (_has_reward(previous) or _has_pending_reward(previous)):
+                previous_pending = bool(previous.get("reward_pending", False))
+                incoming_has_final_reward = _has_reward(challenge) and not bool(challenge.get("reward_pending", False))
+                if not (previous_pending and incoming_has_final_reward):
+                    challenge["reward_type"] = previous.get("reward_type", challenge.get("reward_type", "none"))
+                    challenge["reward_val"] = previous.get("reward_val", challenge.get("reward_val", ""))
+                    challenge["reward_pending"] = previous_pending
+                    challenge["pending_reward_type"] = previous.get("pending_reward_type", challenge.get("pending_reward_type", ""))
+                    challenge["pending_reward_val"] = previous.get("pending_reward_val", challenge.get("pending_reward_val", ""))
             next_challenges.append(challenge)
             active_ids.add(cid)
 
@@ -244,6 +307,7 @@ class ChallengeManager:
             archived_progress.pop(cid, None)
 
         self.map_challenges = next_challenges
+        self._repair_missing_reward_assignments()
         stored["challenges"] = self.map_challenges
         stored["removed_challenge_progress"] = archived_progress
         stored["remote_version"] = result.get("version", "")
@@ -256,13 +320,74 @@ class ChallengeManager:
     def _frontend_challenges(self):
         return list(self.challenges) + list(self.map_challenges)
 
+    def _reward_pair(self, challenge):
+        if not isinstance(challenge, dict):
+            return None
+        reward_type = str(challenge.get("reward_type", "") or "").strip()
+        reward_val = str(challenge.get("reward_val", "") or "").strip()
+        if not reward_type or reward_type == "none" or not reward_val:
+            return None
+        return reward_type, reward_val
+
+    def _pending_reward_pair(self, challenge):
+        if not isinstance(challenge, dict) or not challenge.get("reward_pending"):
+            return None
+        reward_type = str(challenge.get("pending_reward_type", "") or "").strip()
+        reward_val = str(challenge.get("pending_reward_val", "") or "").strip()
+        if not reward_type or reward_type == "none" or not reward_val:
+            return None
+        return reward_type, reward_val
+
+    def _pending_reward_type(self, challenge):
+        if not isinstance(challenge, dict) or not challenge.get("reward_pending"):
+            return ""
+        reward_type = str(challenge.get("pending_reward_type", "") or "").strip()
+        if not reward_type or reward_type == "none":
+            return ""
+        return reward_type
+
     def _load_unlocks(self):
         data = load_json(self.unlocks_path)
         if not data:
             defaults = ["default"]
             save_json(self.unlocks_path, defaults)
             return defaults
-        return data
+        if not isinstance(data, list):
+            data = ["default"]
+        cleaned = []
+        for item in data:
+            text = str(item or "").strip()
+            if text and text not in cleaned:
+                cleaned.append(text)
+        if "default" not in cleaned:
+            cleaned.insert(0, "default")
+        return cleaned
+
+    def _remember_unlocked_reward(self, reward_type, reward_val):
+        reward_type = str(reward_type or "").strip()
+        reward_val = str(reward_val or "").strip()
+        if not reward_val or reward_type not in ("calling_card", "emblem", "theme"):
+            return False
+        if is_reserved_level_emblem(reward_type, reward_val):
+            return False
+        if reward_val in self.unlocked_rewards:
+            return False
+        if not self._reward_asset_exists(reward_type, reward_val):
+            return False
+        self.unlocked_rewards.append(reward_val)
+        return True
+
+    def _remember_completed_rewards(self, challenges=None, save=True):
+        changed = False
+        source = challenges if challenges is not None else self._frontend_challenges()
+        for challenge in source:
+            if not isinstance(challenge, dict) or not challenge.get("completed"):
+                continue
+            if self._remember_unlocked_reward(challenge.get("reward_type"), challenge.get("reward_val")):
+                changed = True
+        if changed and save:
+            save_json(self.unlocks_path, self.unlocked_rewards)
+        return changed
 
     def _load_or_create(self):
         defaults = [
@@ -313,16 +438,15 @@ class ChallengeManager:
         self.weekly_rotation = saved_data.get("weekly_rotation", {})
         if not isinstance(self.weekly_rotation, dict):
             self.weekly_rotation = {}
-        self.remote_weekly_pool = saved_data.get("remote_weekly_pool", [])
-        if not isinstance(self.remote_weekly_pool, list):
-            self.remote_weekly_pool = []
-        try:
-            self.remote_weekly_active_count = max(1, int(saved_data.get("remote_weekly_active_count", LOCAL_WEEKLY_COUNT)))
-        except:
-            self.remote_weekly_active_count = LOCAL_WEEKLY_COUNT
+        self.remote_weekly_pool = []
+        self.remote_weekly_active_count = LOCAL_WEEKLY_COUNT
         
         current_list = saved_data.get("challenges", [])
-        cleaned_list = [c for c in current_list if not c['id'].startswith("c_theme_")]
+        cleaned_list = [
+            strip_reserved_level_emblem_reward(c)
+            for c in current_list
+            if not c['id'].startswith("c_theme_")
+        ]
         default_map = {d['id']: d for d in defaults}
         
         for c in cleaned_list:
@@ -362,18 +486,213 @@ class ChallengeManager:
         week_start = datetime.fromisocalendar(now.isocalendar().year, now.isocalendar().week, 1)
         return week_start.replace(tzinfo=timezone.utc).timestamp()
 
+    def _weekly_definition_signature(self, source):
+        if source == "remote":
+            payload = {
+                "source": "remote",
+                "active_count": max(1, int(self.remote_weekly_active_count or LOCAL_WEEKLY_COUNT)),
+                "pool": self.remote_weekly_pool,
+            }
+        else:
+            payload = {
+                "source": "local",
+                "active_count": LOCAL_WEEKLY_COUNT,
+                "pool": LOCAL_WEEKLY_TEMPLATES,
+            }
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+        return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+    def _scan_available_rewards(self):
+        return self._scan_available_reward_assets(include_themes=False)
+
+    def _sync_hosted_rewards_once(self):
+        if self._hosted_rewards_synced:
+            return
+        self._hosted_rewards_synced = True
+        try:
+            sync_hosted_reward_assets(force=False)
+        except Exception:
+            pass
+
+    def _scan_available_reward_assets(self, include_themes=True, sync_hosted=True, hosted_only=False):
+        if sync_hosted:
+            self._sync_hosted_rewards_once()
+        hosted_assets = get_synced_hosted_reward_assets() if hosted_only else None
+        pool = []
+        folders = [
+            (self.cards_path, "callingcards", "calling_card", ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.gif", "*.mp4", "*.webm"]),
+            (self.emblems_path, "emblems", "emblem", ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.gif", "*.mp4", "*.webm"]),
+        ]
+        if include_themes:
+            folders.append((self.themes_path, "themes", "theme", ["*.css"]))
+
+        for folder, folder_key, rtype, patterns in folders:
+            if not os.path.exists(folder):
+                continue
+            hosted_allowed = set(hosted_assets.get(folder_key, [])) if hosted_assets is not None else None
+            for pattern in patterns:
+                for f in glob.glob(os.path.join(folder, pattern)):
+                    filename = os.path.basename(f)
+                    if hosted_allowed is not None and filename not in hosted_allowed:
+                        continue
+                    base = os.path.splitext(os.path.basename(f))[0]
+                    if base != "default":
+                        if is_reserved_level_emblem(rtype, base):
+                            continue
+                        pool.append((base, rtype))
+        seen = set()
+        unique = []
+        for name, rtype in pool:
+            key = f"{rtype}:{name}"
+            if key not in seen:
+                seen.add(key)
+                unique.append((name, rtype))
+        return unique
+
+    def _reward_asset_exists(self, reward_type, reward_val):
+        reward_type = str(reward_type or "").strip()
+        reward_val = str(reward_val or "").strip()
+        if not reward_type or reward_type == "none" or not reward_val:
+            return True
+        if is_reserved_level_emblem(reward_type, reward_val):
+            return False
+
+        if reward_type == "calling_card":
+            folder = self.cards_path
+            extensions = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4", ".webm"]
+        elif reward_type == "emblem":
+            folder = self.emblems_path
+            extensions = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4", ".webm"]
+        elif reward_type == "theme":
+            folder = self.themes_path
+            extensions = [".css"]
+        else:
+            return True
+
+        return any(os.path.exists(os.path.join(folder, f"{reward_val}{ext}")) for ext in extensions)
+
+    def _replacement_reward_for(self, reward_type, used_pairs, sync_hosted=True, hosted_only=False):
+        reward_type = str(reward_type or "").strip()
+        available = self._scan_available_reward_assets(
+            include_themes=True,
+            sync_hosted=sync_hosted,
+            hosted_only=hosted_only,
+        )
+        candidates = [
+            (name, rtype) for name, rtype in available
+            if rtype == reward_type and (rtype, name) not in used_pairs
+        ]
+        if not candidates:
+            return None
+        name, rtype = sorted(candidates, key=lambda item: (item[1], item[0].lower()))[0]
+        return rtype, name
+
+    def _repair_missing_reward_assignments(self, sync_hosted=True):
+        sections = [
+            ("challenges", self.challenges),
+            ("map_challenges", self.map_challenges),
+        ]
+        used_pairs = set()
+        for _, challenges in sections:
+            for challenge in challenges:
+                pair = self._reward_pair(challenge)
+                if pair and self._reward_asset_exists(pair[0], pair[1]):
+                    used_pairs.add(pair)
+
+        changed_challenges = False
+        changed_map_challenges = False
+        for section_name, challenges in sections:
+            for challenge in challenges:
+                pair = self._reward_pair(challenge)
+                pending_pair = self._pending_reward_pair(challenge)
+                pending_type = self._pending_reward_type(challenge)
+                if not pair and pending_type:
+                    if pending_pair and self._reward_asset_exists(pending_pair[0], pending_pair[1]):
+                        challenge["reward_type"], challenge["reward_val"] = pending_pair
+                        challenge["reward_pending"] = False
+                        challenge["pending_reward_type"] = ""
+                        challenge["pending_reward_val"] = ""
+                        if section_name == "map_challenges":
+                            changed_map_challenges = True
+                        else:
+                            changed_challenges = True
+                    else:
+                        replacement = self._replacement_reward_for(
+                            pending_type, used_pairs,
+                            sync_hosted=sync_hosted,
+                            hosted_only=sync_hosted,
+                        )
+                        if replacement:
+                            challenge["reward_type"], challenge["reward_val"] = replacement
+                            challenge["reward_pending"] = False
+                            challenge["pending_reward_type"] = ""
+                            challenge["pending_reward_val"] = ""
+                            used_pairs.add(replacement)
+                            if section_name == "map_challenges":
+                                changed_map_challenges = True
+                            else:
+                                changed_challenges = True
+                    continue
+                if not pair:
+                    continue
+                if self._reward_asset_exists(pair[0], pair[1]):
+                    if challenge.get("reward_pending"):
+                        challenge["reward_pending"] = False
+                        if section_name == "map_challenges":
+                            changed_map_challenges = True
+                        else:
+                            changed_challenges = True
+                    continue
+                if challenge.get("reward_pending"):
+                    continue
+                if not sync_hosted:
+                    continue
+                replacement = self._replacement_reward_for(pair[0], used_pairs, sync_hosted=sync_hosted, hosted_only=True)
+                if replacement:
+                    challenge["reward_type"], challenge["reward_val"] = replacement
+                    used_pairs.add(replacement)
+                else:
+                    challenge["reward_type"] = "none"
+                    challenge["reward_val"] = ""
+                if section_name == "map_challenges":
+                    changed_map_challenges = True
+                else:
+                    changed_challenges = True
+
+        if changed_challenges:
+            self._save_challenges()
+        if changed_map_challenges:
+            self._save_map_challenges()
+        return changed_challenges or changed_map_challenges
+
     def _ensure_local_weekly_rotation(self, current_challenges):
         week_key = self._current_week_key()
         existing_week = str(self.weekly_rotation.get("week_key", ""))
         active_from = float(self.weekly_rotation.get("active_from", 0) or 0)
-        source = "remote" if self.remote_weekly_pool else "local"
+        source = "local"
+        definition_signature = self._weekly_definition_signature(source)
 
         active_prefix = REMOTE_WEEKLY_PREFIX if source == "remote" else LOCAL_WEEKLY_PREFIX
-        if existing_week == week_key and self.weekly_rotation.get("source") == source and any(
-            isinstance(c, dict) and str(c.get("id", "")).startswith(active_prefix)
-            for c in current_challenges
+        if (
+            existing_week == week_key
+            and self.weekly_rotation.get("source") == source
+            and self.weekly_rotation.get("definition_signature") == definition_signature
+            and any(
+                isinstance(c, dict) and str(c.get("id", "")).startswith(active_prefix)
+                for c in current_challenges
+            )
         ):
-            return current_challenges
+            existing_weekly = [
+                c for c in current_challenges
+                if isinstance(c, dict) and str(c.get("id", "")).startswith(active_prefix)
+            ]
+            if len(existing_weekly) == LOCAL_WEEKLY_COUNT and all(
+                str(c.get("reward_type", "none")) != "none"
+                for c in existing_weekly
+            ):
+                return current_challenges
+
+        self._remember_completed_rewards(current_challenges)
 
         active_from = self._current_week_start_timestamp()
         preserved = [
@@ -392,89 +711,46 @@ class ChallengeManager:
             )
         ]
 
-        if self.remote_weekly_pool:
-            rng = random.Random(f"{week_key}|remote|{len(self.remote_weekly_pool)}")
-            pool = [dict(c) for c in self.remote_weekly_pool if isinstance(c, dict)]
-            rng.shuffle(pool)
-            active_count = max(1, int(self.remote_weekly_active_count or LOCAL_WEEKLY_COUNT))
-            selected = pool[:active_count]
-            for index, source_challenge in enumerate(selected, start=1):
-                source_id = str(source_challenge.get("id", f"remote_{index}"))
-                challenge = dict(source_challenge)
-                challenge["id"] = f"{REMOTE_WEEKLY_PREFIX}{week_key.replace('-', '_')}_{index:02d}"
-                challenge["cat"] = "weekly"
-                challenge["progress"] = 0
-                challenge["completed"] = False
-                challenge["source"] = "remote_weekly_rotation"
-                challenge["remote_pool_id"] = source_id
-                challenge["week_key"] = week_key
-                challenge["active_from"] = active_from
-                preserved.append(challenge)
-        else:
-            rng = random.Random(week_key)
-            templates = list(LOCAL_WEEKLY_TEMPLATES)
-            rng.shuffle(templates)
+        rng = random.Random(week_key)
+        templates = list(LOCAL_WEEKLY_TEMPLATES)
+        rng.shuffle(templates)
 
-            for index, template in enumerate(templates[:LOCAL_WEEKLY_COUNT], start=1):
-                challenge = {
-                    "id": f"{LOCAL_WEEKLY_PREFIX}{week_key.replace('-', '_')}_{index:02d}",
-                    "cat": "weekly",
-                    "title": template["title"],
-                    "desc": template["desc"],
-                    "target": template["target"],
-                    "stat": template["stat"],
-                    "type": template["type"],
-                    "progress": 0,
-                    "completed": False,
-                    "reward_type": "none",
-                    "reward_val": "",
-                    "source": "local_weekly_rotation",
-                    "week_key": week_key,
-                    "active_from": active_from
-                }
-                preserved.append(challenge)
+        reward_pool = self._scan_available_rewards()
+        rng_for_rewards = random.Random(week_key)
+        rng_for_rewards.shuffle(reward_pool)
+
+        for index, template in enumerate(templates[:LOCAL_WEEKLY_COUNT], start=1):
+            reward_name, reward_type = reward_pool[(index - 1) % len(reward_pool)] if reward_pool else ("", "none")
+            challenge = {
+                "id": f"{LOCAL_WEEKLY_PREFIX}{week_key.replace('-', '_')}_{index:02d}",
+                "cat": "weekly",
+                "title": template["title"],
+                "desc": template["desc"],
+                "target": template["target"],
+                "stat": template["stat"],
+                "type": template["type"],
+                "progress": 0,
+                "completed": False,
+                "reward_type": reward_type,
+                "reward_val": reward_name if reward_name else "",
+                "source": "local_weekly_rotation",
+                "week_key": week_key,
+                "active_from": active_from
+            }
+            preserved.append(challenge)
 
         self.weekly_rotation = {
             "week_key": week_key,
             "active_from": active_from,
             "count": len([c for c in preserved if isinstance(c, dict) and str(c.get("id", "")).startswith(active_prefix)]),
-            "source": source
+            "source": source,
+            "definition_signature": definition_signature
         }
         return preserved
 
     def _normalise_remote_weekly_pool(self, manifest, incoming):
-        pool = []
-        if isinstance(manifest, dict):
-            rotation = manifest.get("weekly_rotation", {})
-            if isinstance(rotation, dict) and isinstance(rotation.get("pool"), list):
-                pool = rotation.get("pool", [])
-                try:
-                    self.remote_weekly_active_count = max(1, int(rotation.get("active_count", LOCAL_WEEKLY_COUNT)))
-                except:
-                    self.remote_weekly_active_count = LOCAL_WEEKLY_COUNT
-            elif isinstance(manifest.get("weekly_pool"), list):
-                pool = manifest.get("weekly_pool", [])
-
-        if not pool:
-            pool = [
-                c for c in incoming
-                if isinstance(c, dict) and str(c.get("cat", "")).strip() == "weekly"
-            ]
-
-        cleaned = []
-        for challenge in pool:
-            if not isinstance(challenge, dict):
-                continue
-            item = dict(challenge)
-            item["cat"] = "weekly"
-            item["progress"] = 0
-            item["completed"] = False
-            if item.get("remove") is True:
-                continue
-            if not item.get("id"):
-                item["id"] = f"remote_weekly_pool_{len(cleaned) + 1}"
-            cleaned.append(item)
-        return cleaned
+        self.remote_weekly_active_count = LOCAL_WEEKLY_COUNT
+        return []
 
     def _scan_and_create_card_challenges(self, current_challenges):
         if not os.path.exists(self.cards_path):
@@ -614,6 +890,7 @@ class ChallengeManager:
         self.challenges = self._ensure_local_weekly_rotation(self.challenges)
         self._save_challenges()
         self.map_challenges = self._load_map_challenges()
+        self._repair_missing_reward_assignments()
         return self._frontend_challenges()
 
     def apply_remote_manifest(self, manifest, replace=True):
@@ -625,7 +902,7 @@ class ChallengeManager:
 
         self.remote_weekly_pool = self._normalise_remote_weekly_pool(manifest, incoming)
         incoming = [
-            c for c in incoming
+            strip_reserved_level_emblem_reward(c) for c in incoming
             if not (isinstance(c, dict) and str(c.get("cat", "")).strip() == "weekly")
         ]
         if not incoming and self.remote_weekly_pool:
@@ -705,6 +982,7 @@ class ChallengeManager:
 
         self.challenges = cleaned
         self.challenges = self._ensure_local_weekly_rotation(self.challenges)
+        self._repair_missing_reward_assignments()
         self.check_theme_unlocks()
         self._save_challenges(manifest)
         return True
@@ -798,6 +1076,50 @@ class ChallengeManager:
     def get_unlocked_themes(self):
         return self.unlocked_rewards
 
+    def _emblem_asset_exists(self, emblem_name):
+        if not emblem_name or emblem_name == "default":
+            return False
+        for ext in [".mp4", ".webm", ".jpg", ".jpeg", ".png", ".webp", ".gif"]:
+            if os.path.exists(os.path.join(self.emblems_path, f"{emblem_name}{ext}")):
+                return True
+        return False
+
+    def check_legend_emblem_unlocks(self, player):
+        if not isinstance(player, dict):
+            return []
+        try:
+            legend_rank = int(player.get("prestige_legend", 0) or 0)
+        except:
+            legend_rank = 0
+        if legend_rank <= 0:
+            return []
+
+        unlocked_now = []
+        for required_rank, emblem_name in LEGEND_EMBLEM_UNLOCKS.items():
+            if legend_rank < required_rank:
+                continue
+            if emblem_name in self.unlocked_rewards:
+                continue
+            if not self._emblem_asset_exists(emblem_name):
+                continue
+            self.unlocked_rewards.append(emblem_name)
+            unlocked_now.append(emblem_name)
+
+        if unlocked_now:
+            save_json(self.unlocks_path, self.unlocked_rewards)
+        return unlocked_now
+
+    def check_legend_emblem_unlocks_from_live_data(self, live_data):
+        if not isinstance(live_data, dict):
+            return []
+        players = live_data.get("players") or live_data.get("data", {}).get("players", {})
+        if not isinstance(players, dict) or not players:
+            return []
+        player = players.get("0")
+        if not isinstance(player, dict):
+            player = next((p for p in players.values() if isinstance(p, dict)), None)
+        return self.check_legend_emblem_unlocks(player)
+
     def check_theme_unlocks(self):
         changed = False
         completed_ids = [c['id'] for c in self.challenges if c['completed']]
@@ -839,11 +1161,13 @@ class ChallengeManager:
             "headshots": int(p.get('headshots', 0)),
             "doors": int(p.get('doors_purchased', 0)),
             "round": int(game.get('rounds_total', 0)),
-            "points": 0,
-            "melee": int(p.get('melee_kills', 0)), 
+            "points": int(p.get('true_match_points', p.get('player_points_gained', p.get('total_points', p.get('points', 0))))),
+            "melee": int(p.get('melee_kills', 0)),
             "perks_drank": perks_drank_val,
             "rounds_added": int(game.get('rounds_total', 0)),
             "xp": int(p.get('match_xp_earned', 0)),
+            "gobblegums_used": int(p.get('gobblegums_used', 0)),
+            "box": int(p.get('true_match_box', 0)),
             "_steam_link": get_game_steam_link(game),
             "_map_name": str(game.get("map_played", game.get("map_name", "Unknown")) or "Unknown"),
             "_weapons": extract_weapon_stats(p, get_game_steam_link(game)),
@@ -898,6 +1222,7 @@ class ChallengeManager:
                     changed = True
         
         self.check_theme_unlocks()
+        self._remember_completed_rewards(self.challenges)
         
         if save and changed:
             full = load_json(self.filepath)
@@ -1003,11 +1328,13 @@ class ChallengeManager:
             "headshots": int(p.get('headshots', 0)),
             "doors": int(p.get('doors_purchased', 0)),
             "round": int(game.get('rounds_total', 0)),
-            "points": 0,
+            "points": int(game.get('true_match_points', p.get('score', 0))),
             "melee": int(p.get('melee_kills', 0)),
             "perks_drank": perks_drank_val,
             "rounds_added": int(game.get('rounds_total', 0)),
             "xp": int(p.get('match_xp_earned', 0)),
+            "gobblegums_used": int(p.get('gobblegums_used', 0)),
+            "box": int(p.get('true_match_box', 0)),
             "_steam_link": get_game_steam_link(game),
             "_map_name": str(game.get("map_played", game.get("map_name", "Unknown")) or "Unknown"),
             "_weapons": extract_weapon_stats(p, get_game_steam_link(game)),
@@ -1025,6 +1352,8 @@ class ChallengeManager:
             stats["perks_drank"] = max(0, stats["perks_drank"] - self.reset_offset.get("perks_drank", 0))
             stats["rounds_added"] = max(0, stats["rounds_added"] - self.reset_offset.get("rounds_added", 0))
             stats["xp"] = max(0, stats["xp"] - self.reset_offset.get("xp", 0))
+            stats["gobblegums_used"] = max(0, stats["gobblegums_used"] - self.reset_offset.get("gobblegums_used", 0))
+            stats["box"] = max(0, stats["box"] - self.reset_offset.get("box", 0))
 
         changed = self._apply_stats_to_challenges(stats, game_timestamp=game_timestamp)
 
@@ -1252,6 +1581,7 @@ class ChallengeManager:
         if include_map_challenges:
             map_changed = self._apply_map_stats_to_challenges(stats, full_stats, game_timestamp)
         if changed:
+            self._remember_completed_rewards(self.challenges)
             self.check_theme_unlocks()
             full = load_json(self.filepath)
             if not isinstance(full, dict): full = {}
@@ -1262,6 +1592,7 @@ class ChallengeManager:
             full["live_state"] = self.live_state
             save_json(self.filepath, full)
         if map_changed:
+            self._remember_completed_rewards(self.map_challenges)
             self._save_map_challenges()
         return changed or map_changed
 
@@ -1280,18 +1611,23 @@ class ChallengeManager:
             "melee": int(p.get('melee_kills', 0)),
             "perks_drank": p.get('calculated_perks_drank', len(valid_perks)),
             "xp": int(p.get('match_xp_earned', 0)),
+            "gobblegums_used": int(p.get('gobblegums_used', 0)),
+            "box": int(p.get('true_match_box', 0)),
             "_steam_link": get_game_steam_link(game),
             "_map_name": str(game.get("map_played", game.get("map_name", "Unknown")) or "Unknown"),
             "_weapons": extract_weapon_stats(p, get_game_steam_link(game)),
         }
 
         if game_id != self.live_game_id:
+            prev_game_active = bool(self.live_game_id)
             self.live_game_id = game_id
             restored = self._restore_live_baseline(game_id)
             if not restored:
-                self.live_snapshot = {s: 0 for s in ("kills", "headshots", "melee", "xp", "points", "round", "perks_drank")}
+                self.live_snapshot = {s: 0 for s in ("kills", "headshots", "melee", "xp", "points", "round", "perks_drank", "gobblegums_used", "box")}
                 for ls in ("doors",):
                     self.live_snapshot[ls] = self._lifetime_high_water.get(ls, 0)
+            if prev_game_active and "matches" not in stats:
+                stats["matches"] = 1
 
         delta = {}
         for stat, val in stats.items():

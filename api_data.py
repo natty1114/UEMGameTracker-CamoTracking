@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import time
+from datetime import datetime
 
 from app_paths import get_runtime_path
 from asset_helpers import get_level_icon_src, get_prestige_icon_src, get_tier_icon_src
@@ -48,11 +49,45 @@ def clean_weapon_name(value, fallback=""):
 
 class DataAPI:
     # --- Map Index ---
+    MAP_DETAIL_SUMMARY_VERSION = 2
     _map_index = None
     _index_file_count = 0
     _map_detail_cache = None
     _map_detail_summary = None
     _detail_summary_index_count = 0
+
+    def _get_combined_weapon_data(self, player):
+        if not isinstance(player, dict):
+            return {}
+
+        combined = {}
+        for source_key in ("weapon_data", "top5"):
+            weapons = player.get(source_key, {})
+            if not isinstance(weapons, dict):
+                continue
+            for console_name, weapon in weapons.items():
+                if not isinstance(weapon, dict):
+                    continue
+
+                key = str(console_name or weapon.get("console_name") or "").strip()
+                if not key:
+                    key = clean_weapon_name(weapon.get("display", weapon.get("display_name")), "")
+                if not key:
+                    continue
+
+                existing = combined.setdefault(key, dict(weapon))
+                if existing is weapon:
+                    existing = dict(weapon)
+                    combined[key] = existing
+
+                for field in ("kills", "headshots", "damage"):
+                    existing[field] = max(safe_int(existing.get(field)), safe_int(weapon.get(field)))
+
+                for field, value in weapon.items():
+                    if existing.get(field) in ("", None, "none", "Unknown"):
+                        existing[field] = value
+
+        return combined
 
     def _ensure_map_index(self, hist_path):
         cache_path = get_runtime_path("map_index_cache.json")
@@ -143,10 +178,9 @@ class DataAPI:
 
     # --- Live / History Stats ---
     def get_live_stats(self):
-        path = _bt().app_config.get('live_path')
-        if not path or not os.path.exists(path):
+        data = _bt().get_live_game_data()
+        if not data:
             return None
-        data = load_json(path)
         return _bt().process_stats(
             data,
             is_live=True,
@@ -362,6 +396,69 @@ class DataAPI:
         data = load_json(target)
         return _bt().process_stats(data, is_live=False)
 
+    def remove_history_match(self, game_id):
+        hist_path = _bt().app_config.get('history_path')
+        if not hist_path or not os.path.isdir(hist_path):
+            return {"success": False, "msg": "History folder is not configured."}
+
+        safe_id = sanitize_game_id(game_id)
+        if not safe_id:
+            return {"success": False, "msg": "Invalid archived match ID."}
+
+        hist_root = os.path.abspath(hist_path)
+        target = os.path.abspath(os.path.join(hist_root, f"Game_{safe_id}.json"))
+        try:
+            if os.path.commonpath([os.path.normcase(hist_root), os.path.normcase(target)]) != os.path.normcase(hist_root):
+                return {"success": False, "msg": "Invalid archived match path."}
+        except ValueError:
+            return {"success": False, "msg": "Invalid archived match path."}
+
+        if not os.path.exists(target):
+            return {"success": False, "msg": "Archived match was not found."}
+
+        archive_data = load_json(target) or {}
+        game = archive_data.get('game') or archive_data.get('data', {}).get('game', {})
+        archive_game_id = str(game.get('game_id') or safe_id)
+
+        try:
+            os.remove(target)
+        except OSError as exc:
+            return {"success": False, "msg": f"Could not remove archived match: {exc}"}
+
+        cache = getattr(self, "_history_meta_cache", {})
+        if isinstance(cache, dict):
+            cache.pop(target, None)
+            self._history_meta_cache = cache
+        self._map_index = None
+        self._map_detail_cache = None
+        self._map_detail_summary = None
+        self._detail_summary_index_count = 0
+
+        xp_cache_path = get_runtime_path("match_xp_cache.json")
+        xp_cache = load_json(xp_cache_path) or {}
+        if isinstance(xp_cache, dict):
+            removed_any = False
+            for key in {safe_id, archive_game_id}:
+                if key in xp_cache:
+                    xp_cache.pop(key, None)
+                    removed_any = True
+            if removed_any:
+                save_json(xp_cache_path, xp_cache)
+                self._match_xp_cache = xp_cache
+
+        best_match_removed = False
+        for key in {safe_id, archive_game_id}:
+            result = remove_best_match_by_id(key)
+            if result.get("success"):
+                best_match_removed = True
+
+        return {
+            "success": True,
+            "msg": "Archived match removed.",
+            "id": safe_id,
+            "best_match_removed": best_match_removed,
+        }
+
     def get_lifetime_stats(self):
         hist_path = _bt().app_config.get('history_path')
         if not hist_path or not os.path.exists(hist_path):
@@ -371,6 +468,7 @@ class DataAPI:
             "kills": 0, "headshots": 0, "downs": 0, "rounds": 0,
             "time_sec": 0, "matches": 0, "doors": 0, "gums": 0,
             "box": 0, "pts": 0,
+            "shots_fired": 0, "shots_hit": 0, "shots_missed": 0,
         }
         weapon_stats = {}
         map_high_rounds = {}
@@ -416,35 +514,45 @@ class DataAPI:
                     map_play_times[map_name] = 0
                 map_play_times[map_name] += int(game.get('time_total', 0))
 
-                w_data = p.get('weapon_data', p.get('top5', {}))
+                w_data = self._get_combined_weapon_data(p)
                 for k, w in w_data.items():
-                    name = w.get('display', 'Unknown')
-                    if name == "none" or name == "Unknown":
+                    name = clean_weapon_name(w.get('display', w.get('display_name')), k)
+                    if name.lower() in ("none", "unknown"):
                         continue
                     if name not in weapon_stats:
                         weapon_stats[name] = 0
-                    weapon_stats[name] += int(w.get('kills', 0))
+                    weapon_stats[name] += safe_int(w.get('kills'))
 
             except Exception:
                 pass
 
-        live_path = _bt().app_config.get('live_path')
-        if live_path and os.path.exists(live_path):
-            try:
-                live_data = load_json(live_path)
-                if live_data:
-                    live_players = live_data.get('players') or live_data.get('data', {}).get('players', {})
-                    if live_players:
-                        lp = list(live_players.values())[0]
-                        totals["doors"] = int(lp.get('doors_purchased', 0))
-                        totals["gums"] = int(lp.get('gobblegums_used', 0))
-                        totals["pts"] = int(lp.get('total_points', lp.get('player_points_gained', 0)))
-            except Exception:
-                pass
+        try:
+            live_data = _bt().get_live_game_data()
+            if live_data:
+                live_players = live_data.get('players') or live_data.get('data', {}).get('players', {})
+                if live_players:
+                    lp = list(live_players.values())[0]
+                    totals["doors"] = int(lp.get('doors_purchased', 0))
+                    totals["gums"] = int(lp.get('gobblegums_used', 0))
+                    totals["pts"] = int(lp.get('total_points', lp.get('player_points_gained', 0)))
+                    shots_hit = safe_int(lp.get('shots_hit'))
+                    shots_missed = safe_int(lp.get('shots_missed'))
+                    shots_fired = safe_int(lp.get('shots_fired'))
+                    if shots_fired <= 0 and (shots_hit > 0 or shots_missed > 0):
+                        shots_fired = shots_hit + shots_missed
+                    totals["shots_fired"] = shots_fired
+                    totals["shots_hit"] = shots_hit
+                    totals["shots_missed"] = shots_missed
+        except Exception:
+            pass
 
         hs_ratio = 0
         if totals["kills"] > 0:
             hs_ratio = round((totals["headshots"] / totals["kills"]) * 100, 1)
+
+        shot_accuracy = None
+        if totals["shots_fired"] > 0:
+            shot_accuracy = round((totals["shots_hit"] / totals["shots_fired"]) * 100, 1)
 
         top_weapons = []
         if weapon_stats:
@@ -474,7 +582,7 @@ class DataAPI:
 
         return {
             "totals": totals,
-            "ratios": {"hs_percent": hs_ratio, "kpd": kpd},
+            "ratios": {"hs_percent": hs_ratio, "kpd": kpd, "shot_accuracy": shot_accuracy},
             "time_str": f"{total_h}h {total_m}m",
             "best_map_rounds": map_high_rounds,
             "favorite_weapons": top_weapons,
@@ -638,7 +746,7 @@ class DataAPI:
                 best["kpm"] = max(best["kpm"], kpm)
                 best["xpm"] = max(best["xpm"], xpm)
 
-                weapons_data = player.get('weapon_data', player.get('top5', {}))
+                weapons_data = self._get_combined_weapon_data(player)
                 if isinstance(weapons_data, dict):
                     for console_name, weapon in weapons_data.items():
                         if not isinstance(weapon, dict):
@@ -739,7 +847,7 @@ class DataAPI:
         cached = load_json(summary_path)
         maps_data = {}
 
-        if cached and isinstance(cached, dict) and cached.get("_version") == 1:
+        if cached and isinstance(cached, dict) and cached.get("_version") == self.MAP_DETAIL_SUMMARY_VERSION:
             maps_data = cached.get("maps", {}) or {}
             cached_fc = cached.get("_file_count", 0)
 
@@ -756,7 +864,7 @@ class DataAPI:
                 if changed:
                     maps_data = {k: v for k, v in maps_data.items() if k in self._map_index}
                     save_json(summary_path, {
-                        "_version": 1,
+                        "_version": self.MAP_DETAIL_SUMMARY_VERSION,
                         "_file_count": self._index_file_count,
                         "maps": maps_data,
                     })
@@ -803,7 +911,7 @@ class DataAPI:
                     return {"error": "No archived matches found for this map.", "map": target_name}
                 summary_data[target_name] = computed
                 save_json(get_runtime_path("map_detail_summary.json"), {
-                    "_version": 1,
+                    "_version": self.MAP_DETAIL_SUMMARY_VERSION,
                     "_file_count": self._index_file_count,
                     "maps": {k: v for k, v in summary_data.items()},
                 })
@@ -849,6 +957,7 @@ class DataAPI:
         if not hist_path or not os.path.exists(hist_path):
             return {"error": "No History Folder Found", "weapons": []}
 
+        map_weapons_manager.load()
         weapon_stats = {}
         json_files = glob.glob(os.path.join(hist_path, "Game_*.json"))
         json_files.sort(key=os.path.getmtime)
@@ -867,7 +976,7 @@ class DataAPI:
                 game_id = str(game.get('game_id', os.path.basename(f)))
                 map_name = str(game.get('map_played', 'Unknown')).replace('_', ' ').title()
                 round_num = int(game.get('rounds_total', 0) or 0)
-                weapons = p.get('weapon_data', p.get('top5', {}))
+                weapons = self._get_combined_weapon_data(p)
                 if not isinstance(weapons, dict):
                     continue
 
@@ -887,8 +996,10 @@ class DataAPI:
                         or ""
                     )
                     map_category = map_weapons_manager.get_weapon_category_for(steam_link, console_name, display)
+                    console_category = map_weapons_manager.get_console_category_override(console_name)
                     category = normalise_weapon_category(
-                        map_category
+                        console_category
+                        or map_category
                         or weapon.get("category")
                         or get_weapon_category(console_name, display)
                     )
@@ -904,6 +1015,7 @@ class DataAPI:
                             "best_round": 0,
                             "best_map": "",
                             "pap_uses": 0,
+                            "pap_name": "",
                         }
 
                     try:
@@ -921,7 +1033,9 @@ class DataAPI:
 
                     corrected_damage = _bt().damage_tracker.get_real_damage(game_id, "0", console_name, raw_damage)
                     entry = weapon_stats[key]
-                    if entry.get("category") == "other" and category != "other":
+                    if console_category and console_category != "other":
+                        entry["category"] = console_category
+                    elif entry.get("category") == "other" and category != "other":
                         entry["category"] = category
                     entry["kills"] += kills
                     entry["headshots"] += headshots
@@ -936,6 +1050,19 @@ class DataAPI:
                     )
                     if is_pap:
                         entry["pap_uses"] += 1
+                        raw_pap = weapon.get('display_name_upgraded', '') or ''
+                        if raw_pap and raw_pap.lower() not in ("", "none", "unknown"):
+                            entry["pap_name"] = raw_pap
+                        elif not entry.get("pap_name"):
+                            for mp in map_weapons_manager._data.values():
+                                for mw in mp.get("weapons", []):
+                                    if mw.get("console_name") == console_name:
+                                        up = mw.get("upgraded_display_name", "")
+                                        if up:
+                                            entry["pap_name"] = up
+                                        break
+                                if entry.get("pap_name"):
+                                    break
                     if round_num > entry["best_round"]:
                         entry["best_round"] = round_num
                         entry["best_map"] = map_name
@@ -1031,7 +1158,7 @@ class DataAPI:
                     continue
                 actual_player_id = str(actual_player_id)
 
-                weapons = p.get('weapon_data', p.get('top5', {}))
+                weapons = self._get_combined_weapon_data(p)
                 if not isinstance(weapons, dict):
                     continue
 
@@ -1083,16 +1210,33 @@ class DataAPI:
                     or ""
                 )
                 map_category = map_weapons_manager.get_weapon_category_for(steam_link, matched_console_name, target_name)
+                console_category = map_weapons_manager.get_console_category_override(matched_console_name)
                 resolved_category = normalise_weapon_category(
-                    map_category
+                    console_category
+                    or map_category
                     or matched_weapon.get("category")
                     or get_weapon_category(matched_console_name, target_name)
                 )
-                if category == "other" and resolved_category != "other":
+                if console_category and console_category != "other":
+                    category = console_category
+                elif category == "other" and resolved_category != "other":
                     category = resolved_category
                 if not console_name_result and matched_console_name:
                     console_name_result = matched_console_name
 
+                pap_name = matched_weapon.get('display_name_upgraded', '') or ''
+                if pap_name.lower() in ("", "none", "unknown", "0"):
+                    pap_name = ""
+                if not pap_name and matched_console_name:
+                    for mp in map_weapons_manager._data.values():
+                        for mw in mp.get("weapons", []):
+                            if mw.get("console_name") == matched_console_name:
+                                up = mw.get("upgraded_display_name", "")
+                                if up:
+                                    pap_name = up
+                                break
+                        if pap_name:
+                            break
                 row = {
                     "game_id": game_id,
                     "map": map_name,
@@ -1104,6 +1248,7 @@ class DataAPI:
                     "headshot_pct": round((headshots / kills) * 100, 1) if kills > 0 else 0,
                     "damage": damage,
                     "pap": bool(is_pap),
+                    "pap_name": pap_name,
                     "aat": aat_name,
                 }
                 matches.append(row)
@@ -1155,11 +1300,14 @@ class DataAPI:
             key=lambda item: (int(item.get("kills", 0)), int(item.get("damage", 0))),
             reverse=True,
         )
+        pap_names = [m.get("pap_name", "") for m in matches if m.get("pap_name")]
+        most_common_pap = max(set(pap_names), key=pap_names.count) if pap_names else ""
         return {
             "weapon": {
                 "name": target_name,
                 "console_name": console_name_result,
                 "category": category,
+                "pap_name": most_common_pap,
             },
             "totals": totals,
             "best_match": best_match,
@@ -1169,10 +1317,7 @@ class DataAPI:
         }
 
     def get_career_level_info(self):
-        live_path = _bt().app_config.get('live_path')
-        data = None
-        if live_path and os.path.exists(live_path):
-            data = load_json(live_path)
+        data = _bt().get_live_game_data()
         if not data:
             hist_path = _bt().app_config.get('history_path')
             if hist_path and os.path.exists(hist_path):
@@ -1281,16 +1426,15 @@ class DataAPI:
 
     # --- Best Matches ---
     def add_current_best_match(self, target_game_id=None):
-        live_path = _bt().app_config.get('live_path')
         hist_path = _bt().app_config.get('history_path')
         if not hist_path or not os.path.exists(hist_path):
             return {"success": False, "msg": "History folder is not configured or available."}
 
         raw_id = str(target_game_id or "").strip()
         if not raw_id or raw_id == "0":
-            if not live_path or not os.path.exists(live_path):
+            if not _bt().has_live_game_source():
                 return {"success": False, "msg": "No displayed match ID is available, and Live Game Path is not configured."}
-            live_data = load_json(live_path)
+            live_data = _bt().get_live_game_data()
             if not live_data:
                 return {"success": False, "msg": "CurrentGame.json could not be read."}
             live_game = live_data.get('game') or live_data.get('data', {}).get('game', {})
@@ -1311,6 +1455,54 @@ class DataAPI:
     def remove_best_match(self, game_id):
         return remove_best_match_by_id(game_id)
 
+    def get_xp_trend_data(self, player_id="0", limit=30):
+        hist_path = _bt().app_config.get('history_path')
+        if not hist_path or not os.path.exists(hist_path):
+            return []
+
+        xp_cache_path = get_runtime_path("match_xp_cache.json")
+        xp_data = load_json(xp_cache_path) or {}
+
+        files = sorted(
+            [f for f in glob.glob(os.path.join(hist_path, "Game_*.json"))],
+            key=lambda f: os.path.getmtime(f),
+        )
+        entries = []
+        for filepath in files[-limit:]:
+            try:
+                data = load_json(filepath)
+                if not data:
+                    continue
+                game = data.get('game') or data.get('data', {}).get('game', {})
+                players = data.get('players') or data.get('data', {}).get('players', {})
+                if not players:
+                    continue
+
+                game_id = str(game.get('game_id', ''))
+                map_name = str(game.get('map_played', 'Unknown')).replace('_', ' ').title()
+                round_num = int(game.get('rounds_total', 0))
+                time_sec = int(game.get('time_total', 0))
+                mtime = os.path.getmtime(filepath)
+
+                match_xp = 0
+                if game_id in xp_data and str(player_id) in xp_data[game_id]:
+                    match_xp = xp_data[game_id][str(player_id)].get('total_match_xp', 0)
+                elif str(player_id) in players:
+                    p_data = players[str(player_id)]
+                    match_xp = int(p_data.get('match_xp_earned', 0))
+
+                entries.append({
+                    "map": map_name,
+                    "xp": match_xp,
+                    "round": round_num,
+                    "time_sec": time_sec,
+                    "date_iso": datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M") if mtime else "",
+                })
+            except Exception:
+                continue
+
+        return entries
+
     # --- Challenges ---
     def get_challenges(self):
         return _bt().challenge_manager.get_frontend_data()
@@ -1323,13 +1515,7 @@ class DataAPI:
         return False
 
     def reset_challenges_api(self):
-        live_path = _bt().app_config.get('live_path')
-        live_data = None
-        if live_path and os.path.exists(live_path):
-            try:
-                live_data = load_json(live_path)
-            except Exception:
-                pass
+        live_data = _bt().get_live_game_data()
 
         _bt().challenge_manager.reset_all_challenges(live_data)
         return True

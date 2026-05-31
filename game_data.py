@@ -6,16 +6,20 @@ UEM_WORKSHOP_URL = "https://steamcommunity.com/sharedfiles/filedetails/?id=29420
 UPDATER_EXE_NAME = "BO3Updater.exe"
 DEFAULT_DISCORD_APPLICATION_ID = "1504865399185870869"
 DISCORD_ACTIVITY_NAME = "Ultimate Experience Mod Community Tool"
+REWARD_ASSET_BASE_URL = "https://uemmaps.com/trackerrewards"
+DISCORD_EMBLEM_BASE_URL = f"{REWARD_ASSET_BASE_URL}/emblems"
 CONFIG_FILE = "config.json"
 DAMAGE_HISTORY_FILE = "damage_history.json"
 GLOBAL_STATS_STATE_FILE = "global_stats_state.json"
 REMOTE_MANAGEMENT_CACHE_FILE = "remote_management_cache.json"
 CAMO_DB_FILE = "custom_camos.json"
 MAP_WEAPONS_FILE = "map_weapons.json"
+UEM_BASE_WEAPONS_FILE = "uem_base_weapons.json"
+EXPLOSIVES_FILE = "uem_explosives.json"
 CSS_MAIN_FILE = "style.css"
 CSS_SETUP_FILE = "setup.css"
 THEMES_DIR = "themes"
-ALWAYS_AVAILABLE_THEMES = {"Darkwood", "Cherry Blossom", "Clouds", "Dog Pack", "DeadOps Arcade", "Pacific Paradise", "Shi No Numa"}
+ALWAYS_AVAILABLE_THEMES = {"Darkwood", "Cherry Blossom", "Clouds", "Dog Pack", "DeadOps Arcade", "Extinction", "Pacific Paradise", "Shi No Numa"}
 
 PERK_NAMES = {
     "specialty_armorvest": "Juggernog",

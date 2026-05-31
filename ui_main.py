@@ -1,7 +1,8 @@
 ﻿"""Main dashboard HTML renderer for BO3 Tracker."""
+import html
 
 
-def build_main_app_html(css_content, app_config, app_version, global_stats_prompt_version, chart_js_content=""):
+def build_main_app_html(css_content, app_config, app_version, global_stats_prompt_version, chart_js_content="", client_reference=""):
     
     overlays_on = app_config.get('overlays_enabled', False)
     chk_str = "checked" if overlays_on else ""
@@ -17,8 +18,26 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
     global_stats_js = "true" if global_stats_on else "false"
     global_stats_prompt_needed = app_config.get('global_stats_prompt_version') != global_stats_prompt_version
     global_stats_prompt_js = "true" if global_stats_prompt_needed else "false"
+    compact_mode_on = bool(app_config.get('compact_mode_enabled', False))
+    compact_mode_js = "true" if compact_mode_on else "false"
+    compact_mode_body_class = ' class="compact-mode"' if compact_mode_on else ""
+    compact_mode_btn_class = " active" if compact_mode_on else ""
+    compact_mode_btn_pressed = "true" if compact_mode_on else "false"
+    compact_mode_btn_pressed_attr = 'aria-pressed="' + compact_mode_btn_pressed + '"'
+    compact_mode_status = "ON" if compact_mode_on else "OFF"
     discord_presence_on = app_config.get('discord_presence_enabled', False)
     discord_presence_chk_str = "checked" if discord_presence_on else ""
+    discord_presence_emblem_chk_str = "checked" if app_config.get('discord_presence_image_source', 'workshop') == 'emblem' else ""
+    currentgame_sync_mode = str(app_config.get('currentgame_sync_mode', 'off') or 'off').lower()
+    if currentgame_sync_mode not in ('relay_host', 'relay_client'):
+        currentgame_sync_mode = 'off'
+    currentgame_sync_on = bool(app_config.get('currentgame_sync_enabled', False)) and currentgame_sync_mode != 'off'
+    currentgame_sync_chk_str = "checked" if currentgame_sync_on else ""
+    currentgame_sync_relay_host_selected = "selected" if currentgame_sync_mode == "relay_host" else ""
+    currentgame_sync_relay_client_selected = "selected" if currentgame_sync_mode == "relay_client" else ""
+    currentgame_relay_url = html.escape(str(app_config.get('currentgame_relay_url', '') or 'https://uemmaps.com/tracker/currentgame_relay.php'), quote=True)
+    currentgame_sync_selected_player = html.escape(str(app_config.get('currentgame_sync_selected_player', '') or ''), quote=True)
+    client_reference_label = html.escape(str(client_reference or "Unavailable"), quote=True)
     overlay_components = app_config.get('overlay_components') or {}
     if not isinstance(overlay_components, dict):
         overlay_components = {}
@@ -29,6 +48,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
     overlay_progress_chk_str = "checked" if overlay_components.get('progress', True) else ""
     graph_overlay_on = app_config.get('graph_overlay_enabled', False)
     graph_overlay_chk_str = "checked" if graph_overlay_on else ""
+    challenge_overlay_on = app_config.get('challenge_overlay_enabled', False)
+    challenge_overlay_chk_str = "checked" if challenge_overlay_on else ""
     graph_xpm_chk_str = "checked" if overlay_components.get('xpm_graph', False) else ""
     graph_roundxp_chk_str = "checked" if overlay_components.get('roundxp_graph', False) else ""
     graph_zpm_chk_str = "checked" if overlay_components.get('zpm_graph', False) else ""
@@ -53,16 +74,63 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
         <!-- FIREWALL 2: Theme-specific CSS handled by theme files in /themes/ -->
         <style id="dynamic-camo-styles"></style>
+        <style>
+            .startup-asset-sync {
+                position: fixed;
+                left: 50%;
+                bottom: 22px;
+                transform: translateX(-50%);
+                width: min(520px, calc(100vw - 32px));
+                z-index: 9999;
+                background: rgba(10, 15, 18, 0.96);
+                border: 1px solid rgba(102, 252, 241, 0.55);
+                box-shadow: 0 0 18px rgba(102, 252, 241, 0.18);
+                padding: 12px 14px;
+                color: #f5ffff;
+                font-family: "Segoe UI", Arial, sans-serif;
+            }
+            .startup-asset-sync-title {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                font-size: 12px;
+                font-weight: 800;
+                text-transform: uppercase;
+                color: #66fcf1;
+            }
+            .startup-asset-sync-message {
+                margin-top: 6px;
+                font-size: 11px;
+                color: #9aa5aa;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .startup-asset-sync-bar {
+                height: 8px;
+                margin-top: 9px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                overflow: hidden;
+            }
+            .startup-asset-sync-fill {
+                height: 100%;
+                width: 0%;
+                background: linear-gradient(90deg, #66fcf1, #ff9d00);
+                transition: width 180ms ease;
+            }
+        </style>
     </head>
-    <body>
+    <body""" + compact_mode_body_class + """>
         <div class="privacy-modal-backdrop" id="global-stats-modal">
             <div class="privacy-modal">
-                <h2>Contribute Anonymous Global Stats?</h2>
-                <p>Version """ + global_stats_prompt_version + """ can help build a community global stats database from your archived match summaries. This is optional and can be changed later in Settings.</p>
+                <h2>Contribute Global Stats & Leaderboards?</h2>
+                <p>Version """ + global_stats_prompt_version + """ can help build community stats and leaderboard pages from your archived match summaries. This is optional and can be changed later in Settings.</p>
                 <ul>
-                    <li>No personally identifiable information is collected.</li>
                     <li>No Steam ID, Windows username, file paths, profile files, or raw archive JSON are uploaded.</li>
                     <li>The app sends anonymous match summaries such as map, round, time, kills, XP, weapons, and career counters.</li>
+                    <li>Leaderboard uploads include the in-game player name, last level, and a public client reference so duplicate entries can be matched.</li>
                     <li>Uploads are deduplicated by anonymous hashes so changing the EXE should not create duplicate games.</li>
                 </ul>
                 <div class="privacy-modal-actions">
@@ -71,13 +139,40 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 </div>
             </div>
         </div>
+        <div class="reward-preview-backdrop" id="reward-preview-modal" onclick="closeRewardPreviewFromBackdrop(event)">
+            <div class="reward-preview-modal">
+                <div class="reward-preview-header">
+                    <div>
+                        <div class="reward-preview-label" id="reward-preview-type">REWARD</div>
+                        <h2 id="reward-preview-title">Reward Preview</h2>
+                    </div>
+                    <button class="reward-preview-close" onclick="closeRewardPreview()">X</button>
+                </div>
+                <div class="reward-preview-media-frame">
+                    <img id="reward-preview-img" class="reward-preview-media initially-hidden" src="">
+                    <video id="reward-preview-video" class="reward-preview-media initially-hidden" autoplay loop muted playsinline></video>
+                    <div id="reward-preview-empty" class="reward-preview-empty initially-hidden">Preview unavailable.</div>
+                </div>
+            </div>
+        </div>
+        <div class="startup-asset-sync" id="startup-asset-sync" style="display:none;">
+            <div class="startup-asset-sync-title">
+                <span>Preparing Reward Assets</span>
+                <span id="startup-asset-sync-count">0 / 0</span>
+            </div>
+            <div class="startup-asset-sync-message" id="startup-asset-sync-message">Checking hosted rewards...</div>
+            <div class="startup-asset-sync-bar"><div class="startup-asset-sync-fill" id="startup-asset-sync-fill"></div></div>
+        </div>
         <div class="sidebar">
             <div class="header" id="live-btn" onclick="switchTab('live')" data-i18n="navigation.live_game">LIVE GAME</div>
             <div class="nav-btn" id="camo-btn" onclick="switchTab('camo')" data-i18n="navigation.camo_matrix">CAMO MATRIX</div>
             <div class="nav-btn" id="career-btn" onclick="switchTab('career')" data-i18n="navigation.career_profile">CAREER PROFILE</div>
             <div class="nav-btn" id="bestmatches-btn" onclick="switchTab('bestmatches')" data-i18n="navigation.best_matches">BEST MATCHES</div>
             <div class="nav-btn" id="chal-btn" onclick="switchTab('challenges')" data-i18n="navigation.challenges">CHALLENGES</div>
-            <div class="nav-btn" id="mapcompat-btn" onclick="openMapCompat()" data-i18n="navigation.map_compat">MAP COMPAT</div>
+            <div class="nav-btn disabled" id="mapcompat-btn" aria-disabled="true" title="Temporarily disabled until Steam Workshop image download scripts are fixed.">
+                <span>MAP COMPAT</span>
+                <span class="nav-btn-note">DISABLED: WORKSHOP IMAGE SCRIPTS</span>
+            </div>
             <div class="sidebar-section-label" data-i18n="navigation.match_logs">MATCH LOGS</div>
             <div class="history-filters">
                 <input id="history-search" class="history-filter-input" type="search" placeholder="Search map, player, ID" oninput="queueHistoryFilterUpdate()">
@@ -123,7 +218,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 <span class="donate-badge" aria-hidden="true">P</span>
                 <span data-i18n="buttons.donate_paypal">DONATE VIA PAYPAL</span>
             </button>
-            <div class="app-version-label"><span data-i18n="common.version">VERSION</span> """ + app_version + """</div>
+            <div class="app-version-label"><span data-i18n="common.version">VERSION</span> """ + app_version + """ | CLIENT ID """ + client_reference_label + """</div>
         </div>
         
         <div class="main-view">
@@ -138,7 +233,10 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     <div class="live-card-content">
                         <div class="card-title live-card-title-row">
                             <span data-i18n="live.current_mission">CURRENT MISSION</span>
-                            <button id="best-match-btn" class="nav-btn-small best-match-action" onclick="addBestMatch()" data-i18n="buttons.add_best_match">ADD BEST MATCH</button>
+                            <div class="live-card-actions">
+                                <button id="live-capture-btn" class="nav-btn-small live-capture-action" onclick="captureLiveStats()" data-i18n="buttons.capture_live">CAPTURE</button>
+                                <button id="best-match-btn" class="nav-btn-small best-match-action" onclick="addBestMatch()" data-i18n="buttons.add_best_match">ADD BEST MATCH</button>
+                            </div>
                         </div>
                         <div class="live-mission-row">
                             <div class="live-mission-left">
@@ -330,6 +428,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         <div class="detail-row"><span data-i18n="career.total_kills">TOTAL KILLS</span><span id="life_kills" class="highlight-large-value">0</span></div>
                         <div class="detail-row"><span data-i18n="common.headshots">HEADSHOTS</span><span id="life_headshots">0</span></div>
                         <div class="detail-row"><span data-i18n="career.precision">PRECISION</span><span id="life_hs_pct" class="orange-value">0%</span></div>
+                        <div class="detail-row" id="life_shot_acc_row" title="CurrentGame.json shots_hit / shots_fired"><span>SHOT ACCURACY</span><span id="life_shot_acc" class="highlight-value">N/A</span></div>
         <div class="subsection-divider">
                             <div class="detail-row"><span data-i18n="career.favorite_weapons">FAVORITE WEAPONS</span><span id="life_fav_gun" class="align-right">None</span></div>
                         </div>
@@ -377,6 +476,15 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         <div class="card-title" data-i18n="career.top_maps_xp">TOP MAPS BY HIGHEST MATCH XP</div>
                         <div id="top_xp_maps_list" class="compact-scroll-list medium-scroll-list">
                             <div class='muted-loading' data-i18n="career.loading_xp_records">Loading XP records...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top:20px;">
+                    <div class="card-title" data-i18n="career.xp_trend">MATCH XP TREND</div>
+                    <div style="padding:10px;">
+                        <div id="xp-trend-wrapper" style="width:100%;height:260px;overflow-x:auto;overflow-y:hidden;position:relative;display:block;">
+                            <canvas id="xpTrendChart" style="display:block;height:240px;min-width:100%;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -561,6 +669,19 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         <button class="nav-btn-small danger-action-spaced" onclick="resetOps()" data-i18n="buttons.reset">RESET</button>
                     </div>
                 </div>
+                <div class="card challenge-overlay-picker">
+                    <div class="settings-row">
+                        <div>
+                            <div class="setting-title">Challenge Overlay</div>
+                            <div id="challenge-overlay-status" class="setting-description">Track up to 3 selected challenges in a separate overlay.</div>
+                        </div>
+                        <label class="switch">
+                            <input id="challenge-overlay-toggle" type="checkbox" onchange="toggleChallengeOverlay(this)" """ + challenge_overlay_chk_str + """>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div id="challenge-overlay-selected" class="challenge-overlay-selected"></div>
+                </div>
                 <div id="challenge-list" class="chal-grid"></div>
             </div>
 
@@ -577,6 +698,16 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                             <option value="default">Default Tactical</option>
                         </select>
                         <button class="nav-btn-small" onclick="applySelectedTheme()" data-i18n="buttons.apply">APPLY</button>
+                    </div>
+                    <div class="compact-mode-row">
+                        <div>
+                            <div class="setting-title">Compact Mode</div>
+                            <div class="setting-description">Tightens dashboard spacing so more stats, rows, and challenges fit on screen.</div>
+                        </div>
+                        <button id="compact-mode-toggle" class="nav-btn-small compact-mode-toggle""" + compact_mode_btn_class + """" onclick="toggleCompactMode()" title="Toggle compact dashboard layout" """ + compact_mode_btn_pressed_attr + """>
+                            <span>COMPACT MODE</span>
+                            <span id="compact-mode-status-pill" class="mode-pill">""" + compact_mode_status + """</span>
+                        </button>
                     </div>
                 </div>
 
@@ -603,10 +734,27 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                             <select id="emblem-selector" class="full-select" onchange="previewEmblem(this.value)">
                                 <option value="default">None Equipped</option>
                             </select>
+                            <div id="emblem-version-row" class="emblem-version-row initially-hidden">
+                                <span class="setting-description" data-i18n="customization.emblem_version">Version</span>
+                                <select id="emblem-version-selector" class="settings-select compact-select" onchange="previewSelectedEmblem()">
+                                    <option value="static" data-i18n="customization.emblem_static">Static</option>
+                                    <option value="animated" data-i18n="customization.emblem_animated">Animated GIF</option>
+                                </select>
+                            </div>
                             <img id="emblem-preview" src="" class="emblem-selector-img initially-hidden">
                             <video id="emblem-preview-video" class="emblem-selector-img initially-hidden" autoplay loop muted playsinline></video>
                         </div>
                         <button class="nav-btn-small button-xl" onclick="applySelectedEmblem()" data-i18n="buttons.equip">EQUIP</button>
+                    </div>
+                    <div class="settings-row emblem-discord-presence-row">
+                        <div>
+                            <div class="setting-title" data-i18n="customization.discord_emblem_presence">Use Emblem For Discord Presence</div>
+                            <div class="setting-description" data-i18n="customization.discord_emblem_presence_description">Uses your equipped emblem as the Discord card image instead of the map/workshop image.</div>
+                        </div>
+                        <label class="switch">
+                            <input id="discord-presence-emblem-toggle" type="checkbox" onchange="toggleDiscordPresenceEmblemImage(this)" """ + discord_presence_emblem_chk_str + """>
+                            <span class="slider"></span>
+                        </label>
                     </div>
                 </div>
 
@@ -744,7 +892,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     <div class="card-title" data-settings-copy="updatesCard" data-i18n="settings.app_updates">APP UPDATES</div>
                     <div class="settings-row">
                         <div>
-                            <div class="setting-title">BO3 Tracker Version """ + app_version + """</div>
+                            <div class="setting-title">BO3 Tracker Version """ + app_version + """ | Client ID """ + client_reference_label + """</div>
                             <div id="update-settings-status" class="update-status" data-i18n="settings.update_status">Checking GitHub releases in the background.</div>
                         </div>
                         <button class="nav-btn-small button-xl" onclick="checkForUpdates(true)" data-i18n="buttons.check">CHECK</button>
@@ -770,6 +918,49 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     <div class="card-title" data-settings-copy="dataCard" data-i18n="settings.data_management">DATA MANAGEMENT</div>
                     <button class="nav-btn-small danger-full-action" onclick="reconfigure()" data-i18n="buttons.reset_file_paths">RESET FILE PATHS</button>
                     <p class="setting-note" data-settings-copy="dataNote" data-i18n="settings.data_note">Use this if you moved your game installation or history folder.</p>
+                </div>
+
+                <div class="card diagnostics-card">
+                    <div class="card-title card-title-row">
+                        <span>DIAGNOSTICS</span>
+                        <button class="nav-btn-small diagnostics-refresh-btn" onclick="loadDiagnosticsPanel()">REFRESH</button>
+                    </div>
+                    <div class="setting-help diagnostics-help">Quiet health check for live data, archives, sync, and local caches.</div>
+                    <div id="diagnostics-panel" class="diagnostics-grid">
+                        <div class="diagnostics-empty">Checking tracker health...</div>
+                    </div>
+                    <div id="diagnostics-updated" class="setting-status"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">CURRENTGAME SYNC</div>
+                    <div class="settings-row">
+                        <div>
+                            <div class="setting-title">Enable CurrentGame Sync</div>
+                            <div class="setting-description">Host your live file through the website relay or connect to another player in the same match.</div>
+                            <div id="currentgame-sync-status" class="setting-status">Status: Off</div>
+                        </div>
+                        <label class="switch">
+                            <input id="currentgame-sync-toggle" type="checkbox" onchange="saveCurrentGameSyncSettings()" """ + currentgame_sync_chk_str + """>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row sync-settings-grid">
+                        <select id="currentgame-sync-mode" class="settings-select" onchange="saveCurrentGameSyncSettings()">
+                            <option value="relay_host" """ + currentgame_sync_relay_host_selected + """>Host Website</option>
+                            <option value="relay_client" """ + currentgame_sync_relay_client_selected + """>Connect Website</option>
+                        </select>
+                        <input id="currentgame-sync-password" class="settings-input" type="password" placeholder="Shared password">
+                        <input id="currentgame-sync-relay-url" class="settings-input" value=\"""" + currentgame_relay_url + """\" placeholder="Website relay URL">
+                    </div>
+                    <div class="settings-row sync-settings-grid">
+                        <select id="currentgame-sync-player" class="settings-select" data-selected=\"""" + currentgame_sync_selected_player + """\">
+                            <option value="">Choose synced player</option>
+                        </select>
+                        <button class="nav-btn-small full-width-action" onclick="refreshCurrentGameSyncPlayers()">REFRESH PLAYERS</button>
+                        <button class="nav-btn-small button-xl" onclick="saveCurrentGameSyncSettings()">SAVE SYNC</button>
+                        <button class="nav-btn-small danger-full-action" onclick="turnOffCurrentGameSync()">TURN OFF</button>
+                    </div>
                 </div>
 
                 <div class="card">
@@ -845,11 +1036,11 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 </div>
                 
                 <div class="card">
-                    <div class="card-title" data-settings-copy="globalCard" data-i18n="settings.global_anonymous_stats">GLOBAL ANONYMOUS STATS</div>
+                    <div class="card-title" data-settings-copy="globalCard" data-i18n="settings.global_stats_leaderboards">GLOBAL STATS & LEADERBOARDS</div>
                     <div class="settings-row">
                         <div>
-                            <div class="setting-title" data-settings-copy="globalTitle" data-i18n="settings.contribute_anonymous_stats">Contribute Anonymous Global Stats</div>
-                            <div class="setting-description" data-settings-copy="globalDescription" data-i18n="settings.global_description">Uploads anonymous archived match summaries to the UEMM global tracker database. No personally identifiable info, Steam ID, usernames, file paths, or raw profile/archive files are sent.</div>
+                            <div class="setting-title" data-settings-copy="globalTitle" data-i18n="settings.contribute_global_stats_leaderboards">Contribute Global Stats & Leaderboards</div>
+                            <div class="setting-description" data-settings-copy="globalDescription" data-i18n="settings.global_description_leaderboards">Uploads archived match summaries to the UEMM global tracker database. Leaderboards use in-game player names plus a public client reference; Steam IDs, Windows usernames, file paths, raw profile files, and raw archive JSON are not sent.</div>
                             <div id="global-stats-status" class="setting-status" data-i18n="status.not_synced_this_session">Status: Not synced this session</div>
                         </div>
                         <label class="switch">
@@ -861,7 +1052,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     <br>
                     <div class="settings-links">
                         <a href="https://uemmaps.com/tracker/tracker.html" target="_blank" data-i18n="settings.view_global_stats_board">View Global Stats Board</a> &bull;
-                        <a href="https://uemmaps.com/tracker/recentmatches.html" target="_blank" data-i18n="settings.view_recent_matches">View Recent Matches</a>
+                        <a href="https://uemmaps.com/tracker/recentmatches.html" target="_blank" data-i18n="settings.view_recent_matches">View Recent Matches</a> &bull;
+                        <a href="https://uemmaps.com/tracker/leaderboards.html" target="_blank">View Leaderboards</a>
                     </div>
                 </div>
 
@@ -899,7 +1091,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                             <div class="card-title" data-i18n="help.latest_changelog">LATEST CHANGELOG</div>
                             <div class="changelog-header-row">
                                 <div>
-                                    <div class="setting-title"><span data-i18n="help.current_version">Current Version</span> """ + app_version + """</div>
+                                    <div class="setting-title"><span data-i18n="help.current_version">Current Version</span> """ + app_version + """ | Client ID """ + client_reference_label + """</div>
                                     <div id="changelog-status" class="update-status" data-i18n="help.loading_changelog">Loading latest GitHub release notes...</div>
                                 </div>
                                 <button class="nav-btn-small button-tall" onclick="loadChangelog(true)" data-i18n="buttons.refresh">REFRESH</button>
@@ -926,7 +1118,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                                 <li data-i18n="help.feature_live_game"><b>Live Game:</b> Tracks rank, XP, perks, weapons, damage, and round timing.</li>
                                 <li data-i18n="help.feature_camo_matrix"><b>Camo Matrix:</b> Edits your loaded camo profile locally and supports priority stars.</li>
                                 <li data-i18n="help.feature_career_profile"><b>Career Profile:</b> Summarizes archived maps, records, XP, and long-term stats.</li>
-                                <li data-i18n="help.feature_challenges"><b>Challenges:</b> Unlocks calling cards, emblems, themes, weekly goals, and map operations.</li>
+                                <li data-i18n="help.feature_challenges"><b>Challenges:</b> Unlocks calling cards, emblems, themes, local weekly goals that rotate automatically, and map operations.</li>
                                 <li data-i18n="help.feature_best_matches"><b>Best Matches:</b> Lets you pin standout games from the live dashboard.</li>
                             </ul>
                         </div>
@@ -936,12 +1128,44 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                             <div class="help-link-strip">
                                 <a href="https://uemmaps.com/tracker/tracker.html" target="_blank" data-i18n="settings.view_global_stats_board">Global Stats Board</a>
                                 <a href="https://uemmaps.com/tracker/recentmatches.html" target="_blank" data-i18n="settings.view_recent_matches">Recent Matches</a>
+                                <a href="https://uemmaps.com/tracker/leaderboards.html" target="_blank">Leaderboards</a>
                                 <a href="https://uemmaps.com/" target="_blank" data-i18n="help.uem_maps_upload">UEM Maps login and camo upload</a>
+                            </div>
+                            <div class="discord-contact-panel">
+                                <a class="discord-contact-button" href="https://discord.com/users/140242942773297153" target="_blank" rel="noopener noreferrer" title="Open Discord profile">
+                                    <span class="discord-contact-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 245 240" focusable="false">
+                                            <path d="M104.4 104.6c-5.7 0-10.2 5-10.2 11.1s4.6 11.1 10.2 11.1c5.7 0 10.3-5 10.2-11.1 0-6.1-4.6-11.1-10.2-11.1zm36.3 0c-5.7 0-10.2 5-10.2 11.1s4.6 11.1 10.2 11.1c5.7 0 10.2-5 10.2-11.1s-4.5-11.1-10.2-11.1z"/>
+                                            <path d="M189.5 20h-134C42.6 20 32 30.6 32 43.6v135.2c0 13 10.6 23.6 23.5 23.6h113.4l-5.3-18.4 12.8 11.9 12.1 11.2 21.5 18.9V43.6c0-13-10.6-23.6-23.5-23.6zm-38.9 130.5s-3.6-4.3-6.6-8.1c13.1-3.7 18.1-11.9 18.1-11.9-4.1 2.7-8 4.6-11.5 5.9-5 2.1-9.8 3.5-14.5 4.3-9.6 1.8-18.4 1.3-25.9-.1-5.7-1.1-10.6-2.7-14.7-4.3-2.3-.9-4.8-2-7.3-3.4-.3-.2-.6-.3-.9-.5-.2-.1-.3-.2-.4-.3-1.8-1-2.8-1.7-2.8-1.7s4.8 8 17.5 11.8c-3 3.8-6.7 8.3-6.7 8.3-22.1-.7-30.5-15.2-30.5-15.2 0-32.2 14.4-58.3 14.4-58.3 14.4-10.8 28.1-10.5 28.1-10.5l1 1.2c-18 5.2-26.3 13.1-26.3 13.1s2.2-1.2 5.9-2.9c10.7-4.7 19.2-6 22.7-6.4.6-.1 1.1-.2 1.7-.2 6.1-.8 13-1 20.2-.2 9.5 1.1 19.7 3.9 30.1 9.6 0 0-7.9-7.5-24.9-12.7l1.4-1.6s13.7-.3 28.1 10.5c0 0 14.4 26.1 14.4 58.3 0 .1-8.5 14.6-30.6 15.3z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="discord-contact-copy">
+                                        <span class="discord-contact-label">Issues or questions?</span>
+                                        <span class="discord-contact-user">GurtLushSalmon</span>
+                                        <span class="discord-contact-id">Discord profile link</span>
+                                    </span>
+                                    <span class="discord-contact-action">OPEN PROFILE</span>
+                                </a>
+                                <button class="discord-contact-copy-btn" type="button" onclick="copySupportDiscord(this)" title="Copy Discord username">
+                                    <span class="discord-contact-copy-btn-label">COPY USERNAME</span>
+                                </button>
                             </div>
                             <div class="help-faq-grid">
                                 <details>
                                     <summary data-i18n="help.faq_stats_title">Stats are not updating live</summary>
                                     <p data-i18n="help.faq_stats_body">Check the configured CurrentGame.json path in Settings. Some maps or mods only write new values at round end, during pauses, or after the game has fully initialized.</p>
+                                </details>
+                                <details>
+                                    <summary data-i18n="help.faq_career_sources_title">Why do Career Profile stats come from different places?</summary>
+                                    <p data-i18n="help.faq_career_sources_body">Career totals mostly come from archived Game_*.json files in your history folder. Live/global counters such as shot accuracy come from the current CurrentGame.json, and XP trend data may use the local match XP cache when archived files do not include XP directly.</p>
+                                </details>
+                                <details>
+                                    <summary data-i18n="help.faq_diagnostics_title">What does the Diagnostics panel mean?</summary>
+                                    <p data-i18n="help.faq_diagnostics_body">Diagnostics in Settings is a quiet health check. OK means the source looks usable, CHECK means the app needs more data or setup, FIX means a configured path or sync failed, and OFF means the feature is intentionally disabled.</p>
+                                </details>
+                                <details>
+                                    <summary data-i18n="help.faq_shot_accuracy_title">Why is shot accuracy N/A?</summary>
+                                    <p data-i18n="help.faq_shot_accuracy_body">Shot accuracy needs shots_hit, shots_missed, and shots_fired from CurrentGame.json. It can show N/A before the live file updates, on maps that do not write those counters, or when the live file path is not readable.</p>
                                 </details>
                                 <details>
                                     <summary data-i18n="help.faq_match_title">My match is not in the sidebar</summary>
@@ -960,8 +1184,12 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                                     <p data-i18n="help.faq_challenges_reopen_body">Current live-game progress is saved between launches so reopening should not double count. If you need a clean slate, use the challenge reset button.</p>
                                 </details>
                                 <details>
-                                    <summary data-i18n="help.faq_weekly_map_title">Weekly or map challenges are not progressing</summary>
-                                    <p data-i18n="help.faq_weekly_map_body">Weekly challenges only count eligible activity during the current rotation. Map operations require the matching Steam Workshop map link, and weapon operations require the expected weapon data to appear in the live file.</p>
+                                    <summary data-i18n="help.faq_weekly_map_title">Weekly or map challenges are not changing or progressing</summary>
+                                    <p data-i18n="help.faq_weekly_map_body">Weekly challenges are generated locally by the app, with 8 active at a time, and refresh at the start of each ISO week. They only count eligible activity after the current rotation starts. Map operations require the matching Steam Workshop map link, and weapon operations require the expected weapon data to appear in the live file.</p>
+                                </details>
+                                <details>
+                                    <summary data-i18n="help.faq_legend_emblems_title">Legend rank emblems are not unlocking</summary>
+                                    <p data-i18n="help.faq_legend_emblems_body">Legend 1-10 emblems unlock from Player 1's prestige_legend value. Add custom emblem files named legend_1 through legend_10 in the emblems folder, using PNG, JPG, WebP, GIF, MP4, or WebM.</p>
                                 </details>
                                 <details>
                                     <summary data-i18n="help.faq_overlay_title">The overlay is blank or too busy</summary>
@@ -972,12 +1200,20 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                                     <p data-i18n="help.faq_xp_body">Use the XP Debugger in Settings to inspect round XP and rank snapshots. Only enable Experimental XP Overflow Recovery when you see impossible negative XP or rank reset snapshots.</p>
                                 </details>
                                 <details>
+                                    <summary data-i18n="help.faq_career_xp_chart_title">Why is the Career XP chart empty or showing zero XP?</summary>
+                                    <p data-i18n="help.faq_career_xp_chart_body">The Career XP trend uses recent archived matches and the match XP cache. Older games, manually copied archives, or matches captured before XP tracking was active may not have XP saved, so they can appear as zero or leave the chart empty.</p>
+                                </details>
+                                <details>
                                     <summary data-i18n="help.faq_workshop_title">Steam Workshop images are not showing</summary>
                                     <p data-i18n="help.faq_workshop_body">Workshop images need a Steam Workshop link in the live/archive data and the Dashboard Media toggle enabled in Settings.</p>
                                 </details>
                                 <details>
-                                    <summary data-i18n="help.faq_global_title">Global stats are not uploading</summary>
-                                    <p data-i18n="help.faq_global_body">Global stats are opt-in. Enable them in Settings, then use Sync Now. Uploads are anonymous match summaries, not raw profile files, usernames, Steam IDs, or local paths.</p>
+                                    <summary data-i18n="help.faq_reward_assets_title">Why do reward previews or assets take a moment?</summary>
+                                    <p data-i18n="help.faq_reward_assets_body">Calling cards, emblems, and theme assets can sync from the hosted reward folders in the background. The startup asset box and Settings Diagnostics show whether reward assets are still downloading or already ready.</p>
+                                </details>
+                                <details>
+                                    <summary data-i18n="help.faq_global_title">What gets uploaded to Global Stats?</summary>
+                                    <p data-i18n="help.faq_global_body_leaderboards">Global stats are opt-in. When enabled, the tracker uploads anonymized match summaries and profile totals, plus in-game player names and a public client reference for leaderboards and duplicate matching. Steam IDs, Windows usernames, file paths, raw profile files, and raw archive JSON are not sent.</p>
                                 </details>
                                 <details>
                                     <summary data-i18n="help.faq_updates_title">How do updates and rollback work?</summary>
@@ -1014,13 +1250,14 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             let globalStatsEnabled = """ + global_stats_js + """;
             let showGlobalStatsPrompt = """ + global_stats_prompt_js + """;
         let activeLocale = {};
-        let activeLanguage = 'en';
-        let defaultI18nText = {};
+            let activeLanguage = 'en';
+            let defaultI18nText = {};
+            let customizationRefreshToken = 0;
+            let startupAssetStatusTimer = null;
+            let compactModeEnabled = """ + compact_mode_js + """;
 
         function openMapCompat() {
-            if (window.pywebview && window.pywebview.api) {
-                window.pywebview.api.open_map_compat();
-            }
+            alert('Map Compat is temporarily disabled until Steam Workshop image download scripts are fixed.');
         }
 
         function openDonateLink() {
@@ -1160,6 +1397,13 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 bar: '#8d4423', barBorder: '#68ff5a',
                 zpm: '#b8ff6a', zpmFill: 'rgba(184, 255, 106, 0.08)',
                 tooltip: '#ffb347'
+            },
+            Extinction: {
+                line: '#25f4ff', lineFill: 'rgba(37, 244, 255, 0.14)',
+                point: '#ffb14a', pointBorder: '#030607',
+                bar: '#8f7bff', barBorder: '#25f4ff',
+                zpm: '#85fbff', zpmFill: 'rgba(133, 251, 255, 0.08)',
+                tooltip: '#ffb14a'
             }
         };
 
@@ -1177,9 +1421,9 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             mediaCard: "DASHBOARD MEDIA",
             mediaTitle: "Show Steam Workshop Images",
             mediaDescription: "Displays map preview images on the live dashboard and career rank card when a Steam Workshop link is available.",
-            globalCard: "GLOBAL ANONYMOUS STATS",
-            globalTitle: "Contribute Anonymous Global Stats",
-            globalDescription: "Uploads anonymous archived match summaries to the UEMM global tracker database. No personally identifiable info, Steam ID, usernames, file paths, or raw profile/archive files are sent.",
+            globalCard: "GLOBAL STATS & LEADERBOARDS",
+            globalTitle: "Contribute Global Stats & Leaderboards",
+            globalDescription: "Uploads archived match summaries to the UEMM global tracker database. Leaderboards use in-game player names plus a public client reference; Steam IDs, Windows usernames, file paths, raw profile files, and raw archive JSON are not sent.",
             overlayCard: "OVERLAY CONTROL",
             overlayTitle: "Enable Live Overlay",
             overlayDescription: "Displays Perks and Top Damage in a single, smart-resizing window.",
@@ -1596,11 +1840,38 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 xpCard: "XP CONDUIT ANALYZER",
                 xpTitle: "Enable XP Conduit Window",
                 xpDescription: "Shows live round data, XP ticks, round XP, and rank movement."
+            },
+            Extinction: {
+                heading: "Extinction Field Console",
+                updatesCard: "OUTBREAK UPDATES",
+                visualCard: "HIVE CONTAINMENT",
+                visualHelp: "Select the active hive outbreak theme:",
+                cardIdentityCard: "SQUAD DOSSIER",
+                cardIdentityHelp: "Choose the calling card tagged to your field profile:",
+                backupCard: "EVAC BACKUP",
+                backupHelp: "Pack your local UEM player stats into a sealed evac archive.",
+                dataCard: "EXFIL ROUTES",
+                dataNote: "Use this if the game installation or history route moved after deployment.",
+                mediaCard: "RECON FEEDS",
+                mediaTitle: "Show Workshop Recon",
+                mediaDescription: "Displays workshop previews on the tactical dashboard and career dossier.",
+                globalCard: "ANONYMOUS OUTBREAK INTEL",
+                globalTitle: "Share Anonymous Field Reports",
+                globalDescription: "Uploads anonymous archived match summaries without identity, Steam ID, file paths, or raw files.",
+                overlayCard: "CONTAINMENT HUD",
+                overlayTitle: "Enable Extinction Overlay",
+                overlayDescription: "Displays Perks and Top Damage in a compact live field HUD.",
+                xpCard: "XP TELEMETRY",
+                xpTitle: "Enable Outbreak Telemetry Window",
+                xpDescription: "Shows live round data, XP ticks, round XP, and rank movement."
             }
         };
 
         function applySettingsCopy(themeName) {
             const copy = Object.assign({}, SETTINGS_COPY_DEFAULT, THEME_SETTINGS_COPY[themeName] || {});
+            copy.globalCard = SETTINGS_COPY_DEFAULT.globalCard;
+            copy.globalTitle = SETTINGS_COPY_DEFAULT.globalTitle;
+            copy.globalDescription = SETTINGS_COPY_DEFAULT.globalDescription;
             document.querySelectorAll("[data-settings-copy]").forEach(el => {
                 const key = el.getAttribute("data-settings-copy");
                 if (copy[key]) el.textContent = copy[key];
@@ -1652,6 +1923,23 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 zpmChartInstance.options.plugins.tooltip.titleColor = theme.zpm;
                 zpmChartInstance.options.plugins.tooltip.borderColor = theme.zpm;
                 zpmChartInstance.update('none');
+            }
+
+            if (xpTrendChartInstance) {
+                const ds0 = xpTrendChartInstance.data.datasets[0];
+                ds0.borderColor = theme.line;
+                ds0.backgroundColor = theme.lineFill;
+                const ds1 = xpTrendChartInstance.data.datasets[1];
+                ds1.borderColor = theme.zpm;
+                ds1.backgroundColor = theme.zpmFill;
+                ds1.pointBackgroundColor = theme.zpm;
+                xpTrendChartInstance.options.plugins.tooltip.titleColor = theme.tooltip;
+                xpTrendChartInstance.options.plugins.tooltip.borderColor = theme.tooltip;
+                if (xpTrendChartInstance.options.scales.y1) {
+                    xpTrendChartInstance.options.scales.y1.ticks.color = theme.zpm;
+                    xpTrendChartInstance.options.scales.y1.title.color = theme.zpm;
+                }
+                xpTrendChartInstance.update('none');
             }
         }
 
@@ -1989,11 +2277,17 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
             let currentPlayerIndex = 0;
                let cachedPlayers = [];
+               let cachedLiveData = null;
                let currentGameId = "";
 
                // --- NEW PAGINATION CODE ---
             let currentHistoryPage = 1;
             let totalHistoryPages = 1;
+            let currentHistoryId = "";
+            let allChallenges = [];
+            let challengeOverlaySelectedIds = [];
+            let challengeOverlayEnabled = false;
+            let mapChallengeOpenGroups = {};
             let currentHistoryFilters = { query: "", map: "", date_from: "", date_to: "", xp_min: "", xp_max: "", sort: "newest" };
             let historyFilterTimer = null;
             let pendingUpdateInfo = null;
@@ -2064,6 +2358,107 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
             function toggleGraphOverlayComponent(component, checkbox) {
                 window.pywebview.api.toggle_graph_overlay_component(component, checkbox.checked);
+            }
+
+            function applyCompactMode(enabled) {
+                compactModeEnabled = !!enabled;
+                document.body.classList.toggle('compact-mode', compactModeEnabled);
+                const btn = document.getElementById('compact-mode-toggle');
+                const pill = document.getElementById('compact-mode-status-pill');
+                if (btn) {
+                    btn.classList.toggle('active', compactModeEnabled);
+                    btn.setAttribute('aria-pressed', compactModeEnabled ? 'true' : 'false');
+                }
+                if (pill) pill.innerText = compactModeEnabled ? 'ON' : 'OFF';
+            }
+
+            async function toggleCompactMode() {
+                const next = !compactModeEnabled;
+                applyCompactMode(next);
+                try {
+                    const result = await window.pywebview.api.set_compact_mode(next);
+                    if (result && typeof result.enabled === 'boolean') applyCompactMode(result.enabled);
+                } catch(e) {
+                    applyCompactMode(!next);
+                    alert("Compact Mode could not be saved.");
+                }
+            }
+
+            async function refreshChallengeOverlaySettings() {
+                try {
+                    const settings = await window.pywebview.api.get_challenge_overlay_settings();
+                    challengeOverlayEnabled = !!(settings && settings.enabled);
+                    challengeOverlaySelectedIds = Array.isArray(settings && settings.selected_ids) ? settings.selected_ids : [];
+                    const toggle = document.getElementById('challenge-overlay-toggle');
+                    if (toggle) toggle.checked = challengeOverlayEnabled;
+                    updateChallengeOverlayControls();
+                } catch(e) {}
+            }
+
+            function getChallengeTitle(id) {
+                const c = allChallenges.find(ch => String(ch.id || '') === String(id));
+                if (!c) return id;
+                const mapName = String(c.map_name || '').trim();
+                const title = String(c.title || '').trim();
+                if (mapName && c.map_challenge) return mapName + ': ' + title;
+                return title || id;
+            }
+
+            function updateChallengeOverlayControls() {
+                const selectedSet = new Set(challengeOverlaySelectedIds);
+                document.querySelectorAll('.challenge-track-btn').forEach(btn => {
+                    const id = btn.dataset.challengeId || '';
+                    const active = selectedSet.has(id);
+                    btn.classList.toggle('active', active);
+                    btn.innerText = active ? 'TRACKED' : 'TRACK';
+                });
+                const status = document.getElementById('challenge-overlay-status');
+                if (status) status.innerText = `Track up to 3 selected challenges in a separate overlay. ${challengeOverlaySelectedIds.length}/3 selected.`;
+                const selectedBox = document.getElementById('challenge-overlay-selected');
+                if (selectedBox) {
+                    if (challengeOverlaySelectedIds.length) {
+                        const pills = challengeOverlaySelectedIds.map(id =>
+                            `<span class="challenge-overlay-pill">${escapeHtml(getChallengeTitle(id))}</span>`
+                        ).join('');
+                        const clearBtn = `<button class="chal-btn challenge-clear-btn active" type="button" onclick="clearChallengeOverlaySelection(event)">CLEAR ALL</button>`;
+                        selectedBox.innerHTML = pills + clearBtn;
+                    } else {
+                        selectedBox.innerHTML = '<span class="muted-empty compact-empty">No challenges tracked yet.</span>';
+                    }
+                }
+            }
+
+            async function clearChallengeOverlaySelection(event) {
+                if (event) event.stopPropagation();
+                if (!challengeOverlaySelectedIds.length) return;
+                challengeOverlaySelectedIds = [];
+                const result = await window.pywebview.api.set_challenge_overlay_selection([]);
+                challengeOverlaySelectedIds = result && Array.isArray(result.selected_ids) ? result.selected_ids : [];
+                updateChallengeOverlayControls();
+            }
+
+            function toggleChallengeOverlay(checkbox) {
+                challengeOverlayEnabled = checkbox.checked;
+                window.pywebview.api.toggle_challenge_overlay_system(checkbox.checked);
+            }
+
+            async function toggleChallengeOverlaySelection(event, challengeId) {
+                if (event) event.stopPropagation();
+                const id = String(challengeId || '').trim();
+                if (!id) return;
+                const idx = challengeOverlaySelectedIds.indexOf(id);
+                if (idx >= 0) {
+                    challengeOverlaySelectedIds.splice(idx, 1);
+                } else {
+                    if (challengeOverlaySelectedIds.length >= 3) {
+                        alert('You can track a maximum of 3 challenges at a time.');
+                        return;
+                    }
+                    challengeOverlaySelectedIds.push(id);
+                }
+                const result = await window.pywebview.api.set_challenge_overlay_selection(challengeOverlaySelectedIds);
+                challengeOverlaySelectedIds = result && Array.isArray(result.selected_ids) ? result.selected_ids : challengeOverlaySelectedIds.slice(0, 3);
+                updateChallengeOverlayControls();
             }
 
             function previewOverlaySize(value) {
@@ -2225,6 +2620,142 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 setCustomCamosStatus(res && res.msg ? res.msg : 'Custom camos sync complete.');
             }
 
+            async function copySupportDiscord(button) {
+                const username = 'GurtLushSalmon';
+                const copied = await copyTextToClipboard(username);
+                if (button && copied) {
+                    const action = button.querySelector('.discord-contact-copy-btn-label') || button.querySelector('.discord-contact-action');
+                    const originalAction = action ? action.innerText : '';
+                    if (action) action.innerText = 'COPIED';
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        if (action) action.innerText = originalAction || 'COPY USERNAME';
+                        button.classList.remove('copied');
+                    }, 1400);
+                } else if (!copied) {
+                    alert('Discord: ' + username);
+                }
+            }
+
+            async function loadDiagnosticsPanel() {
+                const panel = document.getElementById('diagnostics-panel');
+                const updated = document.getElementById('diagnostics-updated');
+                if (!panel) return;
+                panel.innerHTML = '<div class="diagnostics-empty">Checking tracker health...</div>';
+                try {
+                    const data = await window.pywebview.api.get_diagnostics_status();
+                    const rows = Array.isArray(data && data.rows) ? data.rows : [];
+                    if (!rows.length) {
+                        panel.innerHTML = '<div class="diagnostics-empty">No diagnostic data available.</div>';
+                    } else {
+                        panel.innerHTML = rows.map(item => {
+                            const status = String(item.status || 'warn').toLowerCase();
+                            const label = escapeHtml(item.label || item.key || 'Check');
+                            const detail = escapeHtml(item.detail || '');
+                            const chipText = status === 'ok' ? 'OK' : (status === 'bad' ? 'FIX' : (status === 'off' ? 'OFF' : 'CHECK'));
+                            return `
+                                <div class="diagnostic-row">
+                                    <div class="diagnostic-main">
+                                        <span class="diagnostic-label">${label}</span>
+                                        <span class="diagnostic-detail">${detail}</span>
+                                    </div>
+                                    <span class="diagnostic-chip diagnostic-${escapeHtml(status)}">${chipText}</span>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    if (updated) updated.innerText = data && data.updated_at ? `Updated ${data.updated_at}` : '';
+                } catch(e) {
+                    panel.innerHTML = '<div class="diagnostics-empty error-empty">Could not load diagnostics.</div>';
+                    if (updated) updated.innerText = '';
+                }
+            }
+
+            function setCurrentGameSyncStatus(text) {
+                const el = document.getElementById('currentgame-sync-status');
+                if (el) el.innerText = text;
+            }
+
+            function readCurrentGameSyncControls(forceOff) {
+                const toggle = document.getElementById('currentgame-sync-toggle');
+                const mode = document.getElementById('currentgame-sync-mode');
+                const relayUrl = document.getElementById('currentgame-sync-relay-url');
+                const password = document.getElementById('currentgame-sync-password');
+                const player = document.getElementById('currentgame-sync-player');
+                return {
+                    enabled: forceOff ? false : !!(toggle && toggle.checked),
+                    mode: forceOff ? 'off' : (mode ? mode.value : 'off'),
+                    relayUrl: relayUrl ? relayUrl.value : '',
+                    password: password ? password.value : '',
+                    selectedPlayer: player ? player.value : ''
+                };
+            }
+
+            async function loadCurrentGameSyncSettings() {
+                const settings = await window.pywebview.api.get_currentgame_sync_settings();
+                const toggle = document.getElementById('currentgame-sync-toggle');
+                const mode = document.getElementById('currentgame-sync-mode');
+                const relayUrl = document.getElementById('currentgame-sync-relay-url');
+                const player = document.getElementById('currentgame-sync-player');
+                if (toggle) toggle.checked = !!(settings && settings.enabled);
+                if (mode && settings && settings.mode && settings.mode !== 'off') mode.value = settings.mode;
+                if (relayUrl) relayUrl.value = settings && settings.relay_url ? settings.relay_url : relayUrl.value;
+                if (player && settings && settings.selected_player) player.dataset.selected = settings.selected_player;
+                setCurrentGameSyncStatus('Status: ' + ((settings && settings.status) || 'Off'));
+                if (settings && settings.enabled && settings.mode === 'relay_client') {
+                    refreshCurrentGameSyncPlayers();
+                }
+            }
+
+            async function saveCurrentGameSyncSettings() {
+                const values = readCurrentGameSyncControls(false);
+                setCurrentGameSyncStatus('Status: Saving...');
+                const res = await window.pywebview.api.save_currentgame_sync_settings(
+                    values.enabled,
+                    values.mode,
+                    '',
+                    values.password,
+                    0,
+                    values.selectedPlayer,
+                    values.relayUrl
+                );
+                setCurrentGameSyncStatus('Status: ' + (res && res.msg ? res.msg : 'Saved.'));
+            }
+
+            async function turnOffCurrentGameSync() {
+                const toggle = document.getElementById('currentgame-sync-toggle');
+                if (toggle) toggle.checked = false;
+                const values = readCurrentGameSyncControls(true);
+                const res = await window.pywebview.api.save_currentgame_sync_settings(
+                    values.enabled,
+                    values.mode,
+                    '',
+                    values.password,
+                    0,
+                    values.selectedPlayer,
+                    values.relayUrl
+                );
+                setCurrentGameSyncStatus('Status: ' + (res && res.msg ? res.msg : 'Off'));
+            }
+
+            async function refreshCurrentGameSyncPlayers() {
+                setCurrentGameSyncStatus('Status: Fetching synced players...');
+                const res = await window.pywebview.api.get_currentgame_sync_players();
+                const select = document.getElementById('currentgame-sync-player');
+                if (select) {
+                    const selected = select.value || select.dataset.selected || '';
+                    select.innerHTML = '<option value="">Choose synced player</option>';
+                    (res && res.players ? res.players : []).forEach(player => {
+                        const opt = document.createElement('option');
+                        opt.value = player.name || player.id || '';
+                        opt.textContent = player.label || player.name || player.id || 'Player';
+                        select.appendChild(opt);
+                    });
+                    if (selected) select.value = selected;
+                }
+                setCurrentGameSyncStatus('Status: ' + (res && res.msg ? res.msg : 'Player refresh complete.'));
+            }
+
             function setDiscordPresenceStatus(text) {
                 const el = document.getElementById('discord-presence-status');
                 if (el) el.innerText = text;
@@ -2233,9 +2764,11 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             async function loadDiscordPresenceSettings() {
                 const settings = await window.pywebview.api.get_discord_presence_settings();
                 const toggle = document.getElementById('discord-presence-toggle');
+                const emblemToggle = document.getElementById('discord-presence-emblem-toggle');
                 const clientId = document.getElementById('discord-client-id');
                 const largeImage = document.getElementById('discord-large-image');
                 if (toggle) toggle.checked = !!(settings && settings.enabled);
+                if (emblemToggle) emblemToggle.checked = !!(settings && settings.image_source === 'emblem');
                 if (clientId) clientId.value = settings && settings.client_id ? settings.client_id : '';
                 if (largeImage) largeImage.value = settings && settings.large_image ? settings.large_image : '';
                 setDiscordPresenceStatus(localeText('common.status', 'Status') + ': ' + ((settings && settings.status) || localeText('status.not_connected_value', 'Not connected')));
@@ -2243,15 +2776,21 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
             async function saveDiscordPresenceSettings() {
                 const toggle = document.getElementById('discord-presence-toggle');
+                const emblemToggle = document.getElementById('discord-presence-emblem-toggle');
                 const clientId = document.getElementById('discord-client-id');
                 const largeImage = document.getElementById('discord-large-image');
                 setDiscordPresenceStatus(localeText('status.saving', 'Status: Saving...'));
                 const res = await window.pywebview.api.save_discord_presence_settings(
                     toggle ? toggle.checked : false,
                     clientId ? clientId.value : '',
-                    largeImage ? largeImage.value : ''
+                    largeImage ? largeImage.value : '',
+                    emblemToggle && emblemToggle.checked ? 'emblem' : 'workshop'
                 );
                 setDiscordPresenceStatus(localeText('common.status', 'Status') + ': ' + (res && res.msg ? res.msg : localeText('status.saved_value', 'Saved.')));
+            }
+
+            async function toggleDiscordPresenceEmblemImage(checkbox) {
+                await saveDiscordPresenceSettings();
             }
 
             function setT7DiscordStatus(text) {
@@ -2307,13 +2846,28 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 if (!notice) return;
                 if (!info || !info.update_available) {
                     notice.style.display = 'none';
+                    notice.classList.remove('update-notice-stale');
                     return;
                 }
                 const version = escapeHtml(info.version || 'new version');
-                if (title) title.innerText = `UPDATE ${version} AVAILABLE`;
-                if (summary) summary.innerText = info.name || 'A new BO3 Tracker build is ready.';
+                const newerCount = Number(info.newer_release_count || 0);
+                const threshold = Number(info.stale_update_threshold || 4);
+                const isStale = Boolean(info.stale_update_notice) || newerCount >= threshold;
+                notice.classList.toggle('update-notice-stale', isStale);
+                if (isStale) {
+                    if (title) title.innerText = `PLEASE UPDATE - ${version} AVAILABLE`;
+                    if (summary) summary.innerText = newerCount > 0
+                        ? `You are ${newerCount} versions behind. This update includes fixes and improvements, but you can keep using the app.`
+                        : 'Several updates with fixes and improvements are available, but you can keep using the app.';
+                } else {
+                    if (title) title.innerText = `UPDATE ${version} AVAILABLE`;
+                    if (summary) summary.innerText = info.name || 'A new BO3 Tracker build is ready.';
+                }
                 notice.style.display = 'block';
-                setUpdateStatus(`Update ${info.version} is available.`);
+                setUpdateStatus(isStale
+                    ? `Update ${info.version} is available. You are ${newerCount || threshold}+ versions behind.`
+                    : `Update ${info.version} is available.`
+                );
             }
 
             async function checkForUpdates(showCurrent) {
@@ -2462,6 +3016,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     isLive = false;
                     document.getElementById('career-btn').classList.add('active');
                     loadCareerData();
+                    setTimeout(() => { if (xpTrendChartInstance) xpTrendChartInstance.resize(); }, 60);
                 } else if(tabName === 'mapselection') {
                     isLive = false;
                     document.getElementById('career-btn').classList.add('active');
@@ -2484,13 +3039,15 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 } else if(tabName === 'customization') {
                     isLive = false;
                     document.getElementById('customization-btn').classList.add('active');
-                    loadThemeList();
-                    loadCardList();
-                    loadEmblemList();
+                    refreshCustomizationLists();
+                    scheduleCustomizationRefresh();
+                    loadDiscordPresenceSettings();
                 } else if(tabName === 'settings') {
                     isLive = false;
                     document.getElementById('settings-btn').classList.add('active');
+                    loadDiagnosticsPanel();
                     loadLanguageSelector();
+                    loadDiscordPresenceSettings();
                 } else {
                     isLive = false; 
                     if (tabName === 'help') {
@@ -2501,6 +3058,24 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             }
             
             // --- THEME & CARD FUNCTIONS ---
+            function refreshCustomizationLists() {
+                loadThemeList();
+                loadCardList();
+                loadEmblemList();
+            }
+
+            function scheduleCustomizationRefresh() {
+                const token = ++customizationRefreshToken;
+                [1500, 4000, 8000].forEach(delay => {
+                    setTimeout(() => {
+                        const tab = document.getElementById('tab-customization');
+                        if(token === customizationRefreshToken && tab && tab.classList.contains('active')) {
+                            refreshCustomizationLists();
+                        }
+                    }, delay);
+                });
+            }
+
             async function loadThemeList() {
                 const themes = await window.pywebview.api.get_available_themes();
                 const select = document.getElementById('theme-selector');
@@ -2523,9 +3098,12 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     }
                 });
                 const current = await window.pywebview.api.get_active_card();
-                if(current) {
+                if(current && Array.from(select.options).some(opt => opt.value === current)) {
                     select.value = current;
                     previewCard(current);
+                } else {
+                    select.value = 'default';
+                    previewCard('default');
                 }
             }
 
@@ -2539,9 +3117,15 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     }
                 });
                 const current = await window.pywebview.api.get_active_emblem();
-                if(current) {
+                const currentVariant = await window.pywebview.api.get_active_emblem_variant();
+                const variantSelect = document.getElementById('emblem-version-selector');
+                if (variantSelect) variantSelect.value = currentVariant || 'static';
+                if(current && Array.from(select.options).some(opt => opt.value === current)) {
                     select.value = current;
                     previewEmblem(current);
+                } else {
+                    select.value = 'default';
+                    previewEmblem('default');
                 }
             }
 
@@ -2568,6 +3152,82 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 }
             }
 
+            function formatRewardName(value) {
+                return String(value || '').replace(/_/g, ' ').toUpperCase();
+            }
+
+            function closeRewardPreview() {
+                const modal = document.getElementById('reward-preview-modal');
+                const empty = document.getElementById('reward-preview-empty');
+                const vid = document.getElementById('reward-preview-video');
+                if (modal) modal.style.display = 'none';
+                if (empty) empty.style.display = 'none';
+                showMedia(null, 'reward-preview-img', 'reward-preview-video');
+                if (vid) {
+                    vid.pause();
+                    vid.removeAttribute('src');
+                    vid.load();
+                }
+            }
+
+            function closeRewardPreviewFromBackdrop(event) {
+                if (event && event.target && event.target.id === 'reward-preview-modal') {
+                    closeRewardPreview();
+                }
+            }
+
+            function setRewardPreviewLoading(rewardType, rewardName) {
+                const modal = document.getElementById('reward-preview-modal');
+                const title = document.getElementById('reward-preview-title');
+                const type = document.getElementById('reward-preview-type');
+                const empty = document.getElementById('reward-preview-empty');
+                if (title) title.innerText = formatRewardName(rewardName);
+                if (type) type.innerText = rewardType === 'emblem' ? 'EMBLEM REWARD' : 'PLAYERCARD REWARD';
+                if (empty) {
+                    empty.innerText = 'Loading preview...';
+                    empty.style.display = 'block';
+                }
+                showMedia(null, 'reward-preview-img', 'reward-preview-video');
+                if (modal) modal.style.display = 'flex';
+            }
+
+            function setRewardPreviewMedia(src) {
+                const empty = document.getElementById('reward-preview-empty');
+                if (src) {
+                    if (empty) empty.style.display = 'none';
+                    showMedia(src, 'reward-preview-img', 'reward-preview-video');
+                } else if (empty) {
+                    showMedia(null, 'reward-preview-img', 'reward-preview-video');
+                    empty.innerText = 'Preview unavailable.';
+                    empty.style.display = 'block';
+                }
+            }
+
+            async function openRewardPreviewFromButton(button) {
+                if (!button) return;
+                await openRewardPreview(button.dataset.rewardType, button.dataset.rewardVal);
+            }
+
+            async function openRewardPreview(rewardType, rewardName) {
+                const type = String(rewardType || '').trim();
+                const name = String(rewardName || '').trim();
+                if (!name || (type !== 'calling_card' && type !== 'emblem')) return;
+                setRewardPreviewLoading(type, name);
+                try {
+                    let src = null;
+                    if (type === 'calling_card') {
+                        src = await window.pywebview.api.get_card_image(name);
+                    } else {
+                        const variants = await window.pywebview.api.get_emblem_variants(name);
+                        const variant = variants && variants.animated ? 'animated' : 'static';
+                        src = await window.pywebview.api.get_emblem_image(name, variant);
+                    }
+                    setRewardPreviewMedia(src);
+                } catch(e) {
+                    setRewardPreviewMedia(null);
+                }
+            }
+
             async function previewCard(cardName) {
                 if(cardName === 'default') {
                     showMedia(null, 'card-preview', 'card-preview-video');
@@ -2578,12 +3238,30 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             }
 
             async function previewEmblem(emblemName) {
+                const row = document.getElementById('emblem-version-row');
+                const variantSelect = document.getElementById('emblem-version-selector');
                 if(emblemName === 'default') {
+                    if(row) row.classList.add('initially-hidden');
                     showMedia(null, 'emblem-preview', 'emblem-preview-video');
                     return;
                 }
-                const src = await window.pywebview.api.get_emblem_image(emblemName);
+                const variants = await window.pywebview.api.get_emblem_variants(emblemName);
+                if(row) row.classList.toggle('initially-hidden', !(variants && variants.animated));
+                if(variantSelect) {
+                    variantSelect.disabled = !(variants && variants.animated);
+                    if(variantSelect.value === 'animated' && !(variants && variants.animated)) {
+                        variantSelect.value = 'static';
+                    }
+                }
+                const selectedVariant = variantSelect ? variantSelect.value : 'static';
+                const variant = selectedVariant === 'animated' && variants && variants.animated ? 'animated' : 'static';
+                const src = await window.pywebview.api.get_emblem_image(emblemName, variant);
                 showMedia(src, 'emblem-preview', 'emblem-preview-video');
+            }
+
+            function previewSelectedEmblem() {
+                const sel = document.getElementById('emblem-selector');
+                if(sel) previewEmblem(sel.value);
             }
 
             async function applySelectedCard() {
@@ -2594,7 +3272,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
             async function applySelectedEmblem() {
                 const sel = document.getElementById('emblem-selector');
-                await window.pywebview.api.set_active_emblem(sel.value);
+                const variantSelect = document.getElementById('emblem-version-selector');
+                await window.pywebview.api.set_active_emblem(sel.value, variantSelect ? variantSelect.value : 'static');
                 alert("Emblem Equipped!");
             }
 
@@ -2760,6 +3439,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
             async function loadChallenges() {
                 const list = await window.pywebview.api.get_challenges();
+                allChallenges = list || [];
                 const container = document.getElementById('challenge-list');
                 
                 if (currentChalFilter === 'themes') {
@@ -2806,6 +3486,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         }
                     }
                     container.innerHTML = html;
+                    updateChallengeOverlayControls();
                     return;
                 }
 
@@ -2825,6 +3506,7 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
                 if (currentChalFilter === 'operations') {
                     container.innerHTML = renderOperationsChallenges(filtered);
+                    updateChallengeOverlayControls();
                     return;
                 }
 
@@ -2845,34 +3527,51 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         container.appendChild(div);
                     }
                 });
+                updateChallengeOverlayControls();
             }
 
             function isMapChallenge(c) {
                 return c && (c.map_challenge || c.map_steam_link || c.steam_link || c.workshop_id);
             }
 
+            function isBaseMapLink(value) {
+                const raw = String(value || '').trim();
+                return raw && !/^\\d+$/.test(raw);
+            }
+
             function getMapChallengeKey(c) {
-                return String(c.map_steam_link || c.steam_link || c.workshop_id || c.map_name || 'unknown-map').trim();
+                const raw = String(c.map_steam_link || c.steam_link || c.workshop_id || '').trim();
+                if (raw && isBaseMapLink(raw)) return 'base_' + raw;
+                return raw || c.map_name || 'unknown-map';
+            }
+
+            function setMapChallengeOpenState(key, open) {
+                mapChallengeOpenGroups[String(key || '')] = !!open;
             }
 
             function renderOperationsChallenges(challenges) {
                 const normal = [];
-                const mapGroups = {};
+                const workshopGroups = {};
+                const baseMapGroups = {};
 
                 challenges.forEach(c => {
                     if (!isMapChallenge(c)) {
                         normal.push(c);
                         return;
                     }
+                    const link = String(c.map_steam_link || c.steam_link || c.workshop_id || '').trim();
+                    const isBase = isBaseMapLink(link);
+                    const groups = isBase ? baseMapGroups : workshopGroups;
                     const key = getMapChallengeKey(c);
-                    if (!mapGroups[key]) {
-                        mapGroups[key] = {
-                            name: String(c.map_name || 'Unknown Workshop Map').trim(),
-                            link: String(c.map_steam_link || c.steam_link || c.workshop_id || '').trim(),
+                    if (!groups[key]) {
+                        groups[key] = {
+                            key: key,
+                            name: String(c.map_name || 'Unknown Map').trim(),
+                            link: link,
                             challenges: []
                         };
                     }
-                    mapGroups[key].challenges.push(c);
+                    groups[key].challenges.push(c);
                 });
 
                 let html = "";
@@ -2880,27 +3579,67 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                     html += `<div id="chal-${escapeHtml(c.id)}" class="chal-card ${c.completed?'done':''}">${renderChallengeCardInner(c, false)}</div>`;
                 });
 
-                Object.values(mapGroups).forEach(group => {
-                    const href = normalizeWorkshopLink(group.link);
-                    const linkHtml = href
-                        ? `<a class="map-challenge-heading-link" href="${escapeHtml(href)}" target="_blank">${escapeHtml(href)}</a>`
-                        : `<span class="map-challenge-heading-link muted">No Steam Workshop link</span>`;
-                    html += `
-                        <div class="map-challenge-section">
-                            <div class="map-challenge-heading">
-                                <div class="map-challenge-heading-name">${escapeHtml(group.name)}</div>
-                                ${linkHtml}
-                            </div>
-                            <div class="map-challenge-grid">
-                    `;
-                    group.challenges.forEach(c => {
-                        html += `<div id="chal-${escapeHtml(c.id)}" class="chal-card ${c.completed?'done':''}">${renderChallengeCardInner(c, false)}</div>`;
+                const workshopEntries = Object.values(workshopGroups);
+                if (workshopEntries.length) {
+                    html += `<div class="map-challenge-section-header">Workshop Maps</div>`;
+                    workshopEntries.forEach(group => {
+                        const href = normalizeWorkshopLink(group.link);
+                        const completed = group.challenges.filter(c => c.completed).length;
+                        const total = group.challenges.length;
+                        const groupKeyArg = encodeURIComponent(group.key).replace(/'/g, '%27');
+                        const openAttr = mapChallengeOpenGroups[group.key] ? ' open' : '';
+                        const linkHtml = href
+                            ? `<a class="map-challenge-heading-link" href="${escapeHtml(href)}" target="_blank" onclick="event.stopPropagation()">${escapeHtml(href)}</a>`
+                            : `<span class="map-challenge-heading-link muted">No Steam Workshop link</span>`;
+                        html += `
+                            <details class="map-challenge-section"${openAttr} ontoggle="setMapChallengeOpenState(decodeURIComponent('${groupKeyArg}'), this.open)">
+                                <summary class="map-challenge-heading">
+                                    <div class="map-challenge-heading-main">
+                                        <div class="map-challenge-heading-name">${escapeHtml(group.name)}</div>
+                                        <div class="map-challenge-heading-progress">${completed}/${total} complete</div>
+                                    </div>
+                                    ${linkHtml}
+                                </summary>
+                                <div class="map-challenge-grid">
+                        `;
+                        group.challenges.forEach(c => {
+                            html += `<div id="chal-${escapeHtml(c.id)}" class="chal-card ${c.completed?'done':''}">${renderChallengeCardInner(c, false)}</div>`;
+                        });
+                        html += `
+                                </div>
+                            </details>
+                        `;
                     });
-                    html += `
-                            </div>
-                        </div>
-                    `;
-                });
+                }
+
+                const baseEntries = Object.values(baseMapGroups);
+                if (baseEntries.length) {
+                    html += `<div class="map-challenge-section-header">Base Maps</div>`;
+                    baseEntries.forEach(group => {
+                        const completed = group.challenges.filter(c => c.completed).length;
+                        const total = group.challenges.length;
+                        const groupKeyArg = encodeURIComponent(group.key).replace(/'/g, '%27');
+                        const openAttr = mapChallengeOpenGroups[group.key] ? ' open' : '';
+                        html += `
+                            <details class="map-challenge-section"${openAttr} ontoggle="setMapChallengeOpenState(decodeURIComponent('${groupKeyArg}'), this.open)">
+                                <summary class="map-challenge-heading">
+                                    <div class="map-challenge-heading-main">
+                                        <div class="map-challenge-heading-name">${escapeHtml(group.name)}</div>
+                                        <div class="map-challenge-heading-progress">${completed}/${total} complete</div>
+                                    </div>
+                                    <span class="map-challenge-heading-link muted">Base Game Map</span>
+                                </summary>
+                                <div class="map-challenge-grid">
+                        `;
+                        group.challenges.forEach(c => {
+                            html += `<div id="chal-${escapeHtml(c.id)}" class="chal-card ${c.completed?'done':''}">${renderChallengeCardInner(c, false)}</div>`;
+                        });
+                        html += `
+                                </div>
+                            </details>
+                        `;
+                    });
+                }
 
                 return html || `<div class="muted-empty">No challenges found.</div>`;
             }
@@ -2912,12 +3651,35 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                 let btnClass = "";
                 let action = "";
                 let rewardTxt = "";
+                let rewardHtml = "";
+                const challengeId = String(c.id || '');
+                const challengeIdArg = encodeURIComponent(challengeId);
+                const isTracked = challengeOverlaySelectedIds.includes(challengeId);
+                const trackButtonHtml = `
+                    <button class="chal-btn challenge-track-btn ${isTracked ? 'active' : ''}" type="button"
+                        data-challenge-id="${escapeHtml(challengeId)}"
+                        onclick="toggleChallengeOverlaySelection(event, decodeURIComponent('${challengeIdArg}'))">
+                        ${isTracked ? 'TRACKED' : 'TRACK'}
+                    </button>`;
 
                 if(c.reward_type === 'theme') rewardTxt = `🏆 THEME: ${c.reward_val.toUpperCase()}`;
                 else if(c.reward_type === 'xp') rewardTxt = `⭐ XP: ${c.reward_val}`;
                 else if(c.reward_type === 'calling_card') rewardTxt = `📇 CARD: ${c.reward_val}`;
                 else if(c.reward_type === 'emblem') rewardTxt = `◆ EMBLEM: ${c.reward_val}`;
                 else rewardTxt = `REWARD: ${c.reward_val}`;
+
+                if (c.reward_type === 'calling_card' || c.reward_type === 'emblem') {
+                    rewardHtml = `
+                        <button class="challenge-reward reward-preview-trigger" type="button"
+                            data-reward-type="${escapeHtml(c.reward_type)}"
+                            data-reward-val="${escapeHtml(c.reward_val)}"
+                            onclick="openRewardPreviewFromButton(this)">
+                            <span>${escapeHtml(rewardTxt)}</span>
+                            <span class="reward-preview-hint">PREVIEW</span>
+                        </button>`;
+                } else {
+                    rewardHtml = `<div class="challenge-reward">${escapeHtml(rewardTxt)}</div>`;
+                }
 
                 if (isDone) {
                     if (c.reward_type === 'theme') {
@@ -2944,7 +3706,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                             <div class="challenge-category">${c.cat ? c.cat.toUpperCase() : ''}</div>
                         </div>
                         <div class="challenge-desc">${c.desc}</div>
-                        <div class="challenge-reward">${rewardTxt}</div>
+                        ${rewardHtml}
+                        ${trackButtonHtml}
                         <div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
                         <div class="challenge-progress-text">${parseInt(c.progress)} / ${c.target}</div>
                         <button class="chal-btn ${btnClass}" onclick="${action}">${btnText}</button>
@@ -2957,7 +3720,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                             <div class="challenge-category">${c.cat ? c.cat.toUpperCase() : ''}</div>
                         </div>
                         <div class="challenge-desc">${c.desc}</div>
-                        <div class="challenge-reward">${rewardTxt}</div>
+                        ${rewardHtml}
+                        ${trackButtonHtml}
                         <div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
                         <div class="challenge-progress-text">${parseInt(c.progress)} / ${c.target}</div>
                         <button class="chal-btn ${btnClass}" onclick="${action}">${btnText}</button>
@@ -2992,7 +3756,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
             
             async function loadCareerData() {
                  // Fetch and display Top XP Maps
-                 loadTopXPMaps(); 
+                 loadTopXPMaps();
+                 loadXpTrendChart(); 
 
                  const activeCard = await window.pywebview.api.get_active_card();
                  if(activeCard && activeCard !== 'default') {
@@ -3004,7 +3769,8 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
 
                  const activeEmblem = await window.pywebview.api.get_active_emblem();
                  if(activeEmblem && activeEmblem !== 'default') {
-                     const emblemSrc = await window.pywebview.api.get_emblem_image(activeEmblem);
+                     const activeEmblemVariant = await window.pywebview.api.get_active_emblem_variant();
+                     const emblemSrc = await window.pywebview.api.get_emblem_image(activeEmblem, activeEmblemVariant);
                      showMedia(emblemSrc, 'emblem-display', 'emblem-display-video');
                  } else {
                      showMedia(null, 'emblem-display', 'emblem-display-video');
@@ -3080,6 +3846,20 @@ def build_main_app_html(css_content, app_config, app_version, global_stats_promp
                         document.getElementById('life_kills').innerText = parseInt(data.totals.kills).toLocaleString();
                         document.getElementById('life_headshots').innerText = parseInt(data.totals.headshots).toLocaleString();
                         document.getElementById('life_hs_pct').innerText = data.ratios.hs_percent + "%";
+                        const shotAccEl = document.getElementById('life_shot_acc');
+                        const shotAccRow = document.getElementById('life_shot_acc_row');
+                        const shotAccuracy = data.ratios ? data.ratios.shot_accuracy : null;
+                        const shotsFired = parseInt(data.totals.shots_fired || 0);
+                        const shotsHit = parseInt(data.totals.shots_hit || 0);
+                        const shotsMissed = parseInt(data.totals.shots_missed || 0);
+                        if (shotAccEl) {
+                            shotAccEl.innerText = shotAccuracy === null || shotAccuracy === undefined ? 'N/A' : Number(shotAccuracy).toFixed(1) + '%';
+                        }
+                        if (shotAccRow) {
+                            shotAccRow.title = shotsFired > 0
+                                ? `${shotsHit.toLocaleString()} hit / ${shotsMissed.toLocaleString()} missed / ${shotsFired.toLocaleString()} fired from CurrentGame.json`
+                                : 'CurrentGame.json shot counters are not available yet.';
+                        }
                         let favGunsText = "None (0)";
 if (data.favorite_weapons && data.favorite_weapons.length > 0) {
     // Joins the top 3 weapons with a line break so they stack neatly on the right side
@@ -3531,6 +4311,9 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     renderWeaponCategoryKillsChart();
                     renderWeaponCategoryDamageChart();
                     renderWeaponUsageTable();
+                    if (selectedWeaponDetailName) {
+                        await loadWeaponDetail(selectedWeaponDetailName, true);
+                    }
                 } catch(e) {
                     console.error("Weapon Usage Load Error", e);
                     if (tbody) tbody.innerHTML = '<tr><td colspan="9" class="error-empty">Weapon usage could not be loaded.</td></tr>';
@@ -3726,7 +4509,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 renderWeaponUsageTable();
             }
 
-            async function loadWeaponDetail(weaponName) {
+            async function loadWeaponDetail(weaponName, preserveScroll=false) {
                 selectedWeaponDetailName = String(weaponName || '');
                 renderWeaponUsageTable();
                 const card = document.getElementById('weapon-detail-card');
@@ -3737,7 +4520,9 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 card.classList.remove('initially-hidden');
                 title.innerText = selectedWeaponDetailName;
                 body.innerHTML = `<div class="muted-empty">${escapeHtml(localeText('weapon_usage.loading_weapon_profile', 'Loading weapon profile...'))}</div>`;
-                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (!preserveScroll) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
 
                 try {
                     const detail = await window.pywebview.api.get_weapon_detail(selectedWeaponDetailName, "0");
@@ -3789,6 +4574,7 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     <div class="weapon-detail-meta">
                         <span>${escapeHtml(category)}</span>
                         ${weapon.console_name ? `<span>${escapeHtml(weapon.console_name)}</span>` : ''}
+                        ${weapon.pap_name ? `<span class="pap-name-meta">${escapeHtml('PaP: ' + weapon.pap_name)}</span>` : ''}
                         <span>${parseInt(totals.matches || 0).toLocaleString()} ${escapeHtml(localeText('common.matches', 'matches'))}</span>
                         ${aatMeta}
                     </div>
@@ -3921,9 +4707,184 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
         console.error("Top XP Load Error", e); 
     }
 }
+
+            let xpTrendChartInstance = null;
+            let xpTrendTooltipRows = [];
+
+            function truncateXpTrendLabel(text, maxLength) {
+                const clean = String(text || '').replace(/\\s+/g, ' ').trim();
+                if (clean.length <= maxLength) return clean;
+                return clean.slice(0, Math.max(1, maxLength - 3)).trimEnd() + '...';
+            }
+
+            function formatXpTrendAxisLabel(mapName, index) {
+                const clean = String(mapName || '').replace(/_/g, ' ').replace(/\\s+/g, ' ').trim() || `Match ${index + 1}`;
+                const words = clean.split(' ');
+                const lines = [];
+                let line = '';
+                let consumed = 0;
+                const maxLine = 16;
+
+                for (let i = 0; i < words.length; i++) {
+                    const word = words[i];
+                    const candidate = line ? `${line} ${word}` : word;
+                    if (candidate.length <= maxLine) {
+                        line = candidate;
+                        consumed = i + 1;
+                        continue;
+                    }
+                    if (line) {
+                        lines.push(line);
+                        line = '';
+                        i -= 1;
+                    } else {
+                        lines.push(truncateXpTrendLabel(word, maxLine));
+                        consumed = i + 1;
+                    }
+                    if (lines.length >= 2) break;
+                }
+
+                if (line && lines.length < 2) lines.push(line);
+                if (!lines.length) lines.push(`Match ${index + 1}`);
+                if (consumed < words.length) {
+                    lines[lines.length - 1] = truncateXpTrendLabel(lines[lines.length - 1] + ' ' + words[consumed], 18);
+                }
+                return lines.slice(0, 2);
+            }
+
+            async function loadXpTrendChart() {
+                const canvas = document.getElementById('xpTrendChart');
+                const wrapper = document.getElementById('xp-trend-wrapper');
+                if (!canvas || !wrapper) return;
+
+                try {
+                    const entries = await window.pywebview.api.get_xp_trend_data("0", 30);
+                    if (!entries || entries.length === 0) {
+                        wrapper.innerHTML = '<div style="color:#666;padding:20px;text-align:center;">No match XP data yet.</div>';
+                        return;
+                    }
+
+                    const labels = entries.map((e, i) => formatXpTrendAxisLabel(e.map, i));
+                    xpTrendTooltipRows = entries.map((e, i) => ({
+                        map: String(e.map || `Match ${i + 1}`),
+                        date: String(e.date_iso || '')
+                    }));
+                    const data = entries.map(e => Math.round(e.xp || 0));
+                    const rounds = entries.map(e => Math.round(e.round || 0));
+
+                    if (xpTrendChartInstance) {
+                        xpTrendChartInstance.data.labels = labels;
+                        xpTrendChartInstance.data.datasets[0].data = data;
+                        xpTrendChartInstance.data.datasets[1].data = rounds;
+                        xpTrendChartInstance.resize();
+                        xpTrendChartInstance.update('none');
+                        return;
+                    }
+
+                    const theme = getGraphTheme();
+                    const ctx = canvas.getContext('2d');
+                    xpTrendChartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Match XP',
+                                    data: data,
+                                    borderColor: theme.line,
+                                    backgroundColor: theme.lineFill,
+                                    borderWidth: 2,
+                                    order: 2,
+                                    yAxisID: 'y',
+                                },
+                                {
+                                    label: 'Round',
+                                    data: rounds,
+                                    type: 'line',
+                                    borderColor: theme.zpm,
+                                    backgroundColor: theme.zpmFill,
+                                    borderWidth: 2,
+                                    fill: false,
+                                    tension: 0.2,
+                                    pointBackgroundColor: theme.zpm,
+                                    pointRadius: 4,
+                                    pointHoverRadius: 7,
+                                    order: 1,
+                                    yAxisID: 'y1',
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: false,
+                            interaction: { mode: 'nearest', axis: 'x', intersect: true },
+                            plugins: {
+                                legend: {
+                                    labels: { color: '#aaa', font: { size: 11 } }
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    mode: 'nearest',
+                                    intersect: true,
+                                    backgroundColor: 'rgba(0,0,0,0.9)',
+                                    titleColor: theme.tooltip,
+                                    bodyColor: '#fff',
+                                    borderColor: theme.tooltip,
+                                    borderWidth: 1,
+                                    callbacks: {
+                                        title: function(t) {
+                                            const row = xpTrendTooltipRows[t[0].dataIndex] || {};
+                                            return row.date ? [row.map, row.date] : row.map;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { color: '#333' },
+                                    ticks: {
+                                        color: '#aaa',
+                                        maxRotation: 0,
+                                        minRotation: 0,
+                                        autoSkip: true,
+                                        autoSkipPadding: 22,
+                                        maxTicksLimit: 12,
+                                        padding: 8,
+                                        font: { size: 10 }
+                                    },
+                                    title: { display: true, text: 'Match (oldest → recent)', color: '#888' }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    grid: { color: '#333' },
+                                    ticks: { color: '#aaa' },
+                                    title: { display: true, text: 'Match XP', color: '#888' },
+                                    position: 'left',
+                                },
+                                y1: {
+                                    beginAtZero: true,
+                                    grid: { drawOnChartArea: false },
+                                    ticks: { color: theme.zpm },
+                                    title: { display: true, text: 'Round', color: theme.zpm },
+                                    position: 'right',
+                                }
+                            },
+                            elements: { point: { hoverBorderWidth: 3, hoverBorderColor: '#fff' } },
+                            layout: { padding: { top: 10, bottom: 18, left: 5, right: 5 } }
+                        }
+                    });
+                    xpTrendChartInstance.update('none');
+                } catch(e) {
+                    console.error("XP Trend Load Error", e);
+                    wrapper.innerHTML = '<div style="color:#c33;padding:20px;text-align:center;">Could not load XP trend.</div>';
+                }
+            }
             
             async function init() {
+                applyCompactMode(compactModeEnabled);
                 updateSidebar();
+                startStartupAssetStatusPolling();
                 switchTab('live');
                 
                 await window.pywebview.api.force_sync_challenges();
@@ -3938,8 +4899,10 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 applySettingsCopy(currentThemeName);
                 const savedLanguage = await window.pywebview.api.get_active_language();
                 await loadLocaleStrings(savedLanguage || 'en');
+                await loadCurrentGameSyncSettings();
                 await loadDiscordPresenceSettings();
                 await loadT7DiscordPresenceSetting();
+                await refreshChallengeOverlaySettings();
                 maybeShowGlobalStatsPrompt();
                 checkForUpdates(false);
                  
@@ -3961,6 +4924,63 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                         loadBestMatches();
                     }
                 }, 3000);
+            }
+
+            function updateStartupAssetStatusBox(status) {
+                const box = document.getElementById('startup-asset-sync');
+                const fill = document.getElementById('startup-asset-sync-fill');
+                const count = document.getElementById('startup-asset-sync-count');
+                const message = document.getElementById('startup-asset-sync-message');
+                if (!box || !fill || !count || !message || !status) return false;
+
+                const total = Math.max(0, parseInt(status.total || 0));
+                const current = Math.max(0, parseInt(status.current || 0));
+                const running = !!status.running;
+                const done = !!status.done;
+                const downloaded = Math.max(0, parseInt(status.downloaded || 0));
+                const pct = total > 0 ? Math.min(100, Math.round((current / total) * 100)) : (running ? 15 : 100);
+
+                if (running || (done && total > 0 && downloaded > 0)) {
+                    box.style.display = 'block';
+                    fill.style.width = `${pct}%`;
+                    count.innerText = total > 0 ? `${Math.min(current, total)} / ${total}` : 'Checking';
+                    message.innerText = status.message || 'Preparing hosted reward assets...';
+                }
+
+                if (done && !running) {
+                    fill.style.width = '100%';
+                    if (downloaded > 0) {
+                        message.innerText = status.message || `Reward assets ready (${downloaded} new).`;
+                        setTimeout(() => { box.style.display = 'none'; }, 2200);
+                    } else {
+                        box.style.display = 'none';
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            function startStartupAssetStatusPolling() {
+                if (startupAssetStatusTimer) clearInterval(startupAssetStatusTimer);
+                let attempts = 0;
+                const poll = async () => {
+                    attempts += 1;
+                    try {
+                        const status = await window.pywebview.api.get_startup_asset_status();
+                        const finished = updateStartupAssetStatusBox(status);
+                        if (finished || attempts > 120) {
+                            clearInterval(startupAssetStatusTimer);
+                            startupAssetStatusTimer = null;
+                        }
+                    } catch(e) {
+                        if (attempts > 10 && startupAssetStatusTimer) {
+                            clearInterval(startupAssetStatusTimer);
+                            startupAssetStatusTimer = null;
+                        }
+                    }
+                };
+                poll();
+                startupAssetStatusTimer = setInterval(poll, 500);
             }
             
             // --- NEW: MULTI-PLAYER TAB LOGIC ---
@@ -4000,8 +5020,502 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                 }
             }
 
+            function captureTextFromHtml(html) {
+                const div = document.createElement('div');
+                div.innerHTML = html || '';
+                return (div.textContent || div.innerText || '').replace(/\\s+/g, ' ').trim();
+            }
+
+            function getLiveCapturePerks() {
+                const container = document.getElementById('d_perks');
+                if (!container) return [];
+                const perks = [];
+                container.querySelectorAll('img').forEach(img => {
+                    const label = img.getAttribute('title') || img.getAttribute('alt') || '';
+                    if (label || img.src) perks.push({ label: label || 'Perk', src: img.src || '' });
+                });
+                if (!perks.length) {
+                    const fallback = captureTextFromHtml(container.innerHTML);
+                    if (fallback) perks.push({ label: fallback, src: '' });
+                }
+                return perks;
+            }
+
+            function getLiveCaptureWeapons() {
+                const rows = [];
+                document.querySelectorAll('#d_weaps tr').forEach(row => {
+                    const tds = Array.from(row.querySelectorAll('td'));
+                    const cells = tds.map(cell => captureTextFromHtml(cell.innerHTML));
+                    if (cells.length) {
+                        const statusCell = tds[4] || null;
+                        const statusLabel = statusCell ? statusCell.querySelector('.weapon-status-enchant, .weapon-status-pap, .weapon-status-std') : null;
+                        const aatIcon = statusCell ? statusCell.querySelector('.weapon-status-aat-icon') : null;
+                        const aatLabel = statusCell ? statusCell.querySelector('.weapon-status-aat') : null;
+                        rows.push({
+                            name: cells[0] || '-',
+                            kills: cells[1] || '0',
+                            headshots: cells[2] || '0',
+                            damage: cells[3] || '0',
+                            status: statusLabel ? captureTextFromHtml(statusLabel.innerHTML) : (cells[4] || ''),
+                            aatIconSrc: aatIcon ? (aatIcon.src || '') : '',
+                            aatName: aatIcon
+                                ? (aatIcon.getAttribute('title') || aatIcon.getAttribute('alt') || '')
+                                : (aatLabel ? captureTextFromHtml(aatLabel.innerHTML) : '')
+                        });
+                    }
+                });
+                return rows;
+            }
+
+            function getCaptureEnchantColor(statusText, fallback) {
+                const text = String(statusText || '').toLowerCase();
+                if (text.includes('ultimate')) return '#10e6a7';
+                if (text.includes('celestial')) return '#60c7ed';
+                if (text.includes('cosmic')) return '#4b0077';
+                if (text.includes('eternal')) return '#8d42ad';
+                if (text.includes('divine')) return '#ef58c7';
+                if (text.includes('exotic')) return '#ec453c';
+                if (text.includes('mythic')) return '#f1c800';
+                if (text.includes('legendary')) return '#ea7b17';
+                if (text.includes('epic')) return '#c833c8';
+                if (text.includes('rare')) return '#3568ff';
+                if (text.includes('common')) return '#55ff2f';
+                return fallback;
+            }
+
+            function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+                const words = String(text || '').split(/\\s+/).filter(Boolean);
+                let line = '';
+                let lines = 0;
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line ? line + ' ' + words[i] : words[i];
+                    if (ctx.measureText(testLine).width > maxWidth && line) {
+                        ctx.fillText(line, x, y);
+                        y += lineHeight;
+                        lines++;
+                        if (maxLines && lines >= maxLines) return y;
+                        line = words[i];
+                    } else {
+                        line = testLine;
+                    }
+                }
+                if (line && (!maxLines || lines < maxLines)) {
+                    ctx.fillText(line, x, y);
+                    y += lineHeight;
+                }
+                return y;
+            }
+
+            function loadCaptureImage(src) {
+                return new Promise(resolve => {
+                    if (!src) {
+                        resolve(null);
+                        return;
+                    }
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = () => resolve(null);
+                    img.src = src;
+                });
+            }
+
+            function drawCaptureRoundXpGraph(ctx, labels, values, x, y, w, h, theme) {
+                const cleanValues = (values || []).map(value => Number(value || 0));
+                drawCapturePanel(ctx, x, y, w, h, theme);
+                ctx.fillStyle = theme.label;
+                ctx.font = `700 18px ${theme.font}`;
+                ctx.fillText('ROUND XP SNAPSHOT', x + 20, y + 34);
+
+                if (!cleanValues.length || cleanValues.every(value => value <= 0)) {
+                    ctx.fillStyle = theme.muted;
+                    ctx.font = `700 18px ${theme.font}`;
+                    ctx.fillText('No round XP data recorded yet.', x + 20, y + 78);
+                    return;
+                }
+
+                const chartX = x + 56;
+                const chartY = y + 58;
+                const chartW = w - 88;
+                const chartH = h - 96;
+                const maxValue = Math.max(...cleanValues, 1);
+                const rows = 4;
+
+                ctx.strokeStyle = theme.border;
+                ctx.lineWidth = 1;
+                for (let i = 0; i <= rows; i++) {
+                    const gy = chartY + (chartH / rows) * i;
+                    ctx.globalAlpha = i === rows ? 0.9 : 0.35;
+                    ctx.beginPath();
+                    ctx.moveTo(chartX, gy);
+                    ctx.lineTo(chartX + chartW, gy);
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
+
+                const shown = cleanValues.slice(-24);
+                const shownLabels = (labels || []).slice(-24);
+                const gap = 4;
+                const barW = Math.max(8, (chartW - gap * Math.max(0, shown.length - 1)) / shown.length);
+                shown.forEach((value, index) => {
+                    const barH = Math.max(2, (value / maxValue) * chartH);
+                    const bx = chartX + index * (barW + gap);
+                    const by = chartY + chartH - barH;
+                    ctx.fillStyle = theme.accent;
+                    ctx.fillRect(bx, by, barW, barH);
+                    if (index === shown.length - 1 || index === 0 || (index + 1) % 6 === 0) {
+                        ctx.fillStyle = theme.muted;
+                        ctx.font = `700 11px ${theme.font}`;
+                        ctx.fillText(String(shownLabels[index] || index + 1), bx, chartY + chartH + 18);
+                    }
+                });
+
+                ctx.fillStyle = theme.gold;
+                ctx.font = `800 17px ${theme.font}`;
+                ctx.fillText(`Peak ${Math.round(maxValue).toLocaleString()} XP`, x + w - 210, y + 34);
+            }
+
+            function drawCapturePanel(ctx, x, y, w, h, theme) {
+                ctx.fillStyle = theme.panel;
+                ctx.fillRect(x, y, w, h);
+                ctx.strokeStyle = theme.border;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, y, w, h);
+            }
+
+            function makeLiveCaptureFilename(game, player) {
+                const clean = value => String(value || 'live').replace(/[^a-z0-9_-]+/gi, '_').replace(/^_+|_+$/g, '').slice(0, 48) || 'live';
+                const map = clean(game && game.map);
+                const round = clean(game && game.round ? 'round_' + game.round : 'round');
+                const name = clean(player && player.name ? player.name : 'player');
+                return `bo3_tracker_${map}_${round}_${name}.png`;
+            }
+
+            async function captureLiveStats() {
+                const button = document.getElementById('live-capture-btn');
+                const originalText = button ? button.textContent : '';
+                try {
+                    if (button) {
+                        button.disabled = true;
+                        button.textContent = 'CAPTURING...';
+                    }
+
+                    if (!cachedLiveData) {
+                        cachedLiveData = await window.pywebview.api.get_live_stats();
+                    }
+                    if (!cachedLiveData || !cachedLiveData.game) {
+                        alert('No live stats are available to capture yet.');
+                        return;
+                    }
+
+                    const game = cachedLiveData.game || {};
+                    const player = cachedPlayers[currentPlayerIndex] || (cachedLiveData.players || [])[0] || {};
+                    const rankIconSources = [player.ult_icon, player.abso_icon, player.leg_icon, player.prest_icon, player.lvl_icon].filter(Boolean);
+                    const rankImages = await Promise.all(rankIconSources.map(src => loadCaptureImage(src)));
+                    const perks = getLiveCapturePerks();
+                    const perkImages = await Promise.all(perks.map(perk => loadCaptureImage(perk.src)));
+                    const weapons = getLiveCaptureWeapons();
+                    const shownWeapons = weapons.slice(0, 6);
+                    const aatImages = await Promise.all(shownWeapons.map(weapon => loadCaptureImage(weapon.aatIconSrc)));
+                    const weaponRowHeight = 38;
+                    const missionPanelY = 142;
+                    const missionPanelHeight = 132;
+                    const servicePanelY = 302;
+                    const combatPanelY = 552;
+                    const lowerPanelY = 696;
+                    const lowerPanelHeight = 164;
+                    const weaponPanelY = lowerPanelY + lowerPanelHeight + 34;
+                    const weaponPanelHeight = 92 + shownWeapons.length * weaponRowHeight + (weapons.length > shownWeapons.length ? 30 : 0);
+                    const graphPanelY = weaponPanelY + weaponPanelHeight + 34;
+                    const graphPanelHeight = 170;
+                    const height = weaponPanelY + weaponPanelHeight + 56;
+                    const fullHeight = graphPanelY + graphPanelHeight + 56;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 1280;
+                    canvas.height = Math.max(height, fullHeight);
+                    const ctx = canvas.getContext('2d');
+                    const rootStyle = getComputedStyle(document.documentElement);
+                    const bodyStyle = getComputedStyle(document.body);
+                    const sampleCard = document.querySelector('#tab-live .card') || document.querySelector('.card');
+                    const cardStyle = sampleCard ? getComputedStyle(sampleCard) : bodyStyle;
+                    const sampleTitle = document.querySelector('#tab-live .card-title') || document.querySelector('.card-title');
+                    const titleStyle = sampleTitle ? getComputedStyle(sampleTitle) : bodyStyle;
+                    const themeColor = (name, fallback) => {
+                        const value = rootStyle.getPropertyValue(name).trim();
+                        return value || fallback;
+                    };
+                    const computedColor = (value, fallback) => {
+                        const text = String(value || '').trim();
+                        if (!text || text === 'transparent' || text === 'rgba(0, 0, 0, 0)') return fallback;
+                        return text;
+                    };
+                    const captureTheme = {
+                        bg: computedColor(bodyStyle.backgroundColor, themeColor('--bg-dark', '#0b0c10')),
+                        panel: computedColor(cardStyle.backgroundColor, themeColor('--bg-panel', 'rgba(16,24,32,0.92)')),
+                        border: computedColor(cardStyle.borderColor, themeColor('--highlight', '#28454a')),
+                        text: computedColor(bodyStyle.color, themeColor('--primary', '#ffffff')),
+                        label: themeColor('--career-muted', computedColor(titleStyle.color, '#8fa4a8')),
+                        title: computedColor(titleStyle.color, themeColor('--accent', '#66fcf1')),
+                        accent: themeColor('--accent', '#66fcf1'),
+                        highlight: themeColor('--highlight', themeColor('--career-accent', '#ff9d00')),
+                        value: themeColor('--career-value', computedColor(bodyStyle.color, '#ffffff')),
+                        gold: themeColor('--gold', themeColor('--career-accent', '#ff9d00')),
+                        danger: themeColor('--danger', '#ff5c5c'),
+                        muted: themeColor('--career-muted', '#9aa5aa'),
+                        font: bodyStyle.fontFamily || 'Segoe UI, Arial'
+                    };
+
+                    ctx.fillStyle = captureTheme.bg;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    grad.addColorStop(0, captureTheme.panel);
+                    grad.addColorStop(0.55, 'rgba(255,255,255,0.035)');
+                    grad.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    const panel = (x, y, w, h) => {
+                        drawCapturePanel(ctx, x, y, w, h, captureTheme);
+                    };
+                    const label = (text, x, y) => {
+                        ctx.fillStyle = captureTheme.label;
+                        ctx.font = `700 18px ${captureTheme.font}`;
+                        ctx.fillText(String(text || '').toUpperCase(), x, y);
+                    };
+                    const value = (text, x, y, size = 30, color = captureTheme.value) => {
+                        ctx.fillStyle = color;
+                        ctx.font = `800 ${size}px ${captureTheme.font}`;
+                        ctx.fillText(String(text || '-'), x, y);
+                    };
+                    const fitValue = (text, x, y, maxWidth, size = 30, color = captureTheme.value, minSize = 15) => {
+                        let fontSize = size;
+                        const display = String(text || '-');
+                        ctx.fillStyle = color;
+                        ctx.font = `800 ${fontSize}px ${captureTheme.font}`;
+                        while (ctx.measureText(display).width > maxWidth && fontSize > minSize) {
+                            fontSize -= 1;
+                            ctx.font = `800 ${fontSize}px ${captureTheme.font}`;
+                        }
+                        ctx.fillText(display, x, y);
+                    };
+                    const metric = (title, val, x, y, w, h, color) => {
+                        panel(x, y, w, h);
+                        const isCompactMetric = h < 68;
+                        const labelSize = isCompactMetric ? 14 : 17;
+                        ctx.fillStyle = captureTheme.label;
+                        ctx.font = `700 ${labelSize}px ${captureTheme.font}`;
+                        ctx.fillText(String(title || '').toUpperCase(), x + 18, y + (isCompactMetric ? 22 : 28));
+                        const valueSize = isCompactMetric ? 18 : 27;
+                        const valueY = y + h - (isCompactMetric ? 7 : 14);
+                        fitValue(val, x + 18, valueY, w - 36, valueSize, color || captureTheme.value, 12);
+                    };
+                    const xpText = String(player.xp || '0');
+                    let currentXpText = xpText;
+                    let matchXpText = player.match_xp || '0';
+                    let xpmText = player.xpm || '0';
+                    const xpOpenIndex = xpText.indexOf('(+');
+                    if (xpOpenIndex >= 0) {
+                        currentXpText = xpText.slice(0, xpOpenIndex).trim();
+                        const xpMeta = xpText.slice(xpOpenIndex).replace(/[()]/g, '');
+                        const xpParts = xpMeta.split('|').map(part => part.trim());
+                        if (xpParts[0]) matchXpText = xpParts[0].replace(/^\\+/, '').replace(/ Match XP$/i, '');
+                        if (xpParts[1]) xpmText = xpParts[1].replace(/ XP\\/min$/i, '');
+                    }
+
+                    ctx.fillStyle = captureTheme.title;
+                    ctx.font = `900 34px ${captureTheme.font}`;
+                    fitValue('Ultimate Experience Mod Community Tracker', 48, 58, 760, 34, captureTheme.title, 20);
+                    ctx.fillStyle = captureTheme.muted;
+                    ctx.font = `600 18px ${captureTheme.font}`;
+                    ctx.fillText(new Date().toLocaleString(), 48, 88);
+                    if (player.name) {
+                        ctx.fillStyle = captureTheme.value;
+                        ctx.font = `800 22px ${captureTheme.font}`;
+                        fitValue(`PLAYER: ${player.name}`, 48, 118, 520, 22, captureTheme.value, 14);
+                    }
+                    ctx.textAlign = 'right';
+                    ctx.fillStyle = captureTheme.gold;
+                    ctx.font = `900 28px ${captureTheme.font}`;
+                    ctx.fillText(`ROUND ${game.round || '0'}`, 1232, 62);
+                    ctx.textAlign = 'left';
+
+                    panel(48, missionPanelY, 1184, missionPanelHeight);
+                    label('Map', 78, missionPanelY + 36);
+                    fitValue(game.map || '-', 78, missionPanelY + 84, 490, 42, captureTheme.value, 24);
+                    label('Mode', 600, missionPanelY + 36);
+                    fitValue(game.mode || '-', 600, missionPanelY + 80, 250, 26, captureTheme.value);
+                    label('Time', 600, missionPanelY + 108);
+                    fitValue(game.time || '00:00', 600, missionPanelY + 128, 250, 24, captureTheme.value);
+                    label('ZPM', 930, missionPanelY + 36);
+                    fitValue(game.zpm || '0', 930, missionPanelY + 82, 120, 42, captureTheme.accent);
+                    label('Version', 930, missionPanelY + 102);
+                    fitValue(game.version || '-', 930, missionPanelY + 126, 280, 19, captureTheme.muted, 12);
+
+                    panel(48, servicePanelY, 568, 220);
+                    label('Service Record', 78, servicePanelY + 38);
+                    const hasRankIcons = rankImages.some(Boolean);
+                    if (hasRankIcons) {
+                        const iconSize = 48;
+                        const gap = 10;
+                        rankImages.forEach((img, index) => {
+                            if (!img) return;
+                            const x = 78 + index * (iconSize + gap);
+                            const y = servicePanelY + 58;
+                            ctx.fillStyle = 'rgba(255,255,255,0.055)';
+                            ctx.fillRect(x, y, iconSize, iconSize);
+                            ctx.strokeStyle = captureTheme.border;
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(x, y, iconSize, iconSize);
+                            ctx.drawImage(img, x + 4, y + 4, iconSize - 8, iconSize - 8);
+                        });
+                    }
+                    const serviceTextX = hasRankIcons ? 78 : 78;
+                    const serviceMainY = hasRankIcons ? servicePanelY + 144 : servicePanelY + 85;
+                    fitValue(player.r_main || '-', serviceTextX, serviceMainY, 510, hasRankIcons ? 29 : 31, captureTheme.value, 18);
+                    ctx.fillStyle = captureTheme.muted;
+                    ctx.font = `700 20px ${captureTheme.font}`;
+                    wrapCanvasText(ctx, player.r_sub || '', serviceTextX, hasRankIcons ? servicePanelY + 174 : servicePanelY + 120, 510, 25, hasRankIcons ? 1 : 2);
+                    if (player.title) {
+                        ctx.fillStyle = captureTheme.gold;
+                        ctx.font = `700 22px ${captureTheme.font}`;
+                        wrapCanvasText(ctx, captureTextFromHtml(player.title), 78, hasRankIcons ? servicePanelY + 214 : servicePanelY + 194, 510, 28, 1);
+                    }
+
+                    panel(664, servicePanelY, 568, 220);
+                    label('XP Snapshot', 694, servicePanelY + 38);
+                    metric('Current XP', currentXpText, 694, servicePanelY + 62, 245, 68, captureTheme.gold);
+                    metric('Match XP', matchXpText, 966, servicePanelY + 62, 236, 68, captureTheme.gold);
+                    metric('XP / Min', xpmText, 694, servicePanelY + 145, 160, 52, captureTheme.accent);
+                    metric('Multiplier', player.mult || 'x1.0', 874, servicePanelY + 145, 150, 52, captureTheme.accent);
+                    metric('Gobblegums', player.gums || '0', 1044, servicePanelY + 145, 158, 52, '#b279ff');
+
+                    metric('Eliminations', player.k || '0', 48, combatPanelY, 270, 92, captureTheme.value);
+                    metric('Score', player.pts || '0', 342, combatPanelY, 274, 92, captureTheme.gold);
+                    metric('Accuracy', `${player.acc || '0'}%`, 664, combatPanelY, 178, 92, captureTheme.accent);
+                    metric('Melee / Equip', `${player.melee || 0} / ${player.equip || 0}`, 866, combatPanelY, 178, 92, captureTheme.value);
+                    metric('Downs', player.downs || '0', 1068, combatPanelY, 164, 92, captureTheme.danger);
+
+                    panel(48, weaponPanelY, 1184, weaponPanelHeight);
+                    label('Weapons', 78, weaponPanelY + 38);
+                    ctx.fillStyle = captureTheme.label;
+                    ctx.font = `800 17px ${captureTheme.font}`;
+                    const headerY = weaponPanelY + 72;
+                    ctx.fillText('WEAPON', 78, headerY);
+                    ctx.fillText('KILLS', 610, headerY);
+                    ctx.fillText('HS', 735, headerY);
+                    ctx.fillText('DAMAGE', 840, headerY);
+                    ctx.fillText('STATUS', 1050, headerY);
+                    ctx.strokeStyle = captureTheme.border;
+                    ctx.beginPath();
+                    ctx.moveTo(78, headerY + 12);
+                    ctx.lineTo(1202, headerY + 12);
+                    ctx.stroke();
+
+                    ctx.font = `700 18px ${captureTheme.font}`;
+                    shownWeapons.forEach((weapon, index) => {
+                        const rowTop = weaponPanelY + 91 + index * weaponRowHeight;
+                        const rowHeight = 34;
+                        const y = rowTop + 23;
+                        ctx.fillStyle = index % 2 ? 'rgba(255,255,255,0.025)' : 'rgba(255,255,255,0.045)';
+                        ctx.fillRect(68, rowTop, 1144, rowHeight);
+                        ctx.fillStyle = captureTheme.value;
+                        wrapCanvasText(ctx, weapon.name, 78, y, 500, 22, 1);
+                        fitValue(weapon.kills, 610, y, 95, 18, captureTheme.value, 12);
+                        fitValue(weapon.headshots, 735, y, 80, 18, captureTheme.value, 12);
+                        fitValue(weapon.damage, 840, y, 190, 18, captureTheme.value, 12);
+                        ctx.fillStyle = getCaptureEnchantColor(weapon.status, captureTheme.gold);
+                        fitValue(weapon.status, 1050, y, aatImages[index] ? 92 : 150, 16, ctx.fillStyle, 8);
+                        if (aatImages[index]) {
+                            const iconSize = 26;
+                            const iconBoxSize = 30;
+                            const iconX = 1178;
+                            const iconY = rowTop + Math.floor((rowHeight - iconBoxSize) / 2);
+                            ctx.fillStyle = 'rgba(255,255,255,0.055)';
+                            ctx.fillRect(iconX, iconY, iconBoxSize, iconBoxSize);
+                            ctx.strokeStyle = captureTheme.border;
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(iconX, iconY, iconBoxSize, iconBoxSize);
+                            ctx.drawImage(aatImages[index], iconX + 2, iconY + 2, iconSize, iconSize);
+                        }
+                    });
+                    if (weapons.length > shownWeapons.length) {
+                        ctx.fillStyle = captureTheme.muted;
+                        ctx.font = `700 17px ${captureTheme.font}`;
+                        ctx.fillText(`+${weapons.length - shownWeapons.length} more weapon rows not shown`, 78, weaponPanelY + weaponPanelHeight - 22);
+                    }
+
+                    drawCaptureRoundXpGraph(
+                        ctx,
+                        player.round_xp_labels || [],
+                        player.round_xp_data || [],
+                        48,
+                        graphPanelY,
+                        1184,
+                        graphPanelHeight,
+                        captureTheme
+                    );
+
+                    panel(48, lowerPanelY, 568, lowerPanelHeight);
+                    label('Perks', 78, lowerPanelY + 38);
+                    if (perks.length && perks.some(perk => perk.src)) {
+                        const iconSize = 40;
+                        const gap = 8;
+                        const perRow = 10;
+                        const maxIcons = 20;
+                        perks.slice(0, maxIcons).forEach((perk, index) => {
+                            const col = index % perRow;
+                            const row = Math.floor(index / perRow);
+                            const x = 78 + col * (iconSize + gap);
+                            const y = lowerPanelY + 58 + row * (iconSize + gap);
+                            ctx.fillStyle = 'rgba(255,255,255,0.055)';
+                            ctx.fillRect(x, y, iconSize, iconSize);
+                            ctx.strokeStyle = captureTheme.border;
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(x, y, iconSize, iconSize);
+                            const img = perkImages[index];
+                            if (img) {
+                                ctx.drawImage(img, x + 4, y + 4, iconSize - 8, iconSize - 8);
+                            } else {
+                                ctx.fillStyle = captureTheme.value;
+                                ctx.font = `800 12px ${captureTheme.font}`;
+                                ctx.fillText(String(perk.label || 'PERK').slice(0, 3).toUpperCase(), x + 7, y + 25);
+                            }
+                        });
+                        if (perks.length > maxIcons) {
+                            ctx.fillStyle = captureTheme.muted;
+                            ctx.font = `700 16px ${captureTheme.font}`;
+                            ctx.fillText(`+${perks.length - maxIcons}`, 78 + 9 * (iconSize + gap), lowerPanelY + 146);
+                        }
+                    } else {
+                        ctx.fillStyle = captureTheme.value;
+                        ctx.font = `700 21px ${captureTheme.font}`;
+                        wrapCanvasText(ctx, perks.length ? perks.map(perk => perk.label).join(' | ') : 'No Active Perks', 78, lowerPanelY + 72, 510, 26, 2);
+                    }
+
+                    panel(664, lowerPanelY, 568, lowerPanelHeight);
+                    label('Loadout', 694, lowerPanelY + 38);
+                    ctx.fillStyle = captureTheme.value;
+                    ctx.font = `700 20px ${captureTheme.font}`;
+                    wrapCanvasText(ctx, `Lethal: ${player.leth || '-'}`, 694, lowerPanelY + 76, 510, 25, 1);
+                    wrapCanvasText(ctx, `Tactical: ${player.tact || '-'}`, 694, lowerPanelY + 108, 510, 25, 1);
+
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const result = await window.pywebview.api.save_live_capture(dataUrl, makeLiveCaptureFilename(game, player));
+                    if (!result || !result.success) {
+                        alert(result && result.msg ? result.msg : 'Could not save live capture.');
+                    }
+                } catch (e) {
+                    alert('Could not capture live stats: ' + e);
+                } finally {
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent = originalText || 'CAPTURE';
+                    }
+                }
+            }
+
             function updateData(d) {
                 if(!d || !d.game) return;
+                cachedLiveData = d;
                 currentGameId = d.game.id || "";
 
                 const currentRound = parseInt(d.game.round);
@@ -4242,14 +5756,31 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                         newHistory.forEach(item => {
                             const div = document.createElement('div');
                             div.className = 'sb-item';
+                            div.dataset.historyId = item.id;
                             const roundText = Number(item.round || 0) > 0 ? `R${item.round} // ` : "";
                             const xpText = Number(item.match_xp || 0) > 0 ? `${Number(item.match_xp).toLocaleString()} XP` : "XP not recorded";
                             div.innerHTML = `
-                                <div class="sb-map">${escapeHtml(item.map)}</div>
-                                <div class="sb-date">${roundText}${escapeHtml(item.date)}</div>
-                                <div class="sb-xp">${escapeHtml(xpText)}</div>
-                                <div class="sb-id" title="${escapeHtml(item.id)}">${escapeHtml(item.id)}</div>
+                                <div class="history-row-main">
+                                    <div class="min-content">
+                                        <div class="sb-map">${escapeHtml(item.map)}</div>
+                                        <div class="sb-date">${roundText}${escapeHtml(item.date)}</div>
+                                        <div class="sb-xp">${escapeHtml(xpText)}</div>
+                                        <div class="sb-id" title="${escapeHtml(item.id)}">${escapeHtml(item.id)}</div>
+                                    </div>
+                                    <div class="history-row-actions">
+                                        <button type="button" class="history-copy-btn" title="Copy game ID">ID</button>
+                                        <button type="button" class="history-remove-btn" title="Remove archived match">X</button>
+                                    </div>
+                                </div>
                             `;
+                            const copyBtn = div.querySelector('.history-copy-btn');
+                            if (copyBtn) {
+                                copyBtn.onclick = (event) => copyHistoryGameId(event, item.id);
+                            }
+                            const removeBtn = div.querySelector('.history-remove-btn');
+                            if (removeBtn) {
+                                removeBtn.onclick = (event) => removeHistoryMatch(event, item.id);
+                            }
                             div.onclick = () => loadHistory(item.id, div);
                             listEl.appendChild(div);
                         });
@@ -4259,10 +5790,54 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     }
                 } catch(e) { console.error("Error updating sidebar:", e); }
             }
+
+            async function copyTextToClipboard(text) {
+                const value = String(text || "");
+                if (!value) return false;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    try {
+                        await navigator.clipboard.writeText(value);
+                        return true;
+                    } catch(e) {}
+                }
+                try {
+                    const input = document.createElement('textarea');
+                    input.value = value;
+                    input.setAttribute('readonly', '');
+                    input.style.position = 'fixed';
+                    input.style.left = '-9999px';
+                    input.style.top = '0';
+                    document.body.appendChild(input);
+                    input.select();
+                    input.setSelectionRange(0, input.value.length);
+                    const copied = document.execCommand('copy');
+                    document.body.removeChild(input);
+                    return copied;
+                } catch(e) {
+                    return false;
+                }
+            }
+
+            async function copyHistoryGameId(event, gameId) {
+                event.stopPropagation();
+                const btn = event.currentTarget;
+                const originalText = btn ? btn.innerText : "";
+                const copied = await copyTextToClipboard(gameId);
+                if (btn) {
+                    btn.innerText = copied ? "OK" : "!";
+                    btn.classList.toggle('copied', copied);
+                    setTimeout(() => {
+                        btn.innerText = originalText || "ID";
+                        btn.classList.remove('copied');
+                    }, 900);
+                }
+                if (!copied) alert("Could not copy game ID.");
+            }
             
             async function loadHistory(id, el) {
                 switchTab('live'); 
                 isLive = false;
+                currentHistoryId = id;
                 document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
                 if (el) el.classList.add('active');
                 const data = await window.pywebview.api.get_history_report(id);
@@ -4275,6 +5850,46 @@ document.getElementById('life_fav_gun').innerHTML = favGunsText;
                     updateData(data);
                     document.getElementById('d_status_bar').innerText = "ARCHIVED MATCH RECORD";
                     document.getElementById('d_status_bar').style.borderLeftColor = "#999";
+                }
+            }
+
+            async function removeHistoryMatch(event, gameId) {
+                event.stopPropagation();
+                const row = event.target.closest('.sb-item');
+                const mapName = row?.querySelector('.sb-map')?.textContent?.trim() || "this archived match";
+                if (!confirm(`Remove ${mapName} from your archived matches?\\n\\nThis deletes the local Game_*.json history file and cannot be undone.`)) return;
+
+                const btn = event.currentTarget;
+                try {
+                    if (btn) btn.disabled = true;
+                    const res = await window.pywebview.api.remove_history_match(gameId);
+                    if (!res || !res.success) {
+                        alert((res && res.msg) || "Could not remove archived match.");
+                        return;
+                    }
+
+                    if (currentHistoryId === gameId) {
+                        currentHistoryId = "";
+                        isLive = true;
+                        const status = document.getElementById('d_status_bar');
+                        if (status) {
+                            status.innerText = "ARCHIVED MATCH REMOVED";
+                            status.style.borderLeftColor = "#ff4d4d";
+                        }
+                    }
+
+                    const listEl = document.getElementById('history-list');
+                    if (listEl) listEl.dataset.signature = "";
+                    await updateSidebar();
+
+                    const bestTab = document.getElementById('tab-bestmatches');
+                    if (res.best_match_removed && bestTab && bestTab.classList.contains('active')) {
+                        loadBestMatches();
+                    }
+                } catch(e) {
+                    alert("Could not remove archived match: " + e);
+                } finally {
+                    if (btn) btn.disabled = false;
                 }
             }
 

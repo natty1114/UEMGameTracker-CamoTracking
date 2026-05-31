@@ -324,7 +324,7 @@
         "feature_live_game": "Partida en vivo: rastrea rango, XP, ventajas, armas, daño y tiempos de ronda.",
         "feature_camo_matrix": "Matriz de camuflajes: edita localmente tu perfil cargado y admite estrellas de prioridad.",
         "feature_career_profile": "Perfil de carrera: resume mapas archivados, récords, XP y estadísticas a largo plazo.",
-        "feature_challenges": "Desafíos: desbloquea tarjetas, emblemas, temas, objetivos semanales y operaciones de mapas.",
+        "feature_challenges": "Desaf?os: desbloquea tarjetas, emblemas y temas. Los objetivos semanales locales rotan autom?ticamente, junto con operaciones de mapas.",
         "feature_best_matches": "Mejores partidas: te permite fijar partidas destacadas desde el panel en vivo.",
         "faq_troubleshooting": "Preguntas frecuentes y solución de problemas",
         "uem_maps_upload": "Inicio de sesión de UEM Maps y subida de camuflajes",
@@ -338,8 +338,8 @@
         "faq_missing_assets_body": "Usa Ajustes para sincronizar la base de datos de camuflajes. Si faltan iconos locales, conserva las carpetas camoimages, perk icons, rank icons, callingcards y emblems junto a la app.",
         "faq_challenges_reopen_title": "Los desafíos se ven mal después de reabrir",
         "faq_challenges_reopen_body": "El progreso de la partida en vivo se guarda entre lanzamientos para que reabrir no cuente doble. Si necesitas empezar de cero, usa el botón de reinicio de desafíos.",
-        "faq_weekly_map_title": "Los desafíos semanales o de mapa no progresan",
-        "faq_weekly_map_body": "Los desafíos semanales solo cuentan actividad válida durante la rotación actual. Las operaciones de mapa requieren el enlace correcto de Steam Workshop, y las operaciones de armas requieren que los datos esperados del arma aparezcan en el archivo en vivo.",
+        "faq_weekly_map_title": "Los desaf?os semanales o de mapa no cambian o no progresan",
+        "faq_weekly_map_body": "Los desaf?os semanales los genera localmente la app. Hay 8 activos a la vez y se actualizan al inicio de cada semana ISO. Solo cuentan actividad v?lida despu?s de que empieza la rotaci?n actual. Las operaciones de mapa requieren el enlace correcto de Steam Workshop, y las operaciones de armas requieren que los datos esperados del arma aparezcan en el archivo en vivo.",
         "faq_overlay_title": "La superposición está vacía o demasiado cargada",
         "faq_overlay_body": "Activa la superposición en vivo en Personalización y luego alterna secciones como ventajas, daño superior, rango, XP de partida y progreso de rango.",
         "faq_xp_title": "La XP o los rangos se ven extraños",
@@ -351,6 +351,8 @@
         "faq_updates_title": "¿Cómo funcionan las actualizaciones y la reversión?",
         "faq_updates_body": "Usa Ajustes para comprobar versiones de GitHub. Cuando haya una disponible, el actualizador cierra y reinicia el tracker. La reversión restaura la versión guardada antes de la última actualización si hay una copia disponible.",
         "faq_backup_title": "¿Cuándo debo crear una copia?",
-        "faq_backup_body": "Crea una copia antes de ediciones grandes, actualizaciones o mover instalaciones. La copia incluye archivos locales de estadísticas UEM como stats_zm_0.cgp hasta stats_zm_4.cgp."
+        "faq_backup_body": "Crea una copia antes de ediciones grandes, actualizaciones o mover instalaciones. La copia incluye archivos locales de estadísticas UEM como stats_zm_0.cgp hasta stats_zm_4.cgp.",
+        "faq_legend_emblems_title": "Los emblemas de rango Leyenda no se desbloquean",
+        "faq_legend_emblems_body": "Los emblemas de Leyenda 1-10 se desbloquean con el valor prestige_legend del Jugador 1. A?ade archivos de emblema personalizados llamados legend_1 a legend_10 en la carpeta emblems, usando PNG, JPG, WebP, GIF, MP4 o WebM."
     }
 }
