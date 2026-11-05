@@ -100,6 +100,12 @@
         "name": "Corruption"
       }
     },
+    "tf2_double_barrel_up": {
+      "3236556600": {
+        "display": "Force-A-Habit",
+        "name": "2Fort (TF2 Zombies)"
+      }
+    },
     "tf2_frontierjustice_up": {
       "3236556600": {
         "display": "Texas Style",
