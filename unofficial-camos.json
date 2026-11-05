@@ -57,6 +57,12 @@
         "display": "Crossbow",
         "name": "Corruption"
       }
+    },
+    "tf2_smg_up": {
+      "3236556600": {
+        "display": "GSTQ",
+        "name": "2Fort (TF2 Zombies)"
+      }
     }
   }
 }
