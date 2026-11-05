@@ -130,6 +130,12 @@
         "name": "2Fort (TF2 Zombies)"
       }
     },
+    "tf2_reserve_shooter_up": {
+      "3236556600": {
+        "display": "Backup Blaster",
+        "name": "2Fort (TF2 Zombies)"
+      }
+    },
     "tf2_revolver_up": {
       "3236556600": {
         "display": "Mentlegen",
@@ -145,6 +151,12 @@
     "tf2_smg_up": {
       "3236556600": {
         "display": "GSTQ",
+        "name": "2Fort (TF2 Zombies)"
+      }
+    },
+    "tf2_syringe_gun_up": {
+      "3236556600": {
+        "display": "Professional Opinion",
         "name": "2Fort (TF2 Zombies)"
       }
     },
