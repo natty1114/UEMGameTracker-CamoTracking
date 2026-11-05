@@ -58,6 +58,18 @@
         "name": "Corruption"
       }
     },
+    "tf2_frontierjustice_up": {
+      "3236556600": {
+        "display": "Texas Style",
+        "name": "2Fort (TF2 Zombies)"
+      }
+    },
+    "tf2_rocket_launcher_up": {
+      "3236556600": {
+        "display": "Crocket Launcher",
+        "name": "2Fort (TF2 Zombies)"
+      }
+    },
     "tf2_smg_up": {
       "3236556600": {
         "display": "GSTQ",
