@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "weapons": {
+    "epg_up": {
+      "3654882086": {
+        "display": "Nova Eruptor",
+        "name": "Gun Range"
+      }
+    },
+    "t4_carbine_up": {},
+    "t4_fg42_up": {
+      "3510401625": {
+        "display": "420 Impeller",
+        "name": "Nacht der Wiedergeburt (Night of the Rebirth)"
+      }
+    },
+    "t4_g43_up": {},
+    "t4_kar98k_scope_up": {},
+    "t4_kar98k_up": {},
+    "t4_m1_scope_up": {},
+    "t4_m1_up": {},
+    "t4_mp40_bigammo_up": {},
+    "t4_mp40_up": {
+      "3510401625": {
+        "display": "The Afterburner",
+        "name": "Nacht der Wiedergeburt (Night of the Rebirth)"
+      }
+    },
+    "t4_ppsh_stick_up": {
+      "3510401625": {
+        "display": "The Banana",
+        "name": "Nacht der Wiedergeburt (Night of the Rebirth)"
+      }
+    },
+    "t4_ptrs_iron_up": {},
+    "t4_ptrs_up": {},
+    "t4_thompson_drum_up": {
+      "3510401625": {
+        "display": "The Patriot",
+        "name": "Nacht der Wiedergeburt (Night of the Rebirth)"
+      }
+    },
+    "t4_thompson_up": {
+      "3510401625": {
+        "display": "Gibs-O-Matic",
+        "name": "Nacht der Wiedergeburt (Night of the Rebirth)"
+      }
+    },
+    "t4_type100_up": {
+      "3510401625": {
+        "display": "1001 Samurais",
+        "name": "Nacht der Wiedergeburt (Night of the Rebirth)"
+      }
+    },
+    "t9_crossbow_up": {
+      "2691637753": {
+        "display": "Crossbow",
+        "name": "Corruption"
+      }
+    }
+  }
+}
