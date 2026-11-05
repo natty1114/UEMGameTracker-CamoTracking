@@ -1,10 +1,52 @@
 {
   "schema": 1,
   "weapons": {
+    "bf4338_up": {
+      "3654882086": {
+        "display": "SRP3NT",
+        "name": "GUN RANGE"
+      }
+    },
+    "contender2_up": {
+      "3654882086": {
+        "display": "Efficient Champion",
+        "name": "GUN RANGE"
+      }
+    },
     "epg_up": {
       "3654882086": {
         "display": "Nova Eruptor",
         "name": "Gun Range"
+      }
+    },
+    "fnfalnato_up": {
+      "3654882086": {
+        "display": "DOW",
+        "name": "GUN RANGE"
+      }
+    },
+    "g362_up": {
+      "3654882086": {
+        "display": "GR3A7",
+        "name": "GUN RANGE"
+      }
+    },
+    "hkg3_up": {
+      "3654882086": {
+        "display": "Homicidal Killer GZ9",
+        "name": "GUN RANGE"
+      }
+    },
+    "s4_tesla_gun_up": {
+      "3654882086": {
+        "display": "Wunderwaffe DG-3 JZ",
+        "name": "GUN RANGE"
+      }
+    },
+    "svu9k_up": {
+      "3654882086": {
+        "display": "Deadly Whisper",
+        "name": "GUN RANGE"
       }
     },
     "t4_carbine_up": {},
@@ -61,6 +103,12 @@
     "tf2_frontierjustice_up": {
       "3236556600": {
         "display": "Texas Style",
+        "name": "2Fort (TF2 Zombies)"
+      }
+    },
+    "tf2_pro_smg_up": {
+      "3236556600": {
+        "display": "Squeaky Clean",
         "name": "2Fort (TF2 Zombies)"
       }
     },
