@@ -1,6 +1,12 @@
 {
   "schema": 1,
   "weapons": {
+    "amd65_up": {
+      "3654882086": {
+        "display": "Annihilation Measure Device 69",
+        "name": "GUN RANGE"
+      }
+    },
     "aw50_up": {
       "3654882086": {
         "display": "SKULL SMASHER",
@@ -19,9 +25,21 @@
         "name": "GUN RANGE"
       }
     },
+    "bf4l115_up": {
+      "3654882086": {
+        "display": "Legionary 115",
+        "name": "GUN RANGE"
+      }
+    },
     "bf4m16_up": {
       "3654882086": {
         "display": "Tried-And-True",
+        "name": "GUN RANGE"
+      }
+    },
+    "bf4m416_up": {
+      "3654882086": {
+        "display": "Discombobulater",
         "name": "GUN RANGE"
       }
     },
