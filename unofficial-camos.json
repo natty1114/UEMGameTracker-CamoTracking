@@ -121,6 +121,12 @@
         "name": "GUN RANGE"
       }
     },
+    "sr3m1_up": {
+      "3654882086": {
+        "display": "SZ-9 Dispatcher",
+        "name": "GUN RANGE"
+      }
+    },
     "svu9k_up": {
       "3654882086": {
         "display": "Deadly Whisper",
@@ -170,6 +176,12 @@
       "3510401625": {
         "display": "1001 Samurais",
         "name": "Nacht der Wiedergeburt (Night of the Rebirth)"
+      }
+    },
+    "t8_raygun_mk2_up": {
+      "3654882086": {
+        "display": "Porter's Mark II Ray Gun",
+        "name": "GUN RANGE"
       }
     },
     "t9_crossbow_up": {
