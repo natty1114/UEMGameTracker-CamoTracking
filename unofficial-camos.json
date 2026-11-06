@@ -85,6 +85,12 @@
         "name": "GUN RANGE"
       }
     },
+    "mgl1_up": {
+      "3654882086": {
+        "display": "Acute Abolisher",
+        "name": "GUN RANGE"
+      }
+    },
     "mp9_up": {
       "3654882086": {
         "display": "Mower T9",
@@ -100,6 +106,12 @@
     "pistberettam92_up": {
       "3654882086": {
         "display": "Roaring Flurry",
+        "name": "GUN RANGE"
+      }
+    },
+    "russpkm_up": {
+      "3654882086": {
+        "display": "Presto Killing Machine",
         "name": "GUN RANGE"
       }
     },
@@ -248,6 +260,12 @@
       "3236556600": {
         "display": "Aerial Assailant",
         "name": "2Fort (TF2 Zombies)"
+      }
+    },
+    "tommyg_up": {
+      "3654882086": {
+        "display": "Mobster",
+        "name": "GUN RANGE"
       }
     },
     "winchester1887_up": {
