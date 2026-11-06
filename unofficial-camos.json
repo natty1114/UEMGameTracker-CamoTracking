@@ -1,6 +1,12 @@
 {
   "schema": 1,
   "weapons": {
+    "aw50_up": {
+      "3654882086": {
+        "display": "SKULL SMASHER",
+        "name": "GUN RANGE"
+      }
+    },
     "bf4338_up": {
       "3654882086": {
         "display": "SRP3NT",
