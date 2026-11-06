@@ -201,6 +201,12 @@
         "display": "Aerial Assailant",
         "name": "2Fort (TF2 Zombies)"
       }
+    },
+    "winchester1887_up": {
+      "3654882086": {
+        "display": "Terminator",
+        "name": "GUN RANGE"
+      }
     }
   }
 }
