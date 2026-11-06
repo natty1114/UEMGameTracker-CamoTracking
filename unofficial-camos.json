@@ -97,6 +97,12 @@
         "name": "GUN RANGE"
       }
     },
+    "mp40smg_up": {
+      "3654882086": {
+        "display": "Leichter Tod",
+        "name": "GUN RANGE"
+      }
+    },
     "mp9_up": {
       "3654882086": {
         "display": "Mower T9",
@@ -112,6 +118,12 @@
     "pistberettam92_up": {
       "3654882086": {
         "display": "Roaring Flurry",
+        "name": "GUN RANGE"
+      }
+    },
+    "rl7_up": {
+      "3654882086": {
+        "display": "Scorcher",
         "name": "GUN RANGE"
       }
     },
