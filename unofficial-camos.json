@@ -1,6 +1,12 @@
 {
   "schema": 1,
   "weapons": {
+    "ak74_up": {
+      "3654882086": {
+        "display": "Renegade",
+        "name": "GUN RANGE"
+      }
+    },
     "amd65_up": {
       "3654882086": {
         "display": "Annihilation Measure Device 69",
