@@ -73,6 +73,12 @@
         "name": "GUN RANGE"
       }
     },
+    "bo6raygun_up": {
+      "3628041837": {
+        "display": "Porter's X2 Ray Gun",
+        "name": "MW SHIPMENT"
+      }
+    },
     "contender2_up": {
       "3654882086": {
         "display": "Efficient Champion",
@@ -113,6 +119,12 @@
       "3654882086": {
         "display": "Homicidal Killer GZ9",
         "name": "GUN RANGE"
+      }
+    },
+    "iw8_bruenmk9_up": {
+      "3628041837": {
+        "display": "M1NI-MINC3R",
+        "name": "MW SHIPMENT"
       }
     },
     "iw8_jak12_up": {
