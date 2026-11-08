@@ -267,7 +267,12 @@
         "name": "DAS WALDHAUS"
       }
     },
-    "t4_carbine_up": {},
+    "t4_carbine_up": {
+      "3748821534": {
+        "display": "Widdershins RC-1",
+        "name": "Classic Bunkers"
+      }
+    },
     "t4_dbsg_sawn_up": {
       "3803674109": {
         "display": "The Snuff Box",
