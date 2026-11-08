@@ -238,6 +238,12 @@
         "name": "GUN RANGE"
       }
     },
+    "t9_carv_up": {
+      "2691637753": {
+        "display": "CARV-O-MATIC",
+        "name": "CORRUPTION"
+      }
+    },
     "t9_crossbow_up": {
       "2691637753": {
         "display": "Crossbow",
