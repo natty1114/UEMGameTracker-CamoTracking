@@ -195,6 +195,12 @@
       }
     },
     "t4_g43_up": {},
+    "t4_gewehr43_up": {
+      "3402282750": {
+        "display": "G115 Compressor",
+        "name": "Frozen Over"
+      }
+    },
     "t4_kar98k_scope_up": {},
     "t4_kar98k_up": {},
     "t4_m1_scope_up": {},
