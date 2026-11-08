@@ -262,9 +262,27 @@
         "name": "CORRUPTION"
       }
     },
+    "t9_pistol_burst_rdw_up": {
+      "2691637753": {
+        "display": "Die-a-Lotti & Die-a-Mori",
+        "name": "CORRUPTION"
+      }
+    },
+    "t9_ppsh_up": {
+      "2691637753": {
+        "display": "Grisly Reaper",
+        "name": "CORRUPTION"
+      }
+    },
     "t9_revolver_up": {
       "2691637753": {
         "display": "Private Eye",
+        "name": "CORRUPTION"
+      }
+    },
+    "t9_striker_up": {
+      "2691637753": {
+        "display": "Road Rage",
         "name": "CORRUPTION"
       }
     },
