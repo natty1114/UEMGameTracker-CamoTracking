@@ -31,6 +31,12 @@
         "name": "GUN RANGE"
       }
     },
+    "bf4famas_up": {
+      "3654882086": {
+        "display": "INFAMOUS",
+        "name": "GUN RANGE"
+      }
+    },
     "bf4jng90_up": {
       "3654882086": {
         "display": "ZEN-90",
@@ -58,6 +64,12 @@
     "bf4m416_up": {
       "3654882086": {
         "display": "Discombobulater",
+        "name": "GUN RANGE"
+      }
+    },
+    "bf4m4_up": {
+      "3654882086": {
+        "display": "M4DUSA",
         "name": "GUN RANGE"
       }
     },
