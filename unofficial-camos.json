@@ -263,6 +263,12 @@
         "name": "GUN RANGE"
       }
     },
+    "m98bravo_up": {
+      "3654882086": {
+        "display": "Hawk Eye",
+        "name": "GUN RANGE"
+      }
+    },
     "matador_up": {
       "3654882086": {
         "display": "Calvary",
@@ -348,6 +354,12 @@
       },
       "3654882086": {
         "display": "Wunderwaffe DG-3 JZ",
+        "name": "GUN RANGE"
+      }
+    },
+    "sl8_up": {
+      "3654882086": {
+        "display": "Serpentine",
         "name": "GUN RANGE"
       }
     },
