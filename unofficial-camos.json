@@ -585,6 +585,12 @@
         "name": "CORRUPTION"
       }
     },
+    "tec9smg_up": {
+      "3654882086": {
+        "display": "Sparse Expunger",
+        "name": "GUN RANGE"
+      }
+    },
     "tf2_ambassador_up": {
       "3236556600": {
         "display": "Petite Chou-Fleur",
