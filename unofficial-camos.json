@@ -866,6 +866,12 @@
         "display": "Terminator",
         "name": "GUN RANGE"
       }
+    },
+    "wwp_thompson_up": {
+      "3836613525": {
+        "display": "Bytewriter",
+        "name": "HORIZON STAIRWAY[HARD]"
+      }
     }
   }
 }
