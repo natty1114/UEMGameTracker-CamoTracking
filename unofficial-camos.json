@@ -1,6 +1,12 @@
 {
   "schema": 1,
   "weapons": {
+    "aacbadger_up": {
+      "3654882086": {
+        "display": "AAZ Ravager",
+        "name": "GUN RANGE"
+      }
+    },
     "ak74_up": {
       "3654882086": {
         "display": "Renegade",
@@ -13,6 +19,12 @@
         "name": "GUN RANGE"
       }
     },
+    "asval_up": {
+      "3654882086": {
+        "display": "Silent Death",
+        "name": "GUN RANGE"
+      }
+    },
     "auga4sa_up": {
       "3654882086": {
         "display": "AUGUSTUS BC27",
@@ -22,6 +34,12 @@
     "aw50_up": {
       "3654882086": {
         "display": "SKULL SMASHER",
+        "name": "GUN RANGE"
+      }
+    },
+    "benellim3_up": {
+      "3654882086": {
+        "display": "Crowd Pleaser",
         "name": "GUN RANGE"
       }
     },
@@ -40,6 +58,12 @@
     "bf4ace21_up": {
       "3654882086": {
         "display": "ACER-420",
+        "name": "GUN RANGE"
+      }
+    },
+    "bf4ace23_up": {
+      "3654882086": {
+        "display": "ACER-69",
         "name": "GUN RANGE"
       }
     },
@@ -64,6 +88,12 @@
     "bf4famas_up": {
       "3654882086": {
         "display": "INFAMOUS",
+        "name": "GUN RANGE"
+      }
+    },
+    "bf4gol_up": {
+      "3654882086": {
+        "display": "Goliath",
         "name": "GUN RANGE"
       }
     },
@@ -103,6 +133,12 @@
         "name": "GUN RANGE"
       }
     },
+    "bf4m82a3_up": {
+      "3654882086": {
+        "display": "Elephant Gun",
+        "name": "GUN RANGE"
+      }
+    },
     "bf4m9_up": {
       "3654882086": {
         "display": "M115 Surge",
@@ -112,6 +148,12 @@
     "bf4mk11_up": {
       "3654882086": {
         "display": "MZ115 Mod 9",
+        "name": "GUN RANGE"
+      }
+    },
+    "bf4mp412_up": {
+      "3654882086": {
+        "display": "Executor",
         "name": "GUN RANGE"
       }
     },
@@ -142,6 +184,12 @@
     "contender2_up": {
       "3654882086": {
         "display": "Efficient Champion",
+        "name": "GUN RANGE"
+      }
+    },
+    "dmg1911_up": {
+      "3654882086": {
+        "display": "Point Maker",
         "name": "GUN RANGE"
       }
     },
