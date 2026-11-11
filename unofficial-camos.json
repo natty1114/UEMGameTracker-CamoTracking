@@ -675,6 +675,12 @@
         "name": "GUN RANGE"
       }
     },
+    "t9_bizon_up": {
+      "2691637753": {
+        "display": "High Anxiety",
+        "name": "CORRUPTION"
+      }
+    },
     "t9_carv_up": {
       "2691637753": {
         "display": "CARV-O-MATIC",
