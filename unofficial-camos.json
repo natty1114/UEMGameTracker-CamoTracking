@@ -181,6 +181,12 @@
         "name": "MW SHIPMENT"
       }
     },
+    "br2famas_up": {
+      "3654882086": {
+        "display": "F8M0S Surmounter",
+        "name": "GUN RANGE"
+      }
+    },
     "contender2_up": {
       "3654882086": {
         "display": "Efficient Champion",
@@ -380,6 +386,12 @@
     "p08luger_up": {
       "3654882086": {
         "display": "Antique Saboteur",
+        "name": "GUN RANGE"
+      }
+    },
+    "pdrsmg_up": {
+      "3654882086": {
+        "display": "Havoc",
         "name": "GUN RANGE"
       }
     },
