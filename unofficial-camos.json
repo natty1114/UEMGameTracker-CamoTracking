@@ -371,6 +371,12 @@
         "name": "GUN RANGE"
       }
     },
+    "mp7sil_up": {
+      "3654882086": {
+        "display": "Tranquil Assassin",
+        "name": "GUN RANGE"
+      }
+    },
     "mp9_up": {
       "3654882086": {
         "display": "Mower T9",
@@ -422,6 +428,12 @@
     "rem870_up": {
       "3654882086": {
         "display": "Exterminator",
+        "name": "GUN RANGE"
+      }
+    },
+    "rifg42_up": {
+      "3654882086": {
+        "display": "Hoary Despoiler",
         "name": "GUN RANGE"
       }
     },
