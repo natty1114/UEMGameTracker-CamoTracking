@@ -223,6 +223,12 @@
         "name": "GUN RANGE"
       }
     },
+    "fnscarh_up": {
+      "3654882086": {
+        "display": "Essence Disrupter",
+        "name": "GUN RANGE"
+      }
+    },
     "g362_up": {
       "3654882086": {
         "display": "GR3A7",
@@ -308,6 +314,12 @@
     "l85a2_up": {
       "3654882086": {
         "display": "Royal Guard",
+        "name": "GUN RANGE"
+      }
+    },
+    "m14sp_up": {
+      "3654882086": {
+        "display": "High Precision Death",
         "name": "GUN RANGE"
       }
     },
@@ -480,6 +492,12 @@
     "striker12g_up": {
       "3654882086": {
         "display": "Crowd Sweeper",
+        "name": "GUN RANGE"
+      }
+    },
+    "svt40_up": {
+      "3654882086": {
+        "display": "Superficial Veracious Tearer 8000",
         "name": "GUN RANGE"
       }
     },
