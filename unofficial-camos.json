@@ -535,6 +535,12 @@
         "name": "DAS WALDHAUS"
       }
     },
+    "t4_bazooka_up": {
+      "3843235256": {
+        "display": "The Stove Pipe",
+        "name": "DESERTED"
+      }
+    },
     "t4_carbine_up": {
       "3748821534": {
         "display": "Widdershins RC-1",
