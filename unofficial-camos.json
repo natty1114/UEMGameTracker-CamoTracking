@@ -577,7 +577,12 @@
         "name": "DAS WALDHAUS"
       }
     },
-    "t4_g43_up": {},
+    "t4_g43_up": {
+      "3748821534": {
+        "display": "G115 Compressor",
+        "name": "Classic Bunkers"
+      }
+    },
     "t4_gewehr43_up": {
       "3402282750": {
         "display": "G115 Compressor",
@@ -714,7 +719,12 @@
       }
     },
     "t4_ptrs_iron_up": {},
-    "t4_ptrs_up": {},
+    "t4_ptrs_up": {
+      "3748821534": {
+        "display": "The Penetrator",
+        "name": "Classic Bunkers"
+      }
+    },
     "t4_stg44_up": {
       "3803674109": {
         "display": "Spatz-447 +",
