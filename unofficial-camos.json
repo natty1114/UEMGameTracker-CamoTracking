@@ -157,9 +157,21 @@
         "name": "GUN RANGE"
       }
     },
+    "bf4pkp_up": {
+      "3654882086": {
+        "display": "Brisk Persecutor",
+        "name": "GUN RANGE"
+      }
+    },
     "bf4saiga_up": {
       "3654882086": {
         "display": "Stampeder 9Z",
+        "name": "GUN RANGE"
+      }
+    },
+    "bf4sr2_up": {
+      "3654882086": {
+        "display": "Devastator",
         "name": "GUN RANGE"
       }
     },
@@ -259,6 +271,12 @@
         "name": "GUN RANGE"
       }
     },
+    "imiuzi_up": {
+      "3654882086": {
+        "display": "80s Gangster",
+        "name": "GUN RANGE"
+      }
+    },
     "iw8_bruenmk9_up": {
       "3628041837": {
         "display": "M1NI-MINC3R",
@@ -308,6 +326,12 @@
     "jackhammer2_up": {
       "3654882086": {
         "display": "Pancor Sledgehammer",
+        "name": "GUN RANGE"
+      }
+    },
+    "kacpdw_up": {
+      "3654882086": {
+        "display": "Prime Devestation Wayfarer",
         "name": "GUN RANGE"
       }
     },
@@ -407,6 +431,12 @@
         "name": "GUN RANGE"
       }
     },
+    "navymp5_up": {
+      "3654882086": {
+        "display": "HK Mutilate 5000",
+        "name": "GUN RANGE"
+      }
+    },
     "p08luger_up": {
       "3654882086": {
         "display": "Antique Saboteur",
@@ -474,6 +504,12 @@
       },
       "3654882086": {
         "display": "Wunderwaffe DG-3 JZ",
+        "name": "GUN RANGE"
+      }
+    },
+    "satan2_up": {
+      "3654882086": {
+        "display": "El Diablo",
         "name": "GUN RANGE"
       }
     },
@@ -903,6 +939,12 @@
       "2691637753": {
         "display": "Road Rage",
         "name": "CORRUPTION"
+      }
+    },
+    "tctf2000_up": {
+      "3654882086": {
+        "display": "F2K Stariner",
+        "name": "GUN RANGE"
       }
     },
     "tec9smg_up": {
