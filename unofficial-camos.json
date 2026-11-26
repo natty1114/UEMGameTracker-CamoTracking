@@ -809,6 +809,12 @@
         "name": "GUN RANGE"
       }
     },
+    "t9_1911_up": {
+      "2691637753": {
+        "display": "Pain",
+        "name": "CORRUPTION"
+      }
+    },
     "t9_bizon_up": {
       "2691637753": {
         "display": "High Anxiety",
@@ -1059,6 +1065,12 @@
       "3836613525": {
         "display": "Bytewriter",
         "name": "HORIZON STAIRWAY[HARD]"
+      }
+    },
+    "xmas_gun_up": {
+      "3625219452": {
+        "display": "X-Mass Murder",
+        "name": "SANTA'S TOWN"
       }
     }
   }
